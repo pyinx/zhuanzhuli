@@ -1,0 +1,13 @@
+/.build/
+/.cache/
+/.claude/
+/.codex/
+/.validation/
+*.app/
+.DS_Store
+__pycache__/
+*.pyc
+/.harness/
+AGENTS.md
+CLAUDE.md
+.impeccable.md

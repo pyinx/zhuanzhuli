@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-04",
+  "kind": "scene-media-verification",
+  "scene": "pond",
+  "method": "built-in imagegen plates, FFmpeg multi-plane parallax",
+  "source_image_size": [
+    1536,
+    1024
+  ],
+  "encoded_size": [
+    1920,
+    1248
+  ],
+  "source_resolution_note": "Images are resampled for the video canvas; not native 2K artwork.",
+  "seconds": 5,
+  "fps": 24,
+  "frames": 120,
+  "motion": {
+    "curve": "quintic smootherstep, t=.15 through 4.60, then hold",
+    "scale_changes": {
+      "background": 0.045,
+      "middle": 0.16,
+      "near": 0.29
+    },
+    "vanishing_point": [
+      0.5,
+      0.48
+    ]
+  },
+  "decoded_stillness": {
+    "tail_mean_luma_difference": 0.002829875022257835,
+    "tail_fraction_changing_by_over_4": 2.7822293447293446e-07,
+    "moving_control_mean_luma_difference": 6.5251155320735394,
+    "mean_luma_tolerance": 0.05
+  },
+  "inputs": {
+    "assets/artwork/v3/pond/background.png": "866fc69fe580c5e88bbdf116c97103cb3d4e9eee8aba4408067ba2cc5c4fbae9",
+    "assets/artwork/v3/pond/middle.png": "d85e9bad1c5023d2023a765bab72eaa3caf10ab29bd64e9f12e75af0b3a8e928",
+    "assets/artwork/v3/pond/near.png": "e8609810993d4999f8e5d44cdb91920787ab14c2b2e7a97f63f8d6c16203f038",
+    "assets/artwork/v3/pond/generation.json": "25030cf693f9d8801306388c628058ee9830ab3514bd54b930d8b222aff6a9d2",
+    "assets/media/v3/pond-work.wav": "a9f14d2803495c3c90b604f43a7ae1131b70ed0f83484fbe71aa4a5916dc3c91"
+  },
+  "outputs": {
+    "assets/media/v3/pond-entry.mp4": "9552eec48f86bed047e47f0e2b6ad45b8c1b8082d41d5232b77b7d0f2087c192",
+    "assets/media/v3/pond-preview.mp4": "a60c15f1a95d79eacaca645019c64e1dd138f1161a083fd6338f4480d4537122",
+    "assets/media/v3/pond-background.png": "7e78e0bc75bdc5406735ed1f8de61a6019449a82423e7a8c97361820db96041f",
+    "assets/media/v3/pond-contact-sheet.png": "a3ec2280aab459a7511be17baa11c87ea9e4d70ae27d611a4b1926bca888a3c9"
+  },
+  "preview_audio": "Same scene original v3 work soundtrack, first five seconds with preview-only end fade.",
+  "visual_review": "2.5D parallax, not full 3D photography; independent visual review tracked in harness",
+  "ffmpeg": "ffmpeg version 9.0.1 Copyright (c) 2000-2026 the FFmpeg developers",
+  "script_sha256": "aa296d4125b04b03b6a2996ee1d7102a84b09351539ce5ec3254b4489d5f6327"
+}

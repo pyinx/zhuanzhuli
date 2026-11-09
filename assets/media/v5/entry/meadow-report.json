@@ -1,0 +1,43 @@
+{
+  "kind": "recorded-entry-verification",
+  "scene": "meadow",
+  "seconds": 8.0,
+  "frames": 192,
+  "source": {
+    "title": "Calmly waving grass and flowers",
+    "author": "Pixelmaniac pictures",
+    "page": "https://commons.wikimedia.org/wiki/File:Calmly_waving_grass_and_flowers.ogv",
+    "download": "https://upload.wikimedia.org/wikipedia/commons/1/15/Calmly_waving_grass_and_flowers.ogv",
+    "source": ".cache/focus-release-v5/sources/meadow.ogv",
+    "sha256": "dfcb71a82633114a63592f9de2df9f477ab6c13db8cfbb3fa72a170080b3b716",
+    "bytes": 13355480,
+    "license": "PD-self",
+    "licenseURL": "https://commons.wikimedia.org/wiki/File:Calmly_waving_grass_and_flowers.ogv#Licensing",
+    "acquired": "2026-11-06",
+    "offset_seconds": 2,
+    "processing": "8-second 1920x1248 crop; first 5s original time, next 2.5s cosine velocity easing with adjacent-frame blends, final .5s hold; supplementary 1.5% eased approach; original audio removed",
+    "review": "候选：待完整动态与第一人称感独立审查"
+  },
+  "source_ledger_sha256": "a083f32d1829a576c3fdfb62167b7875f3bd00cc44650228e25bf630f4fa0515",
+  "script_sha256": "ae81c0b761756b792cd3d780474a19cea078aa8222287c8f73d7ca80d31ad01a",
+  "motion": "real footage: first 5s original time, next 2.5s cosine velocity easing with adjacent-frame blends, final .5s hold; supplementary eased 1.5% approach",
+  "encoding": {
+    "width": 1920,
+    "height": 1248,
+    "fps": 24,
+    "codec": "h264",
+    "audio": false
+  },
+  "decoded_tail_mean_delta": 0.0004017857142857143,
+  "moving_control_difference": 4.047541666666667,
+  "decoded_settling": {
+    "start_mean_delta": 0.8404175347222224,
+    "end_mean_delta": 0.03630208333333333,
+    "ratio": 0.04319529499742294
+  },
+  "outputs": {
+    "assets/media/v5/entry/meadow-entry.mp4": "b850e06bcd924acf0cca10e69028fca950c8cb5c05f6e9c0bac9ffff5b5bee13",
+    "assets/media/v5/entry/meadow-background.png": "76c77ab4ba14b49487c10e44f400477ecdb599ec368b3aa5b0adfbaf0e525896"
+  },
+  "visual_review": "逐片自然运动、人物、转场与变形另行实际审查，数值不代判"
+}

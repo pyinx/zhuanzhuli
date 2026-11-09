@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; img-src 'self' file: data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'none'; media-src 'none'; font-src 'self'">
+  <title>专注 · macOS 交互原型</title>
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="prototype.css">
+</head>
+<body>
+  <header class="review-bar" aria-label="设计评审工具，不属于产品界面">
+    <div class="review-identity"><strong>专注</strong><span class="review-badge">设计原型 v0.2</span><span class="review-description">窗口、场景与保护状态均为演示，不控制电脑</span></div>
+    <div class="review-tools">
+      <label class="sr-only" for="scenario">查看交互状态</label>
+      <select id="scenario">
+        <option value="start">日常开始</option><option value="first">首次配置</option><option value="focus">专注中</option><option value="overtime">到点继续</option><option value="paused">已暂停</option><option value="outside">范围外应用</option><option value="limited">保护受限</option><option value="unverified">保护未验证</option><option value="history">历史记录</option><option value="empty">空历史</option><option value="recovery">异常恢复</option><option value="media-error">场景失败</option><option value="long">长目标</option><option value="multi">双屏示意</option>
+      </select>
+      <button id="appearance" class="tool-button" aria-label="切换深浅外观">深色</button>
+      <details class="review-options"><summary>辅助偏好</summary><div class="review-options-body"><label><input id="reduce-motion" type="checkbox"> 减少动态效果（模拟）</label><label><input id="reduce-transparency" type="checkbox"> 降低透明度（模拟）</label><label><input id="high-contrast" type="checkbox"> 提高对比度（模拟）</label></div></details>
+    </div>
+  </header>
+  <main id="desktop" class="desktop" data-scene="forest" aria-label="macOS 桌面示意">
+    <nav class="system-bar" aria-label="产品菜单栏示意">
+      <div class="system-menus"><button data-action="open-main" class="app-menu">专注</button><button data-action="open-main">窗口</button><button data-action="history">记录</button><button data-action="settings" data-panel="general">设置…</button></div>
+      <button class="status-item" id="status-item" data-action="toggle-control" aria-label="打开专注控制" aria-haspopup="dialog" aria-expanded="false" aria-controls="control-window"><span class="status-glyph" aria-hidden="true">◉</span><span id="menubar-time">准备专注</span></button>
+    </nav>
+    <div class="desktop-caption" id="desktop-caption">场景插画与系统窗口示意 · 非最终媒体资源</div>
+    <div id="workspace" class="workspace" hidden></div>
+    <section id="main-window" class="mac-window main-window" aria-label="开始专注窗口示意"></section>
+    <section id="control-window" class="mac-window control-window" role="dialog" aria-modal="false" aria-labelledby="control-title" hidden></section>
+    <section id="settings-window" class="mac-window settings-window" aria-label="设置窗口示意" hidden></section>
+    <section id="history-window" class="mac-window history-window" aria-label="专注记录窗口示意" hidden></section>
+    <div id="dialog-scrim" class="dialog-scrim" aria-hidden="true" hidden></div>
+    <section id="dialog-window" class="mac-window dialog-window" role="dialog" aria-modal="true" aria-labelledby="dialog-title" hidden></section>
+    <section id="entry-view" class="entry-view" role="dialog" aria-modal="true" aria-labelledby="entry-title" hidden></section>
+    <div class="desktop-dock" id="desktop-dock" aria-label="窗口入口示意"><button class="dock-app" data-action="open-main" aria-label="打开专注窗口"><span aria-hidden="true">◉</span></button><span>专注</span><span class="dock-note">关闭窗口后，可从此入口返回</span></div>
+    <div class="prototype-footnote">交互演示 · 仅在本页内模拟计时、记录和状态 · 不访问系统权限，不播放音频</div>
+  </main>
+  <div id="announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+  <script src="prototype.js"></script>
+</body>
+</html>

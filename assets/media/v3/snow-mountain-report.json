@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-04",
+  "kind": "scene-media-verification",
+  "scene": "snow-mountain",
+  "method": "built-in imagegen plates, FFmpeg multi-plane parallax",
+  "source_image_size": [
+    1536,
+    1024
+  ],
+  "encoded_size": [
+    1920,
+    1248
+  ],
+  "source_resolution_note": "Images are resampled for the video canvas; not native 2K artwork.",
+  "seconds": 5,
+  "fps": 24,
+  "frames": 120,
+  "motion": {
+    "curve": "quintic smootherstep, t=.15 through 4.60, then hold",
+    "scale_changes": {
+      "background": 0.045,
+      "middle": 0.16,
+      "near": 0.29
+    },
+    "vanishing_point": [
+      0.5,
+      0.48
+    ]
+  },
+  "decoded_stillness": {
+    "tail_mean_luma_difference": 0.000634487402065527,
+    "tail_fraction_changing_by_over_4": 4.173344017094017e-07,
+    "moving_control_mean_luma_difference": 3.9760920250178065,
+    "mean_luma_tolerance": 0.05
+  },
+  "inputs": {
+    "assets/artwork/v3/snow-mountain/background.png": "15d7f34036b6ea01ecf4a0340c28d1e904bca6e8132307cacb910c13d707a36f",
+    "assets/artwork/v3/snow-mountain/middle.png": "1832bc1084267c2f7102db85abc084ecb1633937568c85c9a167ae5f2a12c6e8",
+    "assets/artwork/v3/snow-mountain/near.png": "cbd6f8e499351ff08ad20e4c2b927740e4ba472a3391003ff42ddb6bd02fb27b",
+    "assets/artwork/v3/snow-mountain/generation.json": "5e091c8e7878ccd084180b370d9e1bea062211ddc77e3b832370e45d6ea7b683",
+    "assets/media/v3/snow-mountain-work.wav": "9454ee960b6cae41c96aa5eceed3cee1cc6837788141e341cfe29ad943b21f62"
+  },
+  "outputs": {
+    "assets/media/v3/snow-mountain-entry.mp4": "606dbdccc7d06730fb8b4d1e1e41aa1add9bcba0dfc85ea9d4073f208211e7a8",
+    "assets/media/v3/snow-mountain-preview.mp4": "6338ba5affaad0a3f986991bf69d641cc14c2f22a75bcfc1f00b33783560ca04",
+    "assets/media/v3/snow-mountain-background.png": "d5a04fe1b2c371f4f13bf850731ad9a73cfcc76e2269b0389df91e5fe075f1b1",
+    "assets/media/v3/snow-mountain-contact-sheet.png": "9bbcce6226bb75a327507db9dfd8c78ea0ba24732f6d45d044ac2016e3a1d10f"
+  },
+  "preview_audio": "Same scene original v3 work soundtrack, first five seconds with preview-only end fade.",
+  "visual_review": "2.5D parallax, not full 3D photography; independent visual review tracked in harness",
+  "ffmpeg": "ffmpeg version 9.0.1 Copyright (c) 2000-2026 the FFmpeg developers",
+  "script_sha256": "aa296d4125b04b03b6a2996ee1d7102a84b09351539ce5ec3254b4489d5f6327"
+}

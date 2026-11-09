@@ -1,0 +1,10 @@
+[
+  {"id":"mountain","name":"高山","sound":"舒展钢琴 · 温暖声学乐器","ambience":"stream","legacyNatureRatio":0.035},
+  {"id":"snow-mountain","name":"雪山","sound":"清透钢琴 · 轻柔竖琴","ambience":"stream","legacyNatureRatio":0.025},
+  {"id":"meadow","name":"草原","sound":"温暖和声 · 轻拨弦","ambience":"birds","legacyNatureRatio":0.045},
+  {"id":"forest","name":"森林","sound":"温暖琴音 · 木质拨弦","ambience":"birds","legacyNatureRatio":0.06},
+  {"id":"pond","name":"池塘","sound":"圆润琴音 · 绵长和声","ambience":"stream","legacyNatureRatio":0.045},
+  {"id":"garden","name":"花园","sound":"明亮柔音 · 轻拨弦","ambience":"birds","legacyNatureRatio":0.055},
+  {"id":"beach","name":"沙滩","sound":"旧版场景，暂无正式素材","legacy":true},
+  {"id":"snow","name":"雪地","sound":"旧版场景，暂无正式素材","legacy":true}
+]

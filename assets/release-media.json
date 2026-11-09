@@ -1,0 +1,259 @@
+{
+  "version": 2,
+  "notices": [
+    {
+      "source": "assets/media/v5/AUDIO-NOTICES.txt",
+      "path": "media/v5/AUDIO-NOTICES.txt",
+      "sha256": "726e7c5fda3c1bc1d47cc04dfdc6b547adf1abe9d8972bb7223acdf787492372"
+    },
+    {
+      "source": "assets/media/v5/audio-report.json",
+      "path": "media/v5/audio-report.json",
+      "sha256": "486ac43c0634fa0f751c5b34bc2f14a64153e99dc199d915bfbd38105f0dc0a8"
+    },
+    {
+      "source": "assets/media/v5/recording-sources.json",
+      "path": "media/v5/recording-sources.json",
+      "sha256": "0da5c6234b8afe41c9ef9f5021338206526e10633cc6b3133d8fd862420a835e"
+    },
+    {
+      "source": "assets/media/v5/voice-source.json",
+      "path": "media/v5/voice-source.json",
+      "sha256": "bc5f7ec3ba088f3841df98d50fc1610d109c18f6a6ca7a0f9a1d8e8a31dc877b"
+    },
+    {
+      "source": "assets/media/v5/video-sources.json",
+      "path": "media/v5/video-sources.json",
+      "sha256": "a083f32d1829a576c3fdfb62167b7875f3bd00cc44650228e25bf630f4fa0515"
+    },
+    {
+      "source": "assets/media/v5/VIDEO-NOTICES.txt",
+      "path": "media/v5/VIDEO-NOTICES.txt",
+      "sha256": "0b7f423d9dc54000496a975a3b70715466e7ddbfc1fe690742f8815a1ec43bf9"
+    },
+    {
+      "source": "assets/media/v5/entry/pond-report.json",
+      "path": "media/v5/entry/pond-report.json",
+      "sha256": "d995409c2d4e8c8546c5c2781505cdfaa5cf4636486a9b963ef7abf0296dd2d9"
+    },
+    {
+      "source": "assets/media/v5/entry/mountain-report.json",
+      "path": "media/v5/entry/mountain-report.json",
+      "sha256": "75e7646aee5415870afeb4205fc5d8f78be237179d01ac53ffc06e072ef9b7b6"
+    },
+    {
+      "source": "assets/media/v5/entry/forest-report.json",
+      "path": "media/v5/entry/forest-report.json",
+      "sha256": "c389989749d570e86b327096519bea1a4a88f2df3fbd3fd4c1e9e97d14238f62"
+    },
+    {
+      "source": "assets/media/v5/entry/meadow-report.json",
+      "path": "media/v5/entry/meadow-report.json",
+      "sha256": "22972336f226508214e0a92d4418d35b5549b4508fee95fa71d4389e2bcb354f"
+    },
+    {
+      "source": "assets/media/v5/entry/snow-mountain-report.json",
+      "path": "media/v5/entry/snow-mountain-report.json",
+      "sha256": "24741ec95379bc149e8529744d0bfe62dd946e7859c9fe95e2f9b0c4df1178fb"
+    },
+    {
+      "source": "assets/media/v5/entry/garden-report.json",
+      "path": "media/v5/entry/garden-report.json",
+      "sha256": "9b60457ccbae1005f0ea4e5b844842d3ad9dc72ee8e9db10ccec496155b3189c"
+    },
+    {
+      "source": "assets/media/v5/THIRD-PARTY-NOTICES.txt",
+      "path": "media/v5/THIRD-PARTY-NOTICES.txt",
+      "sha256": "431f9b36468fe3f5d4e939814d97f7e11cc202c520a3de6a6b1f08ed0991a0f4"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "mountain",
+      "name": "高山",
+      "preview": {
+        "source": "assets/media/v5/entry/mountain-background.png",
+        "path": "media/v5/entry/mountain-background.png",
+        "sha256": "cd3bec23c70960aac803f711e4735fb1772bdbc3ed649eb5099deb9d5afa235a"
+      },
+      "background": {
+        "source": "assets/media/v5/entry/mountain-background.png",
+        "path": "media/v5/entry/mountain-background.png",
+        "sha256": "cd3bec23c70960aac803f711e4735fb1772bdbc3ed649eb5099deb9d5afa235a"
+      },
+      "entry": {
+        "source": "assets/media/v5/entry/mountain-entry.mp4",
+        "path": "media/v5/entry/mountain-entry.mp4",
+        "sha256": "928fd24c7b1cc8d3c9ab697d58213c1f1160014c7ea28157d7c8eff98cf63c05"
+      },
+      "work": {
+        "source": "assets/media/v5/music/mountain-c493ab9a0b58.m4a",
+        "path": "media/v5/music/mountain-c493ab9a0b58.m4a",
+        "sha256": "c493ab9a0b586dbe09079524e33baae37259062d6456b50e19be65504855b0ee"
+      }
+    },
+    {
+      "id": "snow-mountain",
+      "name": "雪山",
+      "preview": {
+        "source": "assets/media/v5/entry/snow-mountain-background.png",
+        "path": "media/v5/entry/snow-mountain-background.png",
+        "sha256": "f49bfbdf0ca6531d56ae88dd33a408913e8649434e46db8083477fa78c7d6c34"
+      },
+      "background": {
+        "source": "assets/media/v5/entry/snow-mountain-background.png",
+        "path": "media/v5/entry/snow-mountain-background.png",
+        "sha256": "f49bfbdf0ca6531d56ae88dd33a408913e8649434e46db8083477fa78c7d6c34"
+      },
+      "entry": {
+        "source": "assets/media/v5/entry/snow-mountain-entry.mp4",
+        "path": "media/v5/entry/snow-mountain-entry.mp4",
+        "sha256": "89df79f607c135f61c4ee9fa1161bcfe28af4a27556e29f9f9ef52f818ffa196"
+      },
+      "work": {
+        "source": "assets/media/v5/music/snow-mountain-a0adb93bb9b7.m4a",
+        "path": "media/v5/music/snow-mountain-a0adb93bb9b7.m4a",
+        "sha256": "a0adb93bb9b752789f00a5f8f6b8c0f73efa591a78d579403b2dc5a5b5df2a41"
+      }
+    },
+    {
+      "id": "meadow",
+      "name": "草原",
+      "preview": {
+        "source": "assets/media/v5/entry/meadow-background.png",
+        "path": "media/v5/entry/meadow-background.png",
+        "sha256": "76c77ab4ba14b49487c10e44f400477ecdb599ec368b3aa5b0adfbaf0e525896"
+      },
+      "background": {
+        "source": "assets/media/v5/entry/meadow-background.png",
+        "path": "media/v5/entry/meadow-background.png",
+        "sha256": "76c77ab4ba14b49487c10e44f400477ecdb599ec368b3aa5b0adfbaf0e525896"
+      },
+      "entry": {
+        "source": "assets/media/v5/entry/meadow-entry.mp4",
+        "path": "media/v5/entry/meadow-entry.mp4",
+        "sha256": "b850e06bcd924acf0cca10e69028fca950c8cb5c05f6e9c0bac9ffff5b5bee13"
+      },
+      "work": {
+        "source": "assets/media/v5/music/meadow-311d9b40457c.m4a",
+        "path": "media/v5/music/meadow-311d9b40457c.m4a",
+        "sha256": "311d9b40457cd1ad85f3f184b597605d75c3de10f6e19975ea93f9e564e85c5c"
+      }
+    },
+    {
+      "id": "forest",
+      "name": "森林",
+      "preview": {
+        "source": "assets/media/v5/entry/forest-background.png",
+        "path": "media/v5/entry/forest-background.png",
+        "sha256": "078e10e919ff047bf318858b6e3e48a5f6856783dbf55022513f9c986f2485a5"
+      },
+      "background": {
+        "source": "assets/media/v5/entry/forest-background.png",
+        "path": "media/v5/entry/forest-background.png",
+        "sha256": "078e10e919ff047bf318858b6e3e48a5f6856783dbf55022513f9c986f2485a5"
+      },
+      "entry": {
+        "source": "assets/media/v5/entry/forest-entry.mp4",
+        "path": "media/v5/entry/forest-entry.mp4",
+        "sha256": "124df22c193d9f17b1dbb06d25312f27c446c500fb3c5b639f19c55fa7200754"
+      },
+      "work": {
+        "source": "assets/media/v5/music/forest-85f06d795871.m4a",
+        "path": "media/v5/music/forest-85f06d795871.m4a",
+        "sha256": "85f06d7958715704cd64f049d60e8ae50a3554a882d8f8be19f802c1c8a9df11"
+      }
+    },
+    {
+      "id": "pond",
+      "name": "池塘",
+      "preview": {
+        "source": "assets/media/v5/entry/pond-background.png",
+        "path": "media/v5/entry/pond-background.png",
+        "sha256": "e1009b7c826f64154ce35e12b9750e5ab3caa0415a8f6c2da1753b8a3a33eb17"
+      },
+      "background": {
+        "source": "assets/media/v5/entry/pond-background.png",
+        "path": "media/v5/entry/pond-background.png",
+        "sha256": "e1009b7c826f64154ce35e12b9750e5ab3caa0415a8f6c2da1753b8a3a33eb17"
+      },
+      "entry": {
+        "source": "assets/media/v5/entry/pond-entry.mp4",
+        "path": "media/v5/entry/pond-entry.mp4",
+        "sha256": "341882170312737cfdcb18a6cab707a7bb06ce8aeacb198c48440bb6c3767925"
+      },
+      "work": {
+        "source": "assets/media/v5/music/pond-e2351a70963a.m4a",
+        "path": "media/v5/music/pond-e2351a70963a.m4a",
+        "sha256": "e2351a70963a705d665f29558cba8d8a3d760d58e3d64c093c0b166b0f1f1bab"
+      }
+    },
+    {
+      "id": "garden",
+      "name": "花园",
+      "preview": {
+        "source": "assets/media/v5/entry/garden-background.png",
+        "path": "media/v5/entry/garden-background.png",
+        "sha256": "093b5665ef2674d6dbf6ef2d9380515ed1233662f56a76dbfbb7a13976aad059"
+      },
+      "background": {
+        "source": "assets/media/v5/entry/garden-background.png",
+        "path": "media/v5/entry/garden-background.png",
+        "sha256": "093b5665ef2674d6dbf6ef2d9380515ed1233662f56a76dbfbb7a13976aad059"
+      },
+      "entry": {
+        "source": "assets/media/v5/entry/garden-entry.mp4",
+        "path": "media/v5/entry/garden-entry.mp4",
+        "sha256": "d048c6e3477a4f538e1646361c46cae4ab5e617ef9defbd3fc3b7fad6cb08bf9"
+      },
+      "work": {
+        "source": "assets/media/v5/music/garden-321e5ba3d1e6.m4a",
+        "path": "media/v5/music/garden-321e5ba3d1e6.m4a",
+        "sha256": "321e5ba3d1e6409e03fe282131465aa89821198bebe4f5e832f60b75e26c7c3f"
+      }
+    }
+  ],
+  "guide": {
+    "source": "assets/media/v5/guide.m4a",
+    "path": "media/v5/guide.m4a",
+    "sha256": "7d55f5d605e9b86f09d8cbc38c50bf59f9a6c7b70233c72ba813c0f52b9e6457"
+  },
+  "ambiences": [
+    {
+      "id": "rain",
+      "name": "下雨",
+      "audio": {
+        "source": "assets/media/v5/nature/rain-88831c24fbe1.m4a",
+        "path": "media/v5/nature/rain-88831c24fbe1.m4a",
+        "sha256": "88831c24fbe1ff8000f2486e5da35e13e275b8d75f82320b5631fbcad45c9deb"
+      }
+    },
+    {
+      "id": "birds",
+      "name": "鸟叫",
+      "audio": {
+        "source": "assets/media/v5/nature/birds-f4983e6cd6b5.m4a",
+        "path": "media/v5/nature/birds-f4983e6cd6b5.m4a",
+        "sha256": "f4983e6cd6b5f2029ca8d16b89df9a2281b212b5dc9d6be62f308f56ec81d9ae"
+      }
+    },
+    {
+      "id": "waves",
+      "name": "海浪",
+      "audio": {
+        "source": "assets/media/v5/nature/waves-8821f7e72919.m4a",
+        "path": "media/v5/nature/waves-8821f7e72919.m4a",
+        "sha256": "8821f7e72919b7846c153bc00c75e7d56e246868b0c6b5ea7424dc74f759e674"
+      }
+    },
+    {
+      "id": "stream",
+      "name": "流水",
+      "audio": {
+        "source": "assets/media/v5/nature/stream-c552dc713bca.m4a",
+        "path": "media/v5/nature/stream-c552dc713bca.m4a",
+        "sha256": "c552dc713bca13ae9dfd058253dd67ed6a929b27096db8a5aedae03069d04317"
+      }
+    }
+  ]
+}

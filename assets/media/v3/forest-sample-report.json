@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-04",
+  "kind": "forest-sample-not-release-acceptance",
+  "method": "built-in imagegen plates, FFmpeg multi-plane parallax",
+  "source_image_size": [
+    1536,
+    1024
+  ],
+  "encoded_size": [
+    1920,
+    1248
+  ],
+  "source_resolution_note": "Images are resampled for the video canvas; not native 2K artwork.",
+  "seconds": 5,
+  "fps": 24,
+  "frames": 120,
+  "motion": {
+    "curve": "quintic smootherstep, t=.15 through 4.60, then hold",
+    "scale_changes": {
+      "background": 0.045,
+      "trees": 0.16,
+      "ferns": 0.29
+    },
+    "vanishing_point": [
+      0.5,
+      0.48
+    ]
+  },
+  "decoded_stillness": {
+    "tail_mean_luma_difference": 0.0010129401486823361,
+    "tail_fraction_changing_by_over_4": 1.460670405982906e-06,
+    "moving_control_mean_luma_difference": 9.885860640914352,
+    "mean_luma_tolerance": 0.05
+  },
+  "inputs": {
+    "assets/artwork/v3/forest/background.png": "b8084187415070231abc690a01fe41e6215760d31c0a7be59b740422d29373c9",
+    "assets/artwork/v3/forest/trees.png": "eafac86bc3a5f32c619eca48291efe34f7d937042038ffa74457673949f0d25e",
+    "assets/artwork/v3/forest/ferns.png": "4e0b5da84983eada835db873fa665326bfe8a6d936110ede29ef86a148638723",
+    "assets/artwork/v3/forest/prompts.json": "6ddaa113e63b38d023ee0fe28c91c7703f0b6b074f2811df1316f429f3f623b2",
+    "assets/media/v2/forest-work.wav": "cdc4390870d8f19d5953abbae1be4197b4e5b8da9ff03cec5fcf846a84fc445c"
+  },
+  "outputs": {
+    "assets/media/v3/forest-entry.mp4": "41c98afbdee61a4c0822b588ae3f2162f1986af333cd64f82b6ff99867363fef",
+    "assets/media/v3/forest-preview.mp4": "95ded6d96fc5d3871e45dd0406a15c06db596071c5c8ea8b0cbf8e73bcfd40c5",
+    "assets/media/v3/forest-background.png": "09ab04c3b68aa501ceb4802c2fde1f2d41d92ea1bb76bfeed44220934e2d4548",
+    "assets/media/v3/forest-contact-sheet.png": "6b371cf218af628e7f207fb4179ef73f45707cec484a51909884ab0be50a6816"
+  },
+  "preview_audio": "Existing local forest work music at 12s plus quiet synthesized pink-noise wind; five-second sample mix only.",
+  "visual_review": "pending user review; not full 3D motion, no independent acceptance",
+  "remaining": "Other five scenes, new full-length scene music, app integration and complete acceptance.",
+  "ffmpeg": "ffmpeg version 9.0.1 Copyright (c) 2000-2026 the FFmpeg developers",
+  "script_sha256": "d8348c29aa378359b66b5ec7bc5af54db4eea0dc228bc0f73f19d8a8397bca4f"
+}

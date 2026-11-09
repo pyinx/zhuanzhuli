@@ -1,0 +1,43 @@
+{
+  "kind": "recorded-entry-verification",
+  "scene": "garden",
+  "seconds": 8.0,
+  "frames": 192,
+  "source": {
+    "title": "Close-up Shot of Bougainvillea Flowers Moving with the Wind",
+    "author": "ROMAN ODINTSOV",
+    "page": "https://www.pexels.com/video/close-up-shot-of-bougainvillea-flowers-moving-with-the-wind-6610059/",
+    "download": "https://videos.pexels.com/video-files/6610059/6610059-uhd_4096_2160_30fps.mp4",
+    "source": ".cache/focus-release-v5/sources/pexels-garden.mp4",
+    "sha256": "717c5d9ca1fc76fcdd419ffc61c7004af82f136ad19bb3ff8da02840726c07f1",
+    "bytes": 17081157,
+    "license": "Pexels License",
+    "licenseURL": "https://www.pexels.com/license/",
+    "acquired": "2026-11-06",
+    "offset_seconds": 2,
+    "processing": "8-second 1920x1248 crop; first 5s original time, next 2.5s cosine velocity easing with adjacent-frame blends, final .5s hold; supplementary 1.5% eased approach; original audio removed",
+    "review": "候选：待完整动态与第一人称感独立审查"
+  },
+  "source_ledger_sha256": "a083f32d1829a576c3fdfb62167b7875f3bd00cc44650228e25bf630f4fa0515",
+  "script_sha256": "ae81c0b761756b792cd3d780474a19cea078aa8222287c8f73d7ca80d31ad01a",
+  "motion": "real footage: first 5s original time, next 2.5s cosine velocity easing with adjacent-frame blends, final .5s hold; supplementary eased 1.5% approach",
+  "encoding": {
+    "width": 1920,
+    "height": 1248,
+    "fps": 24,
+    "codec": "h264",
+    "audio": false
+  },
+  "decoded_tail_mean_delta": 0.0005461309523809523,
+  "moving_control_difference": 9.090635416666666,
+  "decoded_settling": {
+    "start_mean_delta": 1.3471371527777778,
+    "end_mean_delta": 0.03810503472222222,
+    "ratio": 0.02828593558098385
+  },
+  "outputs": {
+    "assets/media/v5/entry/garden-entry.mp4": "d048c6e3477a4f538e1646361c46cae4ab5e617ef9defbd3fc3b7fad6cb08bf9",
+    "assets/media/v5/entry/garden-background.png": "093b5665ef2674d6dbf6ef2d9380515ed1233662f56a76dbfbb7a13976aad059"
+  },
+  "visual_review": "逐片自然运动、人物、转场与变形另行实际审查，数值不代判"
+}

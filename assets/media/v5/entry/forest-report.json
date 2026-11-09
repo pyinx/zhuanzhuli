@@ -1,0 +1,43 @@
+{
+  "kind": "recorded-entry-verification",
+  "scene": "forest",
+  "seconds": 8.0,
+  "frames": 192,
+  "source": {
+    "title": "Serene Sunlight Through Lush Forest Leaves",
+    "author": "Joshua Woroniecki",
+    "page": "https://www.pexels.com/video/serene-sunlight-through-lush-forest-leaves-31883946/",
+    "download": "https://videos.pexels.com/video-files/31883946/13581542_3840_2160_30fps.mp4",
+    "source": ".cache/focus-release-v5/sources/pexels-forest-v2.mp4",
+    "sha256": "074ddf30807c5789825f8963d44d8a27f515761cb688830b96b513983c5f16f4",
+    "bytes": 66284387,
+    "license": "Pexels License",
+    "licenseURL": "https://www.pexels.com/license/",
+    "acquired": "2026-11-06",
+    "offset_seconds": 2,
+    "processing": "8-second 1920x1248 crop; first 5s original time, next 2.5s cosine velocity easing with adjacent-frame blends, final .5s hold; supplementary 1.5% eased approach; original audio removed",
+    "review": "候选：待完整动态与第一人称感独立审查"
+  },
+  "source_ledger_sha256": "a083f32d1829a576c3fdfb62167b7875f3bd00cc44650228e25bf630f4fa0515",
+  "script_sha256": "ae81c0b761756b792cd3d780474a19cea078aa8222287c8f73d7ca80d31ad01a",
+  "motion": "real footage: first 5s original time, next 2.5s cosine velocity easing with adjacent-frame blends, final .5s hold; supplementary eased 1.5% approach",
+  "encoding": {
+    "width": 1920,
+    "height": 1248,
+    "fps": 24,
+    "codec": "h264",
+    "audio": false
+  },
+  "decoded_tail_mean_delta": 0.005276785714285714,
+  "moving_control_difference": 44.057541666666665,
+  "decoded_settling": {
+    "start_mean_delta": 3.641621527777778,
+    "end_mean_delta": 0.1143550347222222,
+    "ratio": 0.0314022294326684
+  },
+  "outputs": {
+    "assets/media/v5/entry/forest-entry.mp4": "124df22c193d9f17b1dbb06d25312f27c446c500fb3c5b639f19c55fa7200754",
+    "assets/media/v5/entry/forest-background.png": "078e10e919ff047bf318858b6e3e48a5f6856783dbf55022513f9c986f2485a5"
+  },
+  "visual_review": "逐片自然运动、人物、转场与变形另行实际审查，数值不代判"
+}

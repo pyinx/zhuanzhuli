@@ -1,0 +1,24 @@
+[
+  {
+    "clip": "approach",
+    "task_id": "456457471996160",
+    "prompt": "A young woman with long brown hair, wearing a sage-green pinafore dress over a cream blouse and brown ankle boots, walks slowly forward along the sunlit forest path toward the camera, growing larger in frame. Her hair and the hem of her dress sway gently with each step. Morning sunlight filters through the canopy, a few leaves drift in the breeze. The camera stays still. Calm meditative atmosphere, cinematic natural color, smooth continuous motion, photorealistic.",
+    "first_frame": "assets/artwork/v1/forest/01-distant.png",
+    "last_frame": "assets/artwork/v1/forest/02-near.png",
+    "model": "MiniMax-H3",
+    "resolution": "2K",
+    "duration": 5,
+    "ratio": "adaptive"
+  },
+  {
+    "clip": "settle",
+    "task_id": "456457888989495",
+    "prompt": "The same young woman in the sage-green pinafore dress over a cream blouse steps forward once more, then lowers herself and sits cross-legged on the sunlit forest path. She settles her hands on her knees, closes her eyes, and breathes calmly, her long brown hair resting on her shoulders. The camera stays still, the background forest does not change. Soft morning light, calm meditative atmosphere, photorealistic, smooth continuous motion.",
+    "first_frame": "assets/artwork/v1/forest/02-near.png",
+    "last_frame": "assets/artwork/v1/forest/03-seated.png",
+    "model": "MiniMax-H3",
+    "resolution": "2K",
+    "duration": 4,
+    "ratio": "adaptive"
+  }
+]

@@ -1,0 +1,195 @@
+package journal
+
+import (
+	"encoding/json"
+	"errors"
+	"os"
+	"path/filepath"
+	"sync"
+)
+
+type Ref struct {
+	Label    string  `json:"label"`
+	PID      int     `json:"pid"`
+	Launched float64 `json:"launched"`
+	BundleID string  `json:"bundleID"`
+	Path     string  `json:"path"`
+	Token    string  `json:"token"`
+}
+type Entry struct {
+	ID     string `json:"operationID"`
+	Ref    Ref    `json:"ref"`
+	Status string `json:"status"`
+	Reason string `json:"reason,omitempty"`
+}
+type File struct {
+	Schema  int     `json:"schemaVersion"`
+	Entries []Entry `json:"entries"`
+}
+type Journal struct {
+	mu   sync.Mutex
+	path string
+	data File
+}
+
+func Open(path string) (*Journal, error) {
+	j := &Journal{path: path, data: File{Schema: 1, Entries: []Entry{}}}
+	b, err := os.ReadFile(path)
+	if errors.Is(err, os.ErrNotExist) {
+		return j, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(b, &j.data); err != nil {
+		return nil, err
+	}
+	if j.data.Schema != 1 {
+		return nil, errors.New("unsupported: journal schema")
+	}
+	for _, e := range j.data.Entries {
+		if e.ID == "" || e.Ref.PID < 1 || e.Ref.Launched <= 0 || e.Ref.Token == "" {
+			return nil, errors.New("invalid: journal entry")
+		}
+		switch e.Status {
+		case "pending", "applied", "released", "abandoned":
+		default:
+			return nil, errors.New("invalid: journal status")
+		}
+	}
+	return j, nil
+}
+func WriteJSON(path string, value any) error {
+	b, err := json.MarshalIndent(value, "", "  ")
+	if err != nil {
+		return err
+	}
+	f, err := os.CreateTemp(filepath.Dir(path), ".atomic-*")
+	if err != nil {
+		return err
+	}
+	name := f.Name()
+	defer os.Remove(name)
+	if err = f.Chmod(0600); err != nil {
+		f.Close()
+		return err
+	}
+	if _, err = f.Write(append(b, '\n')); err != nil {
+		f.Close()
+		return err
+	}
+	if err = f.Sync(); err != nil {
+		f.Close()
+		return err
+	}
+	if err = f.Close(); err != nil {
+		return err
+	}
+	if err = os.Rename(name, path); err != nil {
+		return err
+	}
+	d, err := os.Open(filepath.Dir(path))
+	if err != nil {
+		return err
+	}
+	defer d.Close()
+	return d.Sync()
+}
+func (j *Journal) mutate(fn func(*File) error) error {
+	j.mu.Lock()
+	defer j.mu.Unlock()
+	next := File{Schema: 1, Entries: append([]Entry{}, j.data.Entries...)}
+	if err := fn(&next); err != nil {
+		return err
+	}
+	if err := WriteJSON(j.path, next); err != nil {
+		return err
+	}
+	j.data = next
+	return nil
+}
+func (j *Journal) Begin(id string, r Ref, initialHidden bool) error {
+	if initialHidden {
+		return nil
+	}
+	if id == "" || r.PID < 1 || r.Launched <= 0 || r.Token == "" {
+		return errors.New("invalid: operation identity")
+	}
+	return j.mutate(func(f *File) error {
+		for _, e := range f.Entries {
+			if e.ID == id {
+				return errors.New("conflict: operation already exists")
+			}
+		}
+		f.Entries = append(f.Entries, Entry{ID: id, Ref: r, Status: "pending"})
+		return nil
+	})
+}
+func (j *Journal) Applied(id string) error {
+	return j.mutate(func(f *File) error {
+		for i := range f.Entries {
+			if f.Entries[i].ID == id && f.Entries[i].Status == "pending" {
+				f.Entries[i].Status = "applied"
+				return nil
+			}
+		}
+		return errors.New("conflict: no pending operation")
+	})
+}
+func (j *Journal) CanRestore(r Ref, hidden bool) bool {
+	j.mu.Lock()
+	defer j.mu.Unlock()
+	if !hidden {
+		return false
+	}
+	for _, e := range j.data.Entries {
+		if e.Ref == r && e.Status == "applied" {
+			return true
+		}
+	}
+	return false
+}
+func (j *Journal) HasUnknown(r Ref) bool {
+	for _, e := range j.Snapshot().Entries {
+		if e.Ref == r && e.Status == "pending" {
+			return true
+		}
+	}
+	return false
+}
+func (j *Journal) Abandon(r Ref, reason string) error {
+	return j.mutate(func(f *File) error {
+		for i := range f.Entries {
+			e := &f.Entries[i]
+			if e.Ref == r && (e.Status == "pending" || e.Status == "applied") {
+				e.Status = "abandoned"
+				e.Reason = reason
+			}
+		}
+		return nil
+	})
+}
+func (j *Journal) Release(r Ref) error {
+	return j.mutate(func(f *File) error {
+		for i := range f.Entries {
+			if f.Entries[i].Ref == r && f.Entries[i].Status == "applied" {
+				f.Entries[i].Status = "released"
+			}
+		}
+		return nil
+	})
+}
+func (j *Journal) Snapshot() File {
+	j.mu.Lock()
+	defer j.mu.Unlock()
+	return File{Schema: 1, Entries: append([]Entry{}, j.data.Entries...)}
+}
+func (j *Journal) Pending() int {
+	n := 0
+	for _, e := range j.Snapshot().Entries {
+		if e.Status == "pending" || e.Status == "applied" {
+			n++
+		}
+	}
+	return n
+}

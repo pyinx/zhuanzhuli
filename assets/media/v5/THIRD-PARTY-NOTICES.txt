@@ -1,0 +1,92 @@
+专注力 — 独立背景音乐与自然录音
+
+Morning — Kevin MacLeod
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN2300003
+CC BY 4.0 https://creativecommons.org/licenses/by/4.0/
+
+Clear Air — Kevin MacLeod
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100626
+CC BY 4.0 https://creativecommons.org/licenses/by/4.0/
+
+Midnight Tale — Kevin MacLeod
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1900004
+CC BY 4.0 https://creativecommons.org/licenses/by/4.0/
+
+Enchanted Journey — Kevin MacLeod
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100799
+CC BY 4.0 https://creativecommons.org/licenses/by/4.0/
+
+White — Kevin MacLeod
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100010
+CC BY 4.0 https://creativecommons.org/licenses/by/4.0/
+
+Fresh Air — Kevin MacLeod
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500084
+CC BY 4.0 https://creativecommons.org/licenses/by/4.0/
+
+A Very Brady Special — Kevin MacLeod
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1900060
+CC BY 4.0 https://creativecommons.org/licenses/by/4.0/
+
+音乐修改：固定增益、完整曲目间和首尾十二秒交叠，ALAC；无自然声混入。
+
+Summer Rain on Terrace — Joseph SARDIN / BigSoundBank
+https://bigsoundbank.com/summer-rain-on-terrace-s1019.html
+CC0-1.0 https://creativecommons.org/publicdomain/zero/1.0/
+
+Birds chirping in a garden — Akum20
+https://commons.wikimedia.org/wiki/File:Birds_chirping_in_a_garden.ogg
+CC0-1.0 https://creativecommons.org/publicdomain/zero/1.0/
+
+Small Waves Facing the Ocean — Joseph SARDIN / BigSoundBank
+https://bigsoundbank.com/small-waves-facing-the-ocean-s1046.html
+CC0-1.0 https://creativecommons.org/publicdomain/zero/1.0/
+
+Mountain stream #1 (2754) — Pierre SIBANARCO / BigSoundBank
+https://bigsoundbank.com/mountain-stream-1-s2754.html
+CC0-1.0 https://creativecommons.org/publicdomain/zero/1.0/
+
+录音修改：连续区间摘取、固定增益、三秒首尾交叠；不生成白噪音。
+原 MP3／Vorbis 有损；ALAC 仅无损保存加工结果。
+
+
+专注力 — 实拍入场候选来源
+仅作为专注应用场景体验的一部分，不提供原片下载、素材库或独立壁纸分发。
+
+Green Mountain Peak With Moving Clouds — K (Kelly)
+https://www.pexels.com/video/green-mountain-peak-with-moving-clouds-4288016/
+Pexels License https://www.pexels.com/license/
+8-second 1920x1248 crop; first 5s original time, next 2.5s cosine velocity easing with adjacent-frame blends, final .5s hold; supplementary 1.5% eased approach; original audio removed
+
+Snow Covered Mountain Under Blue Sky — Ricky Esquivel
+https://www.pexels.com/video/snow-covered-mountain-under-blue-sky-2040063/
+Pexels License https://www.pexels.com/license/
+8-second 1920x1248 crop; first 5s original time, next 2.5s cosine velocity easing with adjacent-frame blends, final .5s hold; supplementary 1.5% eased approach; original audio removed
+
+Calmly waving grass and flowers — Pixelmaniac pictures
+https://commons.wikimedia.org/wiki/File:Calmly_waving_grass_and_flowers.ogv
+PD-self https://commons.wikimedia.org/wiki/File:Calmly_waving_grass_and_flowers.ogv#Licensing
+8-second 1920x1248 crop; first 5s original time, next 2.5s cosine velocity easing with adjacent-frame blends, final .5s hold; supplementary 1.5% eased approach; original audio removed
+
+Serene Sunlight Through Lush Forest Leaves — Joshua Woroniecki
+https://www.pexels.com/video/serene-sunlight-through-lush-forest-leaves-31883946/
+Pexels License https://www.pexels.com/license/
+8-second 1920x1248 crop; first 5s original time, next 2.5s cosine velocity easing with adjacent-frame blends, final .5s hold; supplementary 1.5% eased approach; original audio removed
+
+Raindrops Making Ripples — Anastasia Shuraeva
+https://www.pexels.com/video/raindrops-making-ripples-7663345/
+Pexels License https://www.pexels.com/license/
+8-second 1920x1248 crop; first 5s original time, next 2.5s cosine velocity easing with adjacent-frame blends, final .5s hold; supplementary 1.5% eased approach; original audio removed
+
+Close-up Shot of Bougainvillea Flowers Moving with the Wind — ROMAN ODINTSOV
+https://www.pexels.com/video/close-up-shot-of-bougainvillea-flowers-moving-with-the-wind-6610059/
+Pexels License https://www.pexels.com/license/
+8-second 1920x1248 crop; first 5s original time, next 2.5s cosine velocity easing with adjacent-frame blends, final .5s hold; supplementary 1.5% eased approach; original audio removed
+
+Pexels 许可页明确允许应用中使用；素材不作为原片、素材集或壁纸产品单独销售／分发。
+不暗示素材作者或平台认可本产品。免费许可并非 CC0，保留具体许可名称，不混标。
+
+
+引导人声：本地 Qwen3-TTS VoiceDesign 输出；模型来源与 revision 见 voice-source.json。
+模型许可 Apache-2.0：https://www.apache.org/licenses/LICENSE-2.0
+本应用未包含模型权重、不暗示模型作者或录音与视频作者背书。

@@ -1,0 +1,56 @@
+{
+  "mountain": {
+    "seconds": 120,
+    "sample_rate": 44100,
+    "channels": 2,
+    "peak_dbfs": -12.846329421236602,
+    "seam_step": 0.00014237161797099607,
+    "origin": "original local synthesis, including nature textures; no external samples",
+    "listening_acceptance": "requires actual listening; numeric checks are not a verdict"
+  },
+  "snow-mountain": {
+    "seconds": 120,
+    "sample_rate": 44100,
+    "channels": 2,
+    "peak_dbfs": -13.146096659026691,
+    "seam_step": 0.00950313815679131,
+    "origin": "original local synthesis, including nature textures; no external samples",
+    "listening_acceptance": "requires actual listening; numeric checks are not a verdict"
+  },
+  "meadow": {
+    "seconds": 120,
+    "sample_rate": 44100,
+    "channels": 2,
+    "peak_dbfs": -12.693312627940866,
+    "seam_step": 0.0009591293891600544,
+    "origin": "original local synthesis, including nature textures; no external samples",
+    "listening_acceptance": "requires actual listening; numeric checks are not a verdict"
+  },
+  "forest": {
+    "seconds": 120,
+    "sample_rate": 44100,
+    "channels": 2,
+    "peak_dbfs": -12.552630512295357,
+    "seam_step": 0.0023175853932802387,
+    "origin": "original local synthesis, including nature textures; no external samples",
+    "listening_acceptance": "requires actual listening; numeric checks are not a verdict"
+  },
+  "pond": {
+    "seconds": 120,
+    "sample_rate": 44100,
+    "channels": 2,
+    "peak_dbfs": -11.853492041239269,
+    "seam_step": 0.0034007550681357246,
+    "origin": "original local synthesis, including nature textures; no external samples",
+    "listening_acceptance": "requires actual listening; numeric checks are not a verdict"
+  },
+  "garden": {
+    "seconds": 120,
+    "sample_rate": 44100,
+    "channels": 2,
+    "peak_dbfs": -11.929402504078384,
+    "seam_step": 0.007119317604797122,
+    "origin": "original local synthesis, including nature textures; no external samples",
+    "listening_acceptance": "requires actual listening; numeric checks are not a verdict"
+  }
+}

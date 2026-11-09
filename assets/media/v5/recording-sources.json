@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "sources": {
+    "rain": {
+      "path": ".cache/focus-release-v5/sources/rain.wav",
+      "title": "Summer Rain on Terrace",
+      "author": "Joseph SARDIN / BigSoundBank",
+      "page": "https://bigsoundbank.com/summer-rain-on-terrace-s1019.html",
+      "download": "https://bigsoundbank.com/download.php",
+      "downloadForm": {
+        "method": "POST",
+        "id": "1019",
+        "format": "wav",
+        "note": "Public anonymous form; observed five-second wait"
+      },
+      "license": "CC0-1.0",
+      "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "acquired": "2026-11-06",
+      "sha256": "66ed2534bdde6c399426e568ce8f82c680d7644d19a7fcd4b73cd3fb3a4a07c8",
+      "bytes": 30092336,
+      "name": "下雨",
+      "offset_seconds": 10,
+      "excerpt_seconds": 110
+    },
+    "birds": {
+      "path": ".cache/focus-audio-v4/sources/birds.ogg",
+      "title": "Birds chirping in a garden",
+      "author": "Akum20",
+      "page": "https://commons.wikimedia.org/wiki/File:Birds_chirping_in_a_garden.ogg",
+      "download": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Birds_chirping_in_a_garden.ogg",
+      "license": "CC0-1.0",
+      "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sha256": "961bd9d5113e8c53814eaf21cf8d4efb0505f1c7d67ec4c85ebf651ce4e67f27",
+      "bytes": 2637897,
+      "acquired": "2026-11-04",
+      "name": "鸟叫",
+      "offset_seconds": 10,
+      "excerpt_seconds": 180
+    },
+    "waves": {
+      "path": ".cache/focus-release-v5/sources/waves.wav",
+      "title": "Small Waves Facing the Ocean",
+      "author": "Joseph SARDIN / BigSoundBank",
+      "page": "https://bigsoundbank.com/small-waves-facing-the-ocean-s1046.html",
+      "download": "https://bigsoundbank.com/download.php",
+      "downloadForm": {
+        "method": "POST",
+        "id": "1046",
+        "format": "wav",
+        "note": "Public anonymous form; observed five-second wait"
+      },
+      "license": "CC0-1.0",
+      "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "acquired": "2026-11-06",
+      "sha256": "108546848717aeab4bf60f184b718f7ddb9e479ca77f9f400a620c3835ba4f81",
+      "bytes": 26415706,
+      "name": "海浪",
+      "offset_seconds": 10,
+      "excerpt_seconds": 110
+    },
+    "stream": {
+      "path": ".cache/focus-audio-v4/sources/stream.wav",
+      "title": "Mountain stream #1 (2754)",
+      "author": "Pierre SIBANARCO / BigSoundBank",
+      "page": "https://bigsoundbank.com/mountain-stream-1-s2754.html",
+      "download": "https://bigsoundbank.com/download.php",
+      "downloadForm": {
+        "method": "POST",
+        "id": "2754",
+        "format": "wav",
+        "note": "Follow the public download form and five-second anonymous wait; no account or fee."
+      },
+      "license": "CC0-1.0",
+      "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sha256": "439aa87570e54e2d5e19e4f56a4da6c8fe57c1dac34066dbbc62c595b8d74224",
+      "bytes": 92613330,
+      "acquired": "2026-11-04",
+      "name": "流水",
+      "offset_seconds": 10,
+      "excerpt_seconds": 280
+    }
+  }
+}
