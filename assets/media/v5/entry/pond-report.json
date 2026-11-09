@@ -1,0 +1,43 @@
+{
+  "kind": "recorded-entry-verification",
+  "scene": "pond",
+  "seconds": 8.0,
+  "frames": 192,
+  "source": {
+    "title": "Raindrops Making Ripples",
+    "author": "Anastasia Shuraeva",
+    "page": "https://www.pexels.com/video/raindrops-making-ripples-7663345/",
+    "download": "https://videos.pexels.com/video-files/7663345/7663345-uhd_4096_2160_24fps.mp4",
+    "source": ".cache/focus-release-v5/sources/pexels-pond.mp4",
+    "sha256": "d4a559b1152423479461392a549a092f6837fbb10ab2cbc297b0312bbd03831f",
+    "bytes": 45812628,
+    "license": "Pexels License",
+    "licenseURL": "https://www.pexels.com/license/",
+    "acquired": "2026-11-06",
+    "offset_seconds": 2,
+    "processing": "8-second 1920x1248 crop; first 5s original time, next 2.5s cosine velocity easing with adjacent-frame blends, final .5s hold; supplementary 1.5% eased approach; original audio removed",
+    "review": "候选：待完整动态与第一人称感独立审查"
+  },
+  "source_ledger_sha256": "a083f32d1829a576c3fdfb62167b7875f3bd00cc44650228e25bf630f4fa0515",
+  "script_sha256": "ae81c0b761756b792cd3d780474a19cea078aa8222287c8f73d7ca80d31ad01a",
+  "motion": "real footage: first 5s original time, next 2.5s cosine velocity easing with adjacent-frame blends, final .5s hold; supplementary eased 1.5% approach",
+  "encoding": {
+    "width": 1920,
+    "height": 1248,
+    "fps": 24,
+    "codec": "h264",
+    "audio": false
+  },
+  "decoded_tail_mean_delta": 0.0024151785714285716,
+  "moving_control_difference": 15.286854166666666,
+  "decoded_settling": {
+    "start_mean_delta": 7.504363715277777,
+    "end_mean_delta": 0.303515625,
+    "ratio": 0.04044521781134981
+  },
+  "outputs": {
+    "assets/media/v5/entry/pond-entry.mp4": "341882170312737cfdcb18a6cab707a7bb06ce8aeacb198c48440bb6c3767925",
+    "assets/media/v5/entry/pond-background.png": "e1009b7c826f64154ce35e12b9750e5ab3caa0415a8f6c2da1753b8a3a33eb17"
+  },
+  "visual_review": "逐片自然运动、人物、转场与变形另行实际审查，数值不代判"
+}

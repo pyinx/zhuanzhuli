@@ -1,0 +1,148 @@
+{
+  "version": 1,
+  "crossfade_seconds": 12,
+  "minimum_cycle_seconds": 600,
+  "target_lufs": -23,
+  "source_catalog": "assets/media/v4/music-sources.json",
+  "nature_catalog": "assets/media/v4/sources.json",
+  "scenes": [
+    {
+      "id": "mountain",
+      "name": "高山",
+      "tracks": [
+        "A Very Brady Special",
+        "Morning",
+        "White"
+      ],
+      "nature": "stream",
+      "event_seconds": 24,
+      "nature_ratio": 0.035,
+      "reason": "以舒展钢琴展开，温暖声学乐器作过渡，低声远溪点缀。",
+      "nature_positions": [
+        28,
+        103,
+        198,
+        261,
+        354,
+        458,
+        529,
+        625
+      ]
+    },
+    {
+      "id": "snow-mountain",
+      "name": "雪山",
+      "tracks": [
+        "Fresh Air",
+        "White",
+        "Enchanted Journey"
+      ],
+      "nature": "stream",
+      "event_seconds": 20,
+      "nature_ratio": 0.025,
+      "reason": "清透钢琴和竖琴，少量融雪溪水，避免风啸和冰铃。",
+      "nature_positions": [
+        42,
+        166,
+        287,
+        451,
+        637
+      ]
+    },
+    {
+      "id": "meadow",
+      "name": "草原",
+      "tracks": [
+        "Clear Air",
+        "Midnight Tale",
+        "Morning",
+        "Fresh Air"
+      ],
+      "nature": "birds",
+      "event_seconds": 18,
+      "nature_ratio": 0.045,
+      "reason": "舒展木吉他为前段主调，远鸟稀疏出现，避免持续草浪底噪。",
+      "nature_positions": [
+        31,
+        122,
+        249,
+        347,
+        462,
+        583,
+        690
+      ]
+    },
+    {
+      "id": "forest",
+      "name": "森林",
+      "tracks": [
+        "Morning",
+        "Clear Air",
+        "Midnight Tale",
+        "Enchanted Journey"
+      ],
+      "nature": "birds",
+      "event_seconds": 18,
+      "nature_ratio": 0.06,
+      "reason": "保留先前森林十二分钟组的曲序、固定响度和八段鸟声。",
+      "nature_positions": [
+        25,
+        113,
+        206,
+        302,
+        409,
+        497,
+        590,
+        681
+      ]
+    },
+    {
+      "id": "pond",
+      "name": "池塘",
+      "tracks": [
+        "White",
+        "Fresh Air",
+        "A Very Brady Special"
+      ],
+      "nature": "stream",
+      "event_seconds": 24,
+      "nature_ratio": 0.045,
+      "reason": "流动钢琴声部呼应水面，以低声水流片段点缀，避免突发滴水。",
+      "nature_positions": [
+        29,
+        116,
+        174,
+        289,
+        376,
+        459,
+        592,
+        671,
+        771
+      ]
+    },
+    {
+      "id": "garden",
+      "name": "花园",
+      "tracks": [
+        "Enchanted Journey",
+        "Morning",
+        "White",
+        "Clear Air"
+      ],
+      "nature": "birds",
+      "event_seconds": 18,
+      "nature_ratio": 0.055,
+      "reason": "竖琴开篇、温暖声学与流动钢琴接续，低声花园鸟鸣。",
+      "nature_positions": [
+        24,
+        109,
+        215,
+        276,
+        394,
+        493,
+        607,
+        683
+      ]
+    }
+  ]
+}

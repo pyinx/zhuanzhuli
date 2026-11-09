@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-04",
+  "kind": "scene-media-verification",
+  "scene": "meadow",
+  "method": "built-in imagegen plates, FFmpeg multi-plane parallax",
+  "source_image_size": [
+    1536,
+    1024
+  ],
+  "encoded_size": [
+    1920,
+    1248
+  ],
+  "source_resolution_note": "Images are resampled for the video canvas; not native 2K artwork.",
+  "seconds": 5,
+  "fps": 24,
+  "frames": 120,
+  "motion": {
+    "curve": "quintic smootherstep, t=.15 through 4.60, then hold",
+    "scale_changes": {
+      "background": 0.045,
+      "middle": 0.16,
+      "near": 0.29
+    },
+    "vanishing_point": [
+      0.5,
+      0.48
+    ]
+  },
+  "decoded_stillness": {
+    "tail_mean_luma_difference": 0.0003405448717948718,
+    "tail_fraction_changing_by_over_4": 1.3911146723646723e-07,
+    "moving_control_mean_luma_difference": 3.5384234219195156,
+    "mean_luma_tolerance": 0.05
+  },
+  "inputs": {
+    "assets/artwork/v3/meadow/background.png": "e37fa75f4c99d7f594ebacde9741219654becd88c2dc6dedd4ba9da70e9be8e3",
+    "assets/artwork/v3/meadow/middle.png": "7e17f45d8c7fc23e09493423731d682b5e740a4d5db2610e27e9d975b1cc3aa8",
+    "assets/artwork/v3/meadow/near.png": "a115a62856f15704f87c5a24aec764b3a3bf702c043f516dd42910901056ac5d",
+    "assets/artwork/v3/meadow/generation.json": "295b57589ea1920df25794c77429872683b571d0becfe0c47c95f9a7a6f321db",
+    "assets/media/v3/meadow-work.wav": "84c5e20c5310575038c19c8c2820aa635ab299790c12ac1041cbf9132dc9fc3e"
+  },
+  "outputs": {
+    "assets/media/v3/meadow-entry.mp4": "f3b165524a7bb550d6337611f9159fa4043561002532c351233f0afc02a4bb04",
+    "assets/media/v3/meadow-preview.mp4": "883bf2f2bf89aeae0c66dbd0e5ffd830be160be8ad9cecb820d220cdaa28ee2d",
+    "assets/media/v3/meadow-background.png": "f730cecaff78e261144d42b04243ffea1b2f2888b862383722b5bc5a8bde482c",
+    "assets/media/v3/meadow-contact-sheet.png": "df95bb4375e8d8626a2d0d0f965e5e0f66af3edb1d4b3ff1cb7cbf4cba0d389e"
+  },
+  "preview_audio": "Same scene original v3 work soundtrack, first five seconds with preview-only end fade.",
+  "visual_review": "2.5D parallax, not full 3D photography; independent visual review tracked in harness",
+  "ffmpeg": "ffmpeg version 9.0.1 Copyright (c) 2000-2026 the FFmpeg developers",
+  "script_sha256": "aa296d4125b04b03b6a2996ee1d7102a84b09351539ce5ec3254b4489d5f6327"
+}

@@ -1,0 +1,7 @@
+{
+  "created": "2026-11-04",
+  "generator": "built-in image_gen via imagegen skill",
+  "prompts": {
+    "background": "Use case photorealistic-natural. ONE high-resolution photographic landscape, wide 3:2 canvas matching a 1920x1248 desktop scene composition. Calm first-person human eye level, fixed natural 35mm lens, level horizon. Soft natural illumination, realistic texture, moderate contrast and saturation, no HDR, no fantasy glow. A continuous believable space with a clearly visible route from bottom center toward a stopping place near x=50%, y=48%. This is a BACKGROUND PLATE for later multi-plane FFmpeg camera parallax: keep the central view open, do not include large close framing objects at the edges since these are separate layers. The image must fill every edge with scenery. No people, bodies, animals, signs, buildings, text, logos, watermarks, collage or panels. High mountain setting WITHOUT snow: blue-gray rocky peaks far away, layered misty mountain valleys, sparse mountain grass, warm gray stone, early morning soft gold light from upper LEFT. Camera is on a wide SAFE LEVEL mountain trail on gently rolling terrain, not a cliff edge. A modest broad path leads from foreground toward a grassy viewpoint looking across the valley. Distant peaks are stable landmarks, atmospheric perspective, no sheer drop at the feet, no aerial drone view."
+  }
+}

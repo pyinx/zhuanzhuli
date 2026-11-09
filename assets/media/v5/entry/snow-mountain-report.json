@@ -1,0 +1,43 @@
+{
+  "kind": "recorded-entry-verification",
+  "scene": "snow-mountain",
+  "seconds": 8.0,
+  "frames": 192,
+  "source": {
+    "title": "Snow Covered Mountain Under Blue Sky",
+    "author": "Ricky Esquivel",
+    "page": "https://www.pexels.com/video/snow-covered-mountain-under-blue-sky-2040063/",
+    "download": "https://videos.pexels.com/video-files/2040063/2040063-hd_1920_1080_24fps.mp4",
+    "source": ".cache/focus-release-v5/sources/pexels-snow-mountain.mp4",
+    "sha256": "a8cb363a01b5ac9dcaa126948bb8d0cd7c583efeac45a0db13d5c6fe5b2cc79a",
+    "bytes": 16495268,
+    "license": "Pexels License",
+    "licenseURL": "https://www.pexels.com/license/",
+    "acquired": "2026-11-06",
+    "offset_seconds": 17,
+    "processing": "8-second 1920x1248 crop; first 5s original time, next 2.5s cosine velocity easing with adjacent-frame blends, final .5s hold; supplementary 1.5% eased approach; original audio removed",
+    "review": "候选：待完整动态与第一人称感独立审查"
+  },
+  "source_ledger_sha256": "a083f32d1829a576c3fdfb62167b7875f3bd00cc44650228e25bf630f4fa0515",
+  "script_sha256": "ae81c0b761756b792cd3d780474a19cea078aa8222287c8f73d7ca80d31ad01a",
+  "motion": "real footage: first 5s original time, next 2.5s cosine velocity easing with adjacent-frame blends, final .5s hold; supplementary eased 1.5% approach",
+  "encoding": {
+    "width": 1920,
+    "height": 1248,
+    "fps": 24,
+    "codec": "h264",
+    "audio": false
+  },
+  "decoded_tail_mean_delta": 0.0003883928571428571,
+  "moving_control_difference": 30.606125,
+  "decoded_settling": {
+    "start_mean_delta": 4.493670138888889,
+    "end_mean_delta": 0.20973784722222222,
+    "ratio": 0.046674063903160076
+  },
+  "outputs": {
+    "assets/media/v5/entry/snow-mountain-entry.mp4": "89df79f607c135f61c4ee9fa1161bcfe28af4a27556e29f9f9ef52f818ffa196",
+    "assets/media/v5/entry/snow-mountain-background.png": "f49bfbdf0ca6531d56ae88dd33a408913e8649434e46db8083477fa78c7d6c34"
+  },
+  "visual_review": "逐片自然运动、人物、转场与变形另行实际审查，数值不代判"
+}

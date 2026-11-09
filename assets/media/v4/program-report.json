@@ -1,0 +1,975 @@
+{
+  "version": 1,
+  "bindings": {
+    "assets/media/v4/programs.json": "f558b7e1e9b15c34217619a98c2b9ae2fbe5824726f34e86d06463cd788b1f4c",
+    "assets/media/v4/music-sources.json": "9d1ab6e90a5b865d44388263ca946dd975b378bca49a6609b724ca31085cbbff",
+    "assets/media/v4/sources.json": "dce76dc528af007c8858f81b5459659b36709dee3fe12ac4b465093dd3cd6315",
+    "scripts/scene_programs.py": "1aa043a04d769efdc4b0cbb8b5f1719fedbca71f5df8ffbbad04d0f84ffde449",
+    "scripts/scene_music.py": "642b8be3143650d899955671f00beeb82a49815f2a41ceca9f6dee973932220a",
+    ".harness/view/background-sound-program/render-program.py": "14b71e7b5c24a906c4048b9c87ed4017cd1c0cafd8bf3c92f8f557d7b0e14b20"
+  },
+  "source_catalog": {
+    "Morning": {
+      "title": "Morning",
+      "author": "Kevin MacLeod",
+      "path": ".harness/view/background-sound-light/audio/morning.mp3",
+      "sha256": "25a18be2e8b47ee75c336d9e27ac709bf71f0409806d696ab49ea2bddc113d80",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN2300003",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Morning.mp3",
+      "original_duration_seconds": 153.31265,
+      "original_bytes": 3068475,
+      "listening_approval": "用户认可原曲"
+    },
+    "Clear Air": {
+      "title": "Clear Air",
+      "author": "Kevin MacLeod",
+      "path": ".harness/view/background-sound-light/audio/clear-air.mp3",
+      "sha256": "670811ea9df5186d89161075dd20567c420fdea1cec3f28766dda575accdec8a",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100626",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Clear%20Air.mp3",
+      "original_duration_seconds": 183.79755,
+      "original_bytes": 7355998,
+      "listening_approval": "用户认可原曲"
+    },
+    "Midnight Tale": {
+      "title": "Midnight Tale",
+      "author": "Kevin MacLeod",
+      "path": ".cache/background-sound-matching/midnight-tale.mp3",
+      "sha256": "c2862369ae8ed2ae36468bf87f5a77bfa56b9944fd8ebd9703e99a8bc7a6e863",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1900004",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Midnight%20Tale.mp3",
+      "original_duration_seconds": 161.56735,
+      "original_bytes": 6466790,
+      "listening_approval": "新增候选；完整组试听待认可"
+    },
+    "Enchanted Journey": {
+      "title": "Enchanted Journey",
+      "author": "Kevin MacLeod",
+      "path": ".cache/background-sound-matching/enchanted-journey.mp3",
+      "sha256": "9ada17171c3f3b4034ca390e3bd01bd9af0bb8625659a8e5f1fbbb8756c7f750",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100799",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Enchanted%20Journey.mp3",
+      "original_duration_seconds": 269.55755,
+      "original_bytes": 10784428,
+      "listening_approval": "新增候选；完整组试听待认可"
+    },
+    "White": {
+      "title": "White",
+      "author": "Kevin MacLeod",
+      "path": ".cache/background-sound-matching/white.mp3",
+      "sha256": "3852d5d5f431d2e2564a4e76a68f4b9bcfd4bf96997c84ce411d2a0672fb1776",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100010",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/White.mp3",
+      "original_duration_seconds": 184.6596,
+      "original_bytes": 7498598,
+      "listening_approval": "待实际试听"
+    },
+    "Fresh Air": {
+      "title": "Fresh Air",
+      "author": "Kevin MacLeod",
+      "path": ".cache/background-sound-matching/fresh-air.mp3",
+      "sha256": "528a53352595d5d37bc1eb4e738df66f0c390f833d5fd3de08ba0ab5fe317522",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500084",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Fresh%20Air.mp3",
+      "original_duration_seconds": 294.060438,
+      "original_bytes": 9412181,
+      "listening_approval": "待实际试听"
+    },
+    "A Very Brady Special": {
+      "title": "A Very Brady Special",
+      "author": "Kevin MacLeod",
+      "path": ".cache/background-sound-matching/a-very-brady-special.mp3",
+      "sha256": "5b7d3a5df96e66723d7c3a25fa3c387714e13ac6872a7106b55b72ee289a1f71",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1900060",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/A%20Very%20Brady%20Special.mp3",
+      "original_duration_seconds": 388.3102,
+      "original_bytes": 15667126,
+      "listening_approval": "待实际试听"
+    }
+  },
+  "nature_sources": {
+    "birds": {
+      "path": "birds.ogg",
+      "title": "Birds chirping in a garden",
+      "author": "Akum20",
+      "page": "https://commons.wikimedia.org/wiki/File:Birds_chirping_in_a_garden.ogg",
+      "download": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Birds_chirping_in_a_garden.ogg",
+      "license": "CC0-1.0",
+      "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sha256": "961bd9d5113e8c53814eaf21cf8d4efb0505f1c7d67ec4c85ebf651ce4e67f27",
+      "bytes": 2637897,
+      "acquired": "2026-11-04",
+      "usage": "Offline candidate only; listening approval pending."
+    },
+    "stream": {
+      "path": "stream.wav",
+      "title": "Mountain stream #1 (2754)",
+      "author": "Pierre SIBANARCO / BigSoundBank",
+      "page": "https://bigsoundbank.com/mountain-stream-1-s2754.html",
+      "download": "https://bigsoundbank.com/download.php",
+      "downloadForm": {
+        "method": "POST",
+        "id": "2754",
+        "format": "wav",
+        "note": "Follow the public download form and five-second anonymous wait; no account or fee."
+      },
+      "license": "CC0-1.0",
+      "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sha256": "439aa87570e54e2d5e19e4f56a4da6c8fe57c1dac34066dbbc62c595b8d74224",
+      "bytes": 92613330,
+      "acquired": "2026-11-04",
+      "usage": "Offline candidate only; listening approval pending."
+    }
+  },
+  "listening": "待实际听感验收；数值检查不判定柔和、正向或接缝听感",
+  "scenes": [
+    {
+      "id": "mountain",
+      "name": "高山",
+      "tracks": [
+        "A Very Brady Special",
+        "Morning",
+        "White"
+      ],
+      "reason": "以舒展钢琴展开，温暖声学乐器作过渡，低声远溪点缀。",
+      "timeline": [
+        {
+          "index": 0,
+          "start_frame": 0,
+          "decoded_frames": 17124480,
+          "end_frame": 17124480,
+          "source_coverage_frames": [
+            0,
+            17124480
+          ]
+        },
+        {
+          "index": 1,
+          "start_frame": 16595280,
+          "decoded_frames": 6761088,
+          "end_frame": 23356368,
+          "source_coverage_frames": [
+            0,
+            6761088
+          ]
+        },
+        {
+          "index": 2,
+          "start_frame": 22827168,
+          "decoded_frames": 8143488,
+          "end_frame": 30970656,
+          "source_coverage_frames": [
+            0,
+            8143488
+          ]
+        }
+      ],
+      "levels": [
+        {
+          "title": "A Very Brady Special",
+          "input_lufs": -30.4,
+          "input_peak_dbfs": -12.3,
+          "fixed_gain_db": 7.399999999999999
+        },
+        {
+          "title": "Morning",
+          "input_lufs": -18.0,
+          "input_peak_dbfs": -4.3,
+          "fixed_gain_db": -5.0
+        },
+        {
+          "title": "White",
+          "input_lufs": -22.4,
+          "input_peak_dbfs": -5.4,
+          "fixed_gain_db": -0.6000000000000014
+        }
+      ],
+      "nature_events": [
+        {
+          "source": "stream",
+          "at": 28,
+          "offset": 10,
+          "seconds": 24,
+          "rms": 0.0017616104334592822
+        },
+        {
+          "source": "stream",
+          "at": 103,
+          "offset": 38,
+          "seconds": 24,
+          "rms": 0.0017616104334592822
+        },
+        {
+          "source": "stream",
+          "at": 198,
+          "offset": 66,
+          "seconds": 24,
+          "rms": 0.0017616104334592822
+        },
+        {
+          "source": "stream",
+          "at": 261,
+          "offset": 94,
+          "seconds": 24,
+          "rms": 0.0017616104334592822
+        },
+        {
+          "source": "stream",
+          "at": 354,
+          "offset": 122,
+          "seconds": 24,
+          "rms": 0.0017616104334592822
+        },
+        {
+          "source": "stream",
+          "at": 458,
+          "offset": 150,
+          "seconds": 24,
+          "rms": 0.0017616104334592822
+        },
+        {
+          "source": "stream",
+          "at": 529,
+          "offset": 178,
+          "seconds": 24,
+          "rms": 0.0017616104334592822
+        },
+        {
+          "source": "stream",
+          "at": 625,
+          "offset": 206,
+          "seconds": 24,
+          "rms": 0.0017616104334592822
+        }
+      ],
+      "frames": 30441456,
+      "seconds": 690.2824489795919,
+      "sample_rate": 44100,
+      "lufs": -23.1,
+      "true_peak_dbfs": -4.9,
+      "checks": {
+        "longest_quiet_seconds": 0.0,
+        "duplicate_waveform_windows": [],
+        "loop_boundary_sample_step": 0.00035038962960243225
+      },
+      "source": "assets/media/v4/programs/mountain-9c8019813cea.m4a",
+      "path": "media/v4/programs/mountain-9c8019813cea.m4a",
+      "sha256": "9c8019813cea89f43397c5588e1f4f3d72dbea146d20d8ad013a2caff09b940d",
+      "bytes": 39602482
+    },
+    {
+      "id": "snow-mountain",
+      "name": "雪山",
+      "tracks": [
+        "Fresh Air",
+        "White",
+        "Enchanted Journey"
+      ],
+      "reason": "清透钢琴和竖琴，少量融雪溪水，避免风啸和冰铃。",
+      "timeline": [
+        {
+          "index": 0,
+          "start_frame": 0,
+          "decoded_frames": 12968064,
+          "end_frame": 12968064,
+          "source_coverage_frames": [
+            0,
+            12968064
+          ]
+        },
+        {
+          "index": 1,
+          "start_frame": 12438864,
+          "decoded_frames": 8143488,
+          "end_frame": 20582352,
+          "source_coverage_frames": [
+            0,
+            8143488
+          ]
+        },
+        {
+          "index": 2,
+          "start_frame": 20053152,
+          "decoded_frames": 11887488,
+          "end_frame": 31940640,
+          "source_coverage_frames": [
+            0,
+            11887488
+          ]
+        }
+      ],
+      "levels": [
+        {
+          "title": "Fresh Air",
+          "input_lufs": -15.1,
+          "input_peak_dbfs": -0.1,
+          "fixed_gain_db": -7.9
+        },
+        {
+          "title": "White",
+          "input_lufs": -22.4,
+          "input_peak_dbfs": -5.4,
+          "fixed_gain_db": -0.6000000000000014
+        },
+        {
+          "title": "Enchanted Journey",
+          "input_lufs": -18.3,
+          "input_peak_dbfs": 0.1,
+          "fixed_gain_db": -4.699999999999999
+        }
+      ],
+      "nature_events": [
+        {
+          "source": "stream",
+          "at": 42,
+          "offset": 10,
+          "seconds": 20,
+          "rms": 0.0013025906868278981
+        },
+        {
+          "source": "stream",
+          "at": 166,
+          "offset": 34,
+          "seconds": 20,
+          "rms": 0.0013025906868278981
+        },
+        {
+          "source": "stream",
+          "at": 287,
+          "offset": 58,
+          "seconds": 20,
+          "rms": 0.0013025906868278981
+        },
+        {
+          "source": "stream",
+          "at": 451,
+          "offset": 82,
+          "seconds": 20,
+          "rms": 0.0013025906868278981
+        },
+        {
+          "source": "stream",
+          "at": 637,
+          "offset": 106,
+          "seconds": 20,
+          "rms": 0.0013025906868278981
+        }
+      ],
+      "frames": 31411440,
+      "seconds": 712.2775510204082,
+      "sample_rate": 44100,
+      "lufs": -23.0,
+      "true_peak_dbfs": -4.6,
+      "checks": {
+        "longest_quiet_seconds": 1.1,
+        "duplicate_waveform_windows": [],
+        "loop_boundary_sample_step": 0.001328950747847557
+      },
+      "source": "assets/media/v4/programs/snow-mountain-87a2360154bc.m4a",
+      "path": "media/v4/programs/snow-mountain-87a2360154bc.m4a",
+      "sha256": "87a2360154bce0bb08df1a0484d0e50958f9d7d3ff35360bd9b8960197cd5077",
+      "bytes": 37647497
+    },
+    {
+      "id": "meadow",
+      "name": "草原",
+      "tracks": [
+        "Clear Air",
+        "Midnight Tale",
+        "Morning",
+        "Fresh Air"
+      ],
+      "reason": "舒展木吉他为前段主调，远鸟稀疏出现，避免持续草浪底噪。",
+      "timeline": [
+        {
+          "index": 0,
+          "start_frame": 0,
+          "decoded_frames": 8105472,
+          "end_frame": 8105472,
+          "source_coverage_frames": [
+            0,
+            8105472
+          ]
+        },
+        {
+          "index": 1,
+          "start_frame": 7576272,
+          "decoded_frames": 7125120,
+          "end_frame": 14701392,
+          "source_coverage_frames": [
+            0,
+            7125120
+          ]
+        },
+        {
+          "index": 2,
+          "start_frame": 14172192,
+          "decoded_frames": 6761088,
+          "end_frame": 20933280,
+          "source_coverage_frames": [
+            0,
+            6761088
+          ]
+        },
+        {
+          "index": 3,
+          "start_frame": 20404080,
+          "decoded_frames": 12968064,
+          "end_frame": 33372144,
+          "source_coverage_frames": [
+            0,
+            12968064
+          ]
+        }
+      ],
+      "levels": [
+        {
+          "title": "Clear Air",
+          "input_lufs": -16.8,
+          "input_peak_dbfs": -0.1,
+          "fixed_gain_db": -6.199999999999999
+        },
+        {
+          "title": "Midnight Tale",
+          "input_lufs": -17.5,
+          "input_peak_dbfs": -0.2,
+          "fixed_gain_db": -5.5
+        },
+        {
+          "title": "Morning",
+          "input_lufs": -18.0,
+          "input_peak_dbfs": -4.3,
+          "fixed_gain_db": -5.0
+        },
+        {
+          "title": "Fresh Air",
+          "input_lufs": -15.1,
+          "input_peak_dbfs": -0.1,
+          "fixed_gain_db": -7.9
+        }
+      ],
+      "nature_events": [
+        {
+          "source": "birds",
+          "at": 31,
+          "offset": 10,
+          "seconds": 18,
+          "rms": 0.0024651095084846017
+        },
+        {
+          "source": "birds",
+          "at": 122,
+          "offset": 32,
+          "seconds": 18,
+          "rms": 0.0024651095084846017
+        },
+        {
+          "source": "birds",
+          "at": 249,
+          "offset": 54,
+          "seconds": 18,
+          "rms": 0.0024651095084846017
+        },
+        {
+          "source": "birds",
+          "at": 347,
+          "offset": 76,
+          "seconds": 18,
+          "rms": 0.0024651095084846017
+        },
+        {
+          "source": "birds",
+          "at": 462,
+          "offset": 98,
+          "seconds": 18,
+          "rms": 0.0024651095084846017
+        },
+        {
+          "source": "birds",
+          "at": 583,
+          "offset": 120,
+          "seconds": 18,
+          "rms": 0.0024651095084846017
+        },
+        {
+          "source": "birds",
+          "at": 690,
+          "offset": 142,
+          "seconds": 18,
+          "rms": 0.0024651095084846017
+        }
+      ],
+      "frames": 32842944,
+      "seconds": 744.7379591836735,
+      "sample_rate": 44100,
+      "lufs": -23.1,
+      "true_peak_dbfs": -5.7,
+      "checks": {
+        "longest_quiet_seconds": 1.2,
+        "duplicate_waveform_windows": [],
+        "loop_boundary_sample_step": 0.004516082815825939
+      },
+      "source": "assets/media/v4/programs/meadow-52282896b22f.m4a",
+      "path": "media/v4/programs/meadow-52282896b22f.m4a",
+      "sha256": "52282896b22fd547130afb3bb737bcdfde7477dcdd28eeb0c16c7c9d44ffa7f3",
+      "bytes": 42218252
+    },
+    {
+      "id": "forest",
+      "name": "森林",
+      "tracks": [
+        "Morning",
+        "Clear Air",
+        "Midnight Tale",
+        "Enchanted Journey"
+      ],
+      "reason": "保留先前森林十二分钟组的曲序、固定响度和八段鸟声。",
+      "timeline": [
+        {
+          "index": 0,
+          "start_frame": 0,
+          "decoded_frames": 6761088,
+          "end_frame": 6761088,
+          "source_coverage_frames": [
+            0,
+            6761088
+          ]
+        },
+        {
+          "index": 1,
+          "start_frame": 6231888,
+          "decoded_frames": 8105472,
+          "end_frame": 14337360,
+          "source_coverage_frames": [
+            0,
+            8105472
+          ]
+        },
+        {
+          "index": 2,
+          "start_frame": 13808160,
+          "decoded_frames": 7125120,
+          "end_frame": 20933280,
+          "source_coverage_frames": [
+            0,
+            7125120
+          ]
+        },
+        {
+          "index": 3,
+          "start_frame": 20404080,
+          "decoded_frames": 11887488,
+          "end_frame": 32291568,
+          "source_coverage_frames": [
+            0,
+            11887488
+          ]
+        }
+      ],
+      "levels": [
+        {
+          "title": "Morning",
+          "input_lufs": -18.0,
+          "input_peak_dbfs": -4.3,
+          "fixed_gain_db": -5.0
+        },
+        {
+          "title": "Clear Air",
+          "input_lufs": -16.8,
+          "input_peak_dbfs": -0.1,
+          "fixed_gain_db": -6.199999999999999
+        },
+        {
+          "title": "Midnight Tale",
+          "input_lufs": -17.5,
+          "input_peak_dbfs": -0.2,
+          "fixed_gain_db": -5.5
+        },
+        {
+          "title": "Enchanted Journey",
+          "input_lufs": -18.3,
+          "input_peak_dbfs": 0.1,
+          "fixed_gain_db": -4.699999999999999
+        }
+      ],
+      "nature_events": [
+        {
+          "source": "birds",
+          "at": 25,
+          "offset": 10,
+          "seconds": 18,
+          "rms": 0.003108641356229782
+        },
+        {
+          "source": "birds",
+          "at": 113,
+          "offset": 32,
+          "seconds": 18,
+          "rms": 0.003108641356229782
+        },
+        {
+          "source": "birds",
+          "at": 206,
+          "offset": 54,
+          "seconds": 18,
+          "rms": 0.003108641356229782
+        },
+        {
+          "source": "birds",
+          "at": 302,
+          "offset": 76,
+          "seconds": 18,
+          "rms": 0.003108641356229782
+        },
+        {
+          "source": "birds",
+          "at": 409,
+          "offset": 98,
+          "seconds": 18,
+          "rms": 0.003108641356229782
+        },
+        {
+          "source": "birds",
+          "at": 497,
+          "offset": 120,
+          "seconds": 18,
+          "rms": 0.003108641356229782
+        },
+        {
+          "source": "birds",
+          "at": 590,
+          "offset": 142,
+          "seconds": 18,
+          "rms": 0.003108641356229782
+        },
+        {
+          "source": "birds",
+          "at": 681,
+          "offset": 164,
+          "seconds": 18,
+          "rms": 0.003108641356229782
+        }
+      ],
+      "frames": 31762368,
+      "seconds": 720.2351020408163,
+      "sample_rate": 44100,
+      "lufs": -23.0,
+      "true_peak_dbfs": -4.6,
+      "checks": {
+        "longest_quiet_seconds": 1.2,
+        "duplicate_waveform_windows": [],
+        "loop_boundary_sample_step": 0.001328950747847557
+      },
+      "source": "assets/media/v4/programs/forest-44cd374c705d.m4a",
+      "path": "media/v4/programs/forest-44cd374c705d.m4a",
+      "sha256": "44cd374c705d97505da77a0e95da847ad3ec537706f418bbeb9b7f1d5df372d4",
+      "bytes": 46272609
+    },
+    {
+      "id": "pond",
+      "name": "池塘",
+      "tracks": [
+        "White",
+        "Fresh Air",
+        "A Very Brady Special"
+      ],
+      "reason": "流动钢琴声部呼应水面，以低声水流片段点缀，避免突发滴水。",
+      "timeline": [
+        {
+          "index": 0,
+          "start_frame": 0,
+          "decoded_frames": 8143488,
+          "end_frame": 8143488,
+          "source_coverage_frames": [
+            0,
+            8143488
+          ]
+        },
+        {
+          "index": 1,
+          "start_frame": 7614288,
+          "decoded_frames": 12968064,
+          "end_frame": 20582352,
+          "source_coverage_frames": [
+            0,
+            12968064
+          ]
+        },
+        {
+          "index": 2,
+          "start_frame": 20053152,
+          "decoded_frames": 17124480,
+          "end_frame": 37177632,
+          "source_coverage_frames": [
+            0,
+            17124480
+          ]
+        }
+      ],
+      "levels": [
+        {
+          "title": "White",
+          "input_lufs": -22.4,
+          "input_peak_dbfs": -5.4,
+          "fixed_gain_db": -0.6000000000000014
+        },
+        {
+          "title": "Fresh Air",
+          "input_lufs": -15.1,
+          "input_peak_dbfs": -0.1,
+          "fixed_gain_db": -7.9
+        },
+        {
+          "title": "A Very Brady Special",
+          "input_lufs": -30.4,
+          "input_peak_dbfs": -12.3,
+          "fixed_gain_db": 7.399999999999999
+        }
+      ],
+      "nature_events": [
+        {
+          "source": "stream",
+          "at": 29,
+          "offset": 10,
+          "seconds": 24,
+          "rms": 0.002320847399532795
+        },
+        {
+          "source": "stream",
+          "at": 116,
+          "offset": 38,
+          "seconds": 24,
+          "rms": 0.002320847399532795
+        },
+        {
+          "source": "stream",
+          "at": 174,
+          "offset": 66,
+          "seconds": 24,
+          "rms": 0.002320847399532795
+        },
+        {
+          "source": "stream",
+          "at": 289,
+          "offset": 94,
+          "seconds": 24,
+          "rms": 0.002320847399532795
+        },
+        {
+          "source": "stream",
+          "at": 376,
+          "offset": 122,
+          "seconds": 24,
+          "rms": 0.002320847399532795
+        },
+        {
+          "source": "stream",
+          "at": 459,
+          "offset": 150,
+          "seconds": 24,
+          "rms": 0.002320847399532795
+        },
+        {
+          "source": "stream",
+          "at": 592,
+          "offset": 178,
+          "seconds": 24,
+          "rms": 0.002320847399532795
+        },
+        {
+          "source": "stream",
+          "at": 671,
+          "offset": 206,
+          "seconds": 24,
+          "rms": 0.002320847399532795
+        },
+        {
+          "source": "stream",
+          "at": 771,
+          "offset": 234,
+          "seconds": 24,
+          "rms": 0.002320847399532795
+        }
+      ],
+      "frames": 36648432,
+      "seconds": 831.0302040816326,
+      "sample_rate": 44100,
+      "lufs": -23.1,
+      "true_peak_dbfs": -4.9,
+      "checks": {
+        "longest_quiet_seconds": 0.0,
+        "duplicate_waveform_windows": [],
+        "loop_boundary_sample_step": 0.0014266297221183777
+      },
+      "source": "assets/media/v4/programs/pond-79500f82d17a.m4a",
+      "path": "media/v4/programs/pond-79500f82d17a.m4a",
+      "sha256": "79500f82d17af8b9632aad822279cd3841922b32dd607a6b6673519a6611101d",
+      "bytes": 42329345
+    },
+    {
+      "id": "garden",
+      "name": "花园",
+      "tracks": [
+        "Enchanted Journey",
+        "Morning",
+        "White",
+        "Clear Air"
+      ],
+      "reason": "竖琴开篇、温暖声学与流动钢琴接续，低声花园鸟鸣。",
+      "timeline": [
+        {
+          "index": 0,
+          "start_frame": 0,
+          "decoded_frames": 11887488,
+          "end_frame": 11887488,
+          "source_coverage_frames": [
+            0,
+            11887488
+          ]
+        },
+        {
+          "index": 1,
+          "start_frame": 11358288,
+          "decoded_frames": 6761088,
+          "end_frame": 18119376,
+          "source_coverage_frames": [
+            0,
+            6761088
+          ]
+        },
+        {
+          "index": 2,
+          "start_frame": 17590176,
+          "decoded_frames": 8143488,
+          "end_frame": 25733664,
+          "source_coverage_frames": [
+            0,
+            8143488
+          ]
+        },
+        {
+          "index": 3,
+          "start_frame": 25204464,
+          "decoded_frames": 8105472,
+          "end_frame": 33309936,
+          "source_coverage_frames": [
+            0,
+            8105472
+          ]
+        }
+      ],
+      "levels": [
+        {
+          "title": "Enchanted Journey",
+          "input_lufs": -18.3,
+          "input_peak_dbfs": 0.1,
+          "fixed_gain_db": -4.699999999999999
+        },
+        {
+          "title": "Morning",
+          "input_lufs": -18.0,
+          "input_peak_dbfs": -4.3,
+          "fixed_gain_db": -5.0
+        },
+        {
+          "title": "White",
+          "input_lufs": -22.4,
+          "input_peak_dbfs": -5.4,
+          "fixed_gain_db": -0.6000000000000014
+        },
+        {
+          "title": "Clear Air",
+          "input_lufs": -16.8,
+          "input_peak_dbfs": -0.1,
+          "fixed_gain_db": -6.199999999999999
+        }
+      ],
+      "nature_events": [
+        {
+          "source": "birds",
+          "at": 24,
+          "offset": 10,
+          "seconds": 18,
+          "rms": 0.0028196187131106854
+        },
+        {
+          "source": "birds",
+          "at": 109,
+          "offset": 32,
+          "seconds": 18,
+          "rms": 0.0028196187131106854
+        },
+        {
+          "source": "birds",
+          "at": 215,
+          "offset": 54,
+          "seconds": 18,
+          "rms": 0.0028196187131106854
+        },
+        {
+          "source": "birds",
+          "at": 276,
+          "offset": 76,
+          "seconds": 18,
+          "rms": 0.0028196187131106854
+        },
+        {
+          "source": "birds",
+          "at": 394,
+          "offset": 98,
+          "seconds": 18,
+          "rms": 0.0028196187131106854
+        },
+        {
+          "source": "birds",
+          "at": 493,
+          "offset": 120,
+          "seconds": 18,
+          "rms": 0.0028196187131106854
+        },
+        {
+          "source": "birds",
+          "at": 607,
+          "offset": 142,
+          "seconds": 18,
+          "rms": 0.0028196187131106854
+        },
+        {
+          "source": "birds",
+          "at": 683,
+          "offset": 164,
+          "seconds": 18,
+          "rms": 0.0028196187131106854
+        }
+      ],
+      "frames": 32780736,
+      "seconds": 743.3273469387755,
+      "sample_rate": 44100,
+      "lufs": -23.0,
+      "true_peak_dbfs": -4.6,
+      "checks": {
+        "longest_quiet_seconds": 1.1,
+        "duplicate_waveform_windows": [],
+        "loop_boundary_sample_step": 0.001132916659116745
+      },
+      "source": "assets/media/v4/programs/garden-ad5e25c62913.m4a",
+      "path": "media/v4/programs/garden-ad5e25c62913.m4a",
+      "sha256": "ad5e25c629136e0f22836f60f2f8637ce9e90c52b56f8bd4ccc0c0d09b2cd1b8",
+      "bytes": 46203756
+    }
+  ]
+}

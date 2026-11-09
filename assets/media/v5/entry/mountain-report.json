@@ -1,0 +1,43 @@
+{
+  "kind": "recorded-entry-verification",
+  "scene": "mountain",
+  "seconds": 8.0,
+  "frames": 192,
+  "source": {
+    "title": "Green Mountain Peak With Moving Clouds",
+    "author": "K (Kelly)",
+    "page": "https://www.pexels.com/video/green-mountain-peak-with-moving-clouds-4288016/",
+    "download": "https://videos.pexels.com/video-files/4288016/4288016-uhd_3840_2160_24fps.mp4",
+    "source": ".cache/focus-release-v5/sources/pexels-mountain.mp4",
+    "sha256": "36a74105ea0f1455e342bfc0dbc181d552e7fc4ff612ab77765582d6fad06067",
+    "bytes": 57037909,
+    "license": "Pexels License",
+    "licenseURL": "https://www.pexels.com/license/",
+    "acquired": "2026-11-06",
+    "offset_seconds": 2,
+    "processing": "8-second 1920x1248 crop; first 5s original time, next 2.5s cosine velocity easing with adjacent-frame blends, final .5s hold; supplementary 1.5% eased approach; original audio removed",
+    "review": "候选：待完整动态与第一人称感独立审查"
+  },
+  "source_ledger_sha256": "a083f32d1829a576c3fdfb62167b7875f3bd00cc44650228e25bf630f4fa0515",
+  "script_sha256": "ae81c0b761756b792cd3d780474a19cea078aa8222287c8f73d7ca80d31ad01a",
+  "motion": "real footage: first 5s original time, next 2.5s cosine velocity easing with adjacent-frame blends, final .5s hold; supplementary eased 1.5% approach",
+  "encoding": {
+    "width": 1920,
+    "height": 1248,
+    "fps": 24,
+    "codec": "h264",
+    "audio": false
+  },
+  "decoded_tail_mean_delta": 7.589285714285714e-05,
+  "moving_control_difference": 3.9125520833333334,
+  "decoded_settling": {
+    "start_mean_delta": 0.3521692708333333,
+    "end_mean_delta": 0.016281249999999997,
+    "ratio": 0.046231319278578445
+  },
+  "outputs": {
+    "assets/media/v5/entry/mountain-entry.mp4": "928fd24c7b1cc8d3c9ab697d58213c1f1160014c7ea28157d7c8eff98cf63c05",
+    "assets/media/v5/entry/mountain-background.png": "cd3bec23c70960aac803f711e4735fb1772bdbc3ed649eb5099deb9d5afa235a"
+  },
+  "visual_review": "逐片自然运动、人物、转场与变形另行实际审查，数值不代判"
+}

@@ -1,0 +1,96 @@
+{
+  "version": 1,
+  "tracks": {
+    "Morning": {
+      "title": "Morning",
+      "author": "Kevin MacLeod",
+      "path": ".harness/view/background-sound-light/audio/morning.mp3",
+      "sha256": "25a18be2e8b47ee75c336d9e27ac709bf71f0409806d696ab49ea2bddc113d80",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN2300003",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Morning.mp3",
+      "original_duration_seconds": 153.31265,
+      "original_bytes": 3068475,
+      "listening_approval": "用户认可原曲"
+    },
+    "Clear Air": {
+      "title": "Clear Air",
+      "author": "Kevin MacLeod",
+      "path": ".harness/view/background-sound-light/audio/clear-air.mp3",
+      "sha256": "670811ea9df5186d89161075dd20567c420fdea1cec3f28766dda575accdec8a",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100626",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Clear%20Air.mp3",
+      "original_duration_seconds": 183.79755,
+      "original_bytes": 7355998,
+      "listening_approval": "用户认可原曲"
+    },
+    "Midnight Tale": {
+      "title": "Midnight Tale",
+      "author": "Kevin MacLeod",
+      "path": ".cache/background-sound-matching/midnight-tale.mp3",
+      "sha256": "c2862369ae8ed2ae36468bf87f5a77bfa56b9944fd8ebd9703e99a8bc7a6e863",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1900004",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Midnight%20Tale.mp3",
+      "original_duration_seconds": 161.56735,
+      "original_bytes": 6466790,
+      "listening_approval": "新增候选；完整组试听待认可"
+    },
+    "Enchanted Journey": {
+      "title": "Enchanted Journey",
+      "author": "Kevin MacLeod",
+      "path": ".cache/background-sound-matching/enchanted-journey.mp3",
+      "sha256": "9ada17171c3f3b4034ca390e3bd01bd9af0bb8625659a8e5f1fbbb8756c7f750",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100799",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Enchanted%20Journey.mp3",
+      "original_duration_seconds": 269.55755,
+      "original_bytes": 10784428,
+      "listening_approval": "新增候选；完整组试听待认可"
+    },
+    "White": {
+      "title": "White",
+      "author": "Kevin MacLeod",
+      "path": ".cache/background-sound-matching/white.mp3",
+      "sha256": "3852d5d5f431d2e2564a4e76a68f4b9bcfd4bf96997c84ce411d2a0672fb1776",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100010",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/White.mp3",
+      "original_duration_seconds": 184.6596,
+      "original_bytes": 7498598,
+      "listening_approval": "待实际试听"
+    },
+    "Fresh Air": {
+      "title": "Fresh Air",
+      "author": "Kevin MacLeod",
+      "path": ".cache/background-sound-matching/fresh-air.mp3",
+      "sha256": "528a53352595d5d37bc1eb4e738df66f0c390f833d5fd3de08ba0ab5fe317522",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500084",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Fresh%20Air.mp3",
+      "original_duration_seconds": 294.060438,
+      "original_bytes": 9412181,
+      "listening_approval": "待实际试听"
+    },
+    "A Very Brady Special": {
+      "title": "A Very Brady Special",
+      "author": "Kevin MacLeod",
+      "path": ".cache/background-sound-matching/a-very-brady-special.mp3",
+      "sha256": "5b7d3a5df96e66723d7c3a25fa3c387714e13ac6872a7106b55b72ee289a1f71",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1900060",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/A%20Very%20Brady%20Special.mp3",
+      "original_duration_seconds": 388.3102,
+      "original_bytes": 15667126,
+      "listening_approval": "待实际试听"
+    }
+  }
+}

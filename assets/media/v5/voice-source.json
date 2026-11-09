@@ -1,0 +1,17 @@
+{
+  "model": "mlx-community/Qwen3-TTS-12Hz-1.7B-VoiceDesign-4bit",
+  "revision": "5c390979e4b93af5f2932f90742ca99c7dd04687",
+  "upstream": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+  "license": "Apache-2.0",
+  "licenseURL": "https://www.apache.org/licenses/LICENSE-2.0",
+  "text": "把注意力，轻轻放回这一件事。",
+  "instruction": "年轻成年女性，声音温暖自然，像身旁朋友轻声说一句话。自然普通话，正常偏舒缓语速，句意连贯，轻松平静而不困倦。不使用播音腔、不刻意气声、不拖长字、不夸张表演。",
+  "seed": 42,
+  "mlx_audio": "0.5.5",
+  "sample_rate": 24000,
+  "seconds": 3.36,
+  "processing": "LUFS -20 / true peak -3, ALAC; local inference, no paid API",
+  "master_sha256": "7f964fdaafb1cbbde2c107c0ede802ef42a510799b5ed3ebeedd7b4da95cd709",
+  "sha256": "7d55f5d605e9b86f09d8cbc38c50bf59f9a6c7b70233c72ba813c0f52b9e6457",
+  "listening": "待实际自然度验收"
+}

@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-04",
+  "kind": "scene-media-verification",
+  "scene": "mountain",
+  "method": "built-in imagegen plates, FFmpeg multi-plane parallax",
+  "source_image_size": [
+    1536,
+    1024
+  ],
+  "encoded_size": [
+    1920,
+    1248
+  ],
+  "source_resolution_note": "Images are resampled for the video canvas; not native 2K artwork.",
+  "seconds": 5,
+  "fps": 24,
+  "frames": 120,
+  "motion": {
+    "curve": "quintic smootherstep, t=.15 through 4.60, then hold",
+    "scale_changes": {
+      "background": 0.045,
+      "middle": 0.16,
+      "near": 0.29
+    },
+    "vanishing_point": [
+      0.5,
+      0.48
+    ]
+  },
+  "decoded_stillness": {
+    "tail_mean_luma_difference": 0.0034287498887108263,
+    "tail_fraction_changing_by_over_4": 1.3911146723646723e-07,
+    "moving_control_mean_luma_difference": 4.815967422876603,
+    "mean_luma_tolerance": 0.05
+  },
+  "inputs": {
+    "assets/artwork/v3/mountain/background.png": "5cd22bc17f342cb03b92fce22af2a26451f3a7fb86e9554786dd27baf81a683e",
+    "assets/artwork/v3/mountain/middle.png": "947ae35dbb622b97462eee783da090498adc3f372af1e14c76b59806a1a439c3",
+    "assets/artwork/v3/mountain/near.png": "2fb2af9b508d88fd14def56b3f7d94c14d34898acbc5dbd9c561e9736026cc1a",
+    "assets/artwork/v3/mountain/generation.json": "52b8cb0b3541e7d66586b86d6790100e551d06fed4563f22085756119845c6cd",
+    "assets/media/v3/mountain-work.wav": "48bb59d0ccb9657d3b68982afd51f739725676a3b301ee90dffcdc85f21286a9"
+  },
+  "outputs": {
+    "assets/media/v3/mountain-entry.mp4": "4a177d178efc97b9fb4eff8ab9207090648f3ba7432be10a092fba0cc0b7ce32",
+    "assets/media/v3/mountain-preview.mp4": "c84da123986073e8d9159ded8b6ae769ac750b266b17218ff976b6139b3a7814",
+    "assets/media/v3/mountain-background.png": "f1d8be78a0dadb76542714c9f270212a52072d904da941b1262f7b67bb496dec",
+    "assets/media/v3/mountain-contact-sheet.png": "c097a360f12a00255c4cad8963e6a17e84447d07ca4d060e6f6097e31b9cf9db"
+  },
+  "preview_audio": "Same scene original v3 work soundtrack, first five seconds with preview-only end fade.",
+  "visual_review": "2.5D parallax, not full 3D photography; independent visual review tracked in harness",
+  "ffmpeg": "ffmpeg version 9.0.1 Copyright (c) 2000-2026 the FFmpeg developers",
+  "script_sha256": "aa296d4125b04b03b6a2996ee1d7102a84b09351539ce5ec3254b4489d5f6327"
+}

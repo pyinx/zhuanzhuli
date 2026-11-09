@@ -1,0 +1,44 @@
+专注力 — 六场景背景音乐与自然录音来源
+
+以下完整音乐均为 Kevin MacLeod 创作，来自 Incompetech。
+许可：Creative Commons Attribution 4.0 International（CC BY 4.0）
+https://creativecommons.org/licenses/by/4.0/
+
+“Morning” — Kevin MacLeod
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN2300003
+
+“Clear Air” — Kevin MacLeod
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100626
+
+“Midnight Tale” — Kevin MacLeod
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1900004
+
+“Enchanted Journey” — Kevin MacLeod
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100799
+
+“White” — Kevin MacLeod
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100010
+
+“Fresh Air” — Kevin MacLeod
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500084
+
+“A Very Brady Special” — Kevin MacLeod
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1900060
+
+音乐修改：固定增益校准、整曲间及首尾十二秒等功率交叠、低声自然录音混音，
+以 Apple Lossless（ALAC）编码。无变速、变调或短片段复制延长。
+部分曲目在不同场景共享；每组曲目组合不同，组内每曲仅出现一次。
+
+Birds chirping in a garden — Akum20
+https://commons.wikimedia.org/wiki/File:Birds_chirping_in_a_garden.ogg
+CC0-1.0
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Mountain stream #1 (2754) — Pierre SIBANARCO / BigSoundBank
+https://bigsoundbank.com/mountain-stream-1-s2754.html
+CC0-1.0
+https://creativecommons.org/publicdomain/zero/1.0/
+
+自然录音修改：各组采用不同源区间摘录、带通滤波、淡入淡出和音量调整。
+溪流与鸟声是配景，不代表录制于应用图片对应地点。
+原 MP3／Vorbis 有损，ALAC 仅无损保存混音，不恢复原始录音质量。

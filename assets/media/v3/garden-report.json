@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-04",
+  "kind": "scene-media-verification",
+  "scene": "garden",
+  "method": "built-in imagegen plates, FFmpeg multi-plane parallax",
+  "source_image_size": [
+    1536,
+    1024
+  ],
+  "encoded_size": [
+    1920,
+    1248
+  ],
+  "source_resolution_note": "Images are resampled for the video canvas; not native 2K artwork.",
+  "seconds": 5,
+  "fps": 24,
+  "frames": 120,
+  "motion": {
+    "curve": "quintic smootherstep, t=.15 through 4.60, then hold",
+    "scale_changes": {
+      "background": 0.045,
+      "middle": 0.16,
+      "near": 0.29
+    },
+    "vanishing_point": [
+      0.5,
+      0.48
+    ]
+  },
+  "decoded_stillness": {
+    "tail_mean_luma_difference": 0.001127846220619658,
+    "tail_fraction_changing_by_over_4": 6.955573361823362e-07,
+    "moving_control_mean_luma_difference": 7.9259428279691955,
+    "mean_luma_tolerance": 0.05
+  },
+  "inputs": {
+    "assets/artwork/v3/garden/background.png": "62e19b19d3e50b0ec14b9c02412d3c0a3700ed2f2b3f930bb02fd19a40788035",
+    "assets/artwork/v3/garden/middle.png": "7082c5aa1f2149aae1cc1300f32fe82052dee821659c07df9cc59a44f797f683",
+    "assets/artwork/v3/garden/near.png": "0ffd4b7399bddce394874fa24ea2b3761305607165082b4b6b2798c37aa5fd9e",
+    "assets/artwork/v3/garden/generation.json": "3d6457962a4dd4a27c76ec95c4a2bc9522a7b1174d71b0501402929b48a12319",
+    "assets/media/v3/garden-work.wav": "e97fe4e148820bcec5e4fac832c38b9bf4ed2deec17f3df72d1b537f956a291e"
+  },
+  "outputs": {
+    "assets/media/v3/garden-entry.mp4": "1d46509a19b7b0eca8df98fc928eb9f05132a39583a14e7c94aeae9602fc6816",
+    "assets/media/v3/garden-preview.mp4": "e188f8addf8225bb06fbb202d5b620a31046f210653c6d64b947e10d6f158478",
+    "assets/media/v3/garden-background.png": "c6a9adc6c87f9515fac7e17703232cfabcf9082df17fb50362754171da8c55a0",
+    "assets/media/v3/garden-contact-sheet.png": "f3a510d1c98624d4bd9772dea1e509ebe1f51517e5919288a22443db5cb07440"
+  },
+  "preview_audio": "Same scene original v3 work soundtrack, first five seconds with preview-only end fade.",
+  "visual_review": "2.5D parallax, not full 3D photography; independent visual review tracked in harness",
+  "ffmpeg": "ffmpeg version 9.0.1 Copyright (c) 2000-2026 the FFmpeg developers",
+  "script_sha256": "aa296d4125b04b03b6a2996ee1d7102a84b09351539ce5ec3254b4489d5f6327"
+}

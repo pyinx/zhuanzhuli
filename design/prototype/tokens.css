@@ -1,0 +1,40 @@
+/* 设计候选 token 的唯一来源；浏览器中的窗口、材质与阴影只是示意。 */
+:root {
+  font-size:100%;
+  color-scheme: light;
+  --font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Helvetica Neue", sans-serif;
+  --font-xs: .6875rem; --font-sm: .75rem; --font-body: .8125rem; --font-md: .875rem; --font-lg: 1.0625rem; --font-title: 1.375rem; --font-clock: 2.5rem;
+  --weight-normal: 400; --weight-medium: 500; --weight-semibold: 600;
+  --s1: .25rem; --s2: .5rem; --s3: .75rem; --s4: 1rem; --s5: 1.25rem; --s6: 1.5rem; --s7: 2rem; --s8: 2.5rem;
+  --radius-control: .375rem; --radius-group: .5rem; --radius-window: .75rem;
+  --control-height: 1.75rem; --input-height: 2.375rem; --titlebar-height: 2.875rem; --menubar-height:1.875rem;
+  --canvas: #e8ece9; --window: #f6f6f6; --surface: #ffffff; --inset: #eeeeef; --toolbar: #ededed;
+  --text: #202124; --secondary: #63666b; --tertiary: #6b7076; --line: #d4d5d7; --separator: #e3e3e5;
+  --accent: #086ccc; --accent-text: #ffffff; --accent-tint: #e7f0fa;
+  --good: #287849; --good-tint: #edf5ee; --warning: #8a5a13; --warning-tint: #faf2e3; --danger: #b62c32;
+  --focus-ring: #3884d5; --material: rgba(248,248,248,.96);
+  --toolbar-material:rgba(246,246,246,.95); --desktop-wash:rgba(246,248,246,.38); --work-wash:rgba(246,248,246,.06);
+  --scrim:rgba(0,0,0,.24); --menu-hover:rgba(0,0,0,.06);
+  --scene-label-background:#19382e; --scene-label-text:#ffffff;
+  --window-shadow: 0 24px 70px rgba(0,0,0,.16),0 2px 8px rgba(0,0,0,.12),0 0 0 1px rgba(0,0,0,.12);
+  --panel-shadow: 0 12px 40px rgba(0,0,0,.18),0 0 0 1px rgba(0,0,0,.13);
+  --motion-fast: 120ms; --motion-slow: 280ms;
+  --main-width: 35rem; --settings-width: 41.25rem; --history-width: 40.625rem; --control-width: 19rem; --dialog-width:25.5rem;
+}
+@supports (color: AccentColor) { :root { --accent: AccentColor; --accent-text: AccentColorText; } }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { color-scheme: dark; --canvas:#252d2a;--window:#292a2c;--surface:#333437;--inset:#242528;--toolbar:#303133;--text:#f0f0f2;--secondary:#b6b7bc;--tertiary:#a2a6ad;--line:#54565b;--separator:#44464b;--accent-tint:#283e55;--good:#9bd5aa;--good-tint:#293e30;--warning:#ecc489;--warning-tint:#433a2b;--danger:#ff8a8f;--material:rgba(46,47,49,.97); }
+}
+:root[data-theme="dark"] { color-scheme:dark;--canvas:#252d2a;--window:#292a2c;--surface:#333437;--inset:#242528;--toolbar:#303133;--text:#f0f0f2;--secondary:#b6b7bc;--tertiary:#a2a6ad;--line:#54565b;--separator:#44464b;--accent-tint:#283e55;--good:#9bd5aa;--good-tint:#293e30;--warning:#ecc489;--warning-tint:#433a2b;--danger:#ff8a8f;--material:rgba(46,47,49,.97); }
+@media(prefers-color-scheme:dark) {
+  :root:not([data-theme="light"]) { --toolbar-material:rgba(46,47,49,.96);--desktop-wash:rgba(17,24,21,.36);--work-wash:rgba(17,24,21,.14);--scrim:rgba(0,0,0,.42);--menu-hover:rgba(255,255,255,.1); }
+}
+:root[data-theme="dark"] { --toolbar-material:rgba(46,47,49,.96);--desktop-wash:rgba(17,24,21,.36);--work-wash:rgba(17,24,21,.14);--scrim:rgba(0,0,0,.42);--menu-hover:rgba(255,255,255,.1); }
+@media(prefers-contrast:more) {
+  :root:not([data-contrast]) { --line:var(--secondary);--separator:var(--secondary);--material:var(--window);--toolbar-material:var(--toolbar); }
+}
+@media(prefers-reduced-transparency:reduce) {
+  :root:not([data-transparency]) { --material:var(--window);--toolbar-material:var(--toolbar); }
+}
+:root[data-contrast="high"] { --line:var(--secondary);--separator:var(--secondary);--material:var(--window);--toolbar-material:var(--toolbar); }
+:root[data-transparency="reduced"] { --material:var(--window);--toolbar-material:var(--toolbar); }

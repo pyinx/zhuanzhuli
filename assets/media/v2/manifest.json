@@ -1,0 +1,109 @@
+{
+  "forest": {
+    "movie": {
+      "path": "assets/media/v2/forest.mp4",
+      "sha256": "6e1df88a84b48135c99a6e5ff5cfedb9c670901df834dea9b25c173a2967352f",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1920,
+            "height": 1248,
+            "r_frame_rate": "24/1"
+          },
+          {
+            "codec_name": "aac",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "10.000000",
+          "size": "22330844"
+        }
+      }
+    },
+    "soundtrack": {
+      "path": "assets/media/v2/forest.wav",
+      "sha256": "3185a120bc0c2afb9e41dd59df7b0d571548339675d972fdc0b35f8f4971bef4",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s16le",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "10.000000",
+          "size": "1764044"
+        }
+      }
+    },
+    "model": "MiniMax-H3",
+    "resolution": "2K",
+    "timeline": {
+      "approach": [
+        0,
+        4.6
+      ],
+      "settle": [
+        4.6,
+        8.2
+      ],
+      "merge": [
+        8.2,
+        10.0
+      ],
+      "fps": 24,
+      "size": [
+        1920,
+        1248
+      ]
+    },
+    "clips": [
+      {
+        "clip": "approach",
+        "task_id": "456457471996160",
+        "prompt": "A young woman with long brown hair, wearing a sage-green pinafore dress over a cream blouse and brown ankle boots, walks slowly forward along the sunlit forest path toward the camera, growing larger in frame. Her hair and the hem of her dress sway gently with each step. Morning sunlight filters through the canopy, a few leaves drift in the breeze. The camera stays still. Calm meditative atmosphere, cinematic natural color, smooth continuous motion, photorealistic.",
+        "first_frame": "assets/artwork/v1/forest/01-distant.png",
+        "last_frame": "assets/artwork/v1/forest/02-near.png",
+        "model": "MiniMax-H3",
+        "resolution": "2K",
+        "duration": 5,
+        "ratio": "adaptive"
+      },
+      {
+        "clip": "settle",
+        "task_id": "456457888989495",
+        "prompt": "The same young woman in the sage-green pinafore dress over a cream blouse steps forward once more, then lowers herself and sits cross-legged on the sunlit forest path. She settles her hands on her knees, closes her eyes, and breathes calmly, her long brown hair resting on her shoulders. The camera stays still, the background forest does not change. Soft morning light, calm meditative atmosphere, photorealistic, smooth continuous motion.",
+        "first_frame": "assets/artwork/v1/forest/02-near.png",
+        "last_frame": "assets/artwork/v1/forest/03-seated.png",
+        "model": "MiniMax-H3",
+        "resolution": "2K",
+        "duration": 4,
+        "ratio": "adaptive"
+      }
+    ],
+    "inputs": {
+      "assets/artwork/v1/forest/00-clean.png": "6d61cd2cd639bc7180f8f1371b2db48ac96eaafcc2dbd20f531930eacc6ee063",
+      "assets/artwork/v1/forest/01-distant.png": "3775c4a9501934091b8dc49b08f35eb77ed315a34eadd266090731f1172d9321",
+      "assets/artwork/v1/forest/02-near.png": "2b3bf90ed05e58d0e8697a41db71a0c6b15e34e84908e819a021eee6a4592431",
+      "assets/artwork/v1/forest/03-seated.png": "6a58c249f80ab433dd45cab6597cba011ae90f92ae3d862ba18f357da2f0b0da",
+      "assets/artwork/v1/forest/04-dissolve.png": "a6c8200877dd1c9c861ba44871784bed1a2cbc095012ea25795fcc5ddeb8aa76",
+      "assets/media/v2/clips/forest-approach.mp4": "071d188c06c80831481d35b179046671323f98e2a3fd14cd15a37a11ebe7b327",
+      "assets/media/v2/clips/forest-settle.mp4": "628e526beb703ccd9e98565d8496e3e37f90f1d5d4a852c48251fe717e390328"
+    },
+    "scripts": {
+      "scene_animation.py": "b9f2d348225c6603f91c25417cbbcbe28aedf324ff86fb9fa90cfb06754d9726",
+      "scene_music.py": "3389b514883cf698a606a0f9f1539962962526ee0e033550dba83582e4140a8c"
+    },
+    "visual_acceptance": "pending user review; AC2/AC3 not certified"
+  }
+}
