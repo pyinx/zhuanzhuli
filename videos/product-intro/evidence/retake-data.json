@@ -1,0 +1,93 @@
+{
+  "templates": [
+    {
+      "id": "122b937b5474145f5bb9c8cde5c45a11",
+      "name": "安静写作",
+      "config": {
+        "minutes": 15,
+        "scene": "forest",
+        "apps": [
+          {
+            "id": "com.apple.TextEdit",
+            "name": "文本编辑",
+            "path": "/System/Applications/TextEdit.app"
+          }
+        ],
+        "sound": true,
+        "volume": 0.3,
+        "voice": false,
+        "entry": true,
+        "reminderSound": false,
+        "background": true,
+        "ambience": {
+          "mode": "birds",
+          "volume": 0.15
+        }
+      }
+    }
+  ],
+  "version": 3,
+  "preferences": {
+    "appearance": "light",
+    "minutes": 15,
+    "scene": "forest",
+    "apps": [
+      {
+        "id": "com.apple.TextEdit",
+        "name": "文本编辑",
+        "path": "/System/Applications/TextEdit.app"
+      }
+    ],
+    "sound": true,
+    "volume": 0.3,
+    "voice": false,
+    "entry": true,
+    "reminderSound": false,
+    "background": true,
+    "ambience": {
+      "mode": "birds",
+      "volume": 0.15
+    },
+    "focusLinked": false,
+    "focusProfile": ""
+  },
+  "history": [
+    {
+      "config": {
+        "minutes": 15,
+        "scene": "forest",
+        "apps": [
+          {
+            "id": "com.apple.TextEdit",
+            "name": "文本编辑",
+            "path": "/System/Applications/TextEdit.app"
+          }
+        ],
+        "sound": true,
+        "volume": 0.3,
+        "voice": false,
+        "entry": true,
+        "reminderSound": false,
+        "background": true,
+        "ambience": {
+          "mode": "birds",
+          "volume": 0.15
+        }
+      },
+      "templateID": "122b937b5474145f5bb9c8cde5c45a11",
+      "templateName": "安静写作",
+      "id": "1794999308944286000",
+      "goal": "写完方案第一版",
+      "minutes": 0,
+      "scene": "",
+      "started": "2026-11-18T18:55:08.944358+08:00",
+      "phase": "ended",
+      "elapsed": 128916180917,
+      "allowed": [],
+      "temporaryAllowed": [],
+      "reminder": false,
+      "partial": true,
+      "workStarted": true
+    }
+  ]
+}

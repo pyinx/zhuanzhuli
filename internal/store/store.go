@@ -20,6 +20,7 @@ type App = session.App
 type Preferences struct {
 	Appearance    string                  `json:"appearance"`
 	Immersion     bool                    `json:"immersion,omitempty"`
+	DebugLogging  bool                    `json:"debugLogging,omitempty"`
 	Minutes       int                     `json:"minutes"`
 	Scene         string                  `json:"scene"`
 	Apps          []App                   `json:"apps"`

@@ -23,21 +23,41 @@ func SameReadOnlyBundleProjection(selected, running string) bool {
 	if !filepath.IsAbs(from) || !filepath.IsAbs(on) {
 		return false
 	}
-	canonical, err := filepath.EvalSymlinks(from)
-	if err != nil || canonical != from || canonical != selected {
-		return false
-	}
-	on, err = bundlePath(on)
-	if err != nil || filepath.Join(on, "d", filepath.Base(from)) != running {
+	sourcePath, ok := projectedBundleSource(selected, running, from, on)
+	if !ok {
 		return false
 	}
 	var source, projection syscall.Stat_t
-	if syscall.Lstat(from, &source) != nil || syscall.Lstat(running, &projection) != nil {
+	if syscall.Lstat(sourcePath, &source) != nil || syscall.Lstat(running, &projection) != nil {
 		return false
 	}
 	return source.Mode&syscall.S_IFMT == syscall.S_IFDIR &&
 		projection.Mode&syscall.S_IFMT == syscall.S_IFDIR &&
 		source.Dev != projection.Dev && source.Ino == projection.Ino
+}
+
+func projectedBundleSource(selected, running, from, on string) (string, bool) {
+	canonical, err := filepath.EvalSymlinks(from)
+	if err != nil || canonical != from {
+		return "", false
+	}
+	on, err = bundlePath(on)
+	if err != nil {
+		return "", false
+	}
+	source := from
+	projection := filepath.Join(on, "d", filepath.Base(from))
+	if from != selected {
+		if from != filepath.Join(selected, "Wrapper") {
+			return "", false
+		}
+		source, err = filepath.EvalSymlinks(filepath.Join(selected, "WrappedBundle"))
+		if err != nil || filepath.Dir(source) != from || filepath.Ext(source) != ".app" {
+			return "", false
+		}
+		projection = filepath.Join(projection, filepath.Base(source))
+	}
+	return source, projection == running
 }
 
 func mountString(value []int8) string {

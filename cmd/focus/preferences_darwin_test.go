@@ -12,6 +12,31 @@ import (
 	"focus.local/zhuanzhuli/internal/store"
 )
 
+func TestFocusSettingPreservesUnrelatedTemplateDerivedDraft(t *testing.T) {
+	s, err := store.Open(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	// Selecting a template and then choosing Custom retains its values and
+	// baseline while removing the template identity.
+	seed := s.Data.Preferences.Config().IndependentAudio()
+	seed.Sound, seed.Entry = true, false
+	a := &application{store: s, controller: session.New(time.Now)}
+	a.focusDraft = &focusDraft{config: seed.Clone(), baseline: seed.Clone()}
+	if err := a.saveFocusPreference(func(p *store.Preferences) { p.Immersion = true }); err != nil {
+		t.Fatal(err)
+	}
+	if !s.Data.Preferences.Immersion || !a.focusDraft.config.Sound || a.focusDraft.config.Entry || a.focusIsDirty() {
+		t.Fatalf("immersion setting replaced independent draft defaults: %+v", a.focusDraft)
+	}
+	if err := a.saveFocusPreference(func(p *store.Preferences) { p.Voice = true }); err != nil {
+		t.Fatal(err)
+	}
+	if !s.Data.Preferences.Voice || !a.focusDraft.config.Voice || !a.focusDraft.config.Sound || a.focusDraft.config.Entry || a.focusIsDirty() {
+		t.Fatalf("new default did not reach only its inheriting field: %+v", a.focusDraft)
+	}
+}
+
 func TestFailedWorkCommitCannotCreateAWorkHistoryRecord(t *testing.T) {
 	for _, resume := range []bool{false, true} {
 		t.Run(map[bool]string{false: "entry", true: "first-resume"}[resume], func(t *testing.T) {

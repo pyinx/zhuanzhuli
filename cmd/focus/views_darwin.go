@@ -38,7 +38,9 @@ type notificationDraft struct {
 	linked  bool
 }
 type uiState struct {
-	permissionRefresh                                                                        func()
+	inlinePermissionRefresh                                                                  func(bool)
+	inlinePermissionReads                                                                    uint64 // isolated UI evidence
+	notificationPermissionLabel                                                              m.ID
 	readyProtectionCaption                                                                   m.ID
 	unknownSheet                                                                             *m.AlertSheet
 	appPicker                                                                                *mygo.Window

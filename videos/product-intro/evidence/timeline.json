@@ -1,0 +1,307 @@
+{
+  "duration": 77.0,
+  "shots": [
+    {
+      "id": "intro",
+      "duration": 4,
+      "card": "intro",
+      "subtitle": "归径，回到正在做的一件事。",
+      "at": 0,
+      "take": "first-take"
+    },
+    {
+      "id": "goal",
+      "chapter": "01 / 准备",
+      "title": "先选定\n这一件事。",
+      "body": "写下当前目标，\n为它留出一段时间。",
+      "subtitle": "写下目标，选择这次专注的时长。",
+      "source": "06-goal-apps.mov",
+      "start": 13.8,
+      "sourceDuration": 4.1,
+      "duration": 6,
+      "crop": [
+        355,
+        100,
+        1430,
+        740
+      ],
+      "at": 4,
+      "take": "first-take",
+      "sourceSHA256": "4f8eb9a74d43caaa402bdfdc589a8bfd716f3c2458fd9875465f0adda1e29780",
+      "speed": 0.6833333333333332
+    },
+    {
+      "id": "apps",
+      "chapter": "01 / 准备",
+      "title": "选好需要的\n工作工具。",
+      "body": "按应用选择，\n继续使用熟悉的工具。",
+      "subtitle": "添加这次工作需要的应用。",
+      "source": "06-goal-apps.mov",
+      "start": 24,
+      "sourceDuration": 10.2,
+      "duration": 8,
+      "crop": [
+        330,
+        110,
+        1130,
+        1150
+      ],
+      "at": 10,
+      "take": "first-take",
+      "sourceSHA256": "4f8eb9a74d43caaa402bdfdc589a8bfd716f3c2458fd9875465f0adda1e29780",
+      "speed": 1.275
+    },
+    {
+      "id": "scene",
+      "chapter": "02 / 环境",
+      "title": "让环境，\n配合你的节奏。",
+      "body": "六种自然场景，\n选一个此刻喜欢的。",
+      "subtitle": "在自然场景中，选一个喜欢的环境。",
+      "source": "02-environment.mov",
+      "start": 21,
+      "sourceDuration": 8,
+      "duration": 5,
+      "crop": [
+        350,
+        100,
+        1440,
+        1120
+      ],
+      "at": 18,
+      "take": "first-take",
+      "sourceSHA256": "dbdbe68214ff28617874b89318dc3af6a868f8cba794bcae6937842708184fec",
+      "speed": 1.6,
+      "renderedSourceSHA256": "04ca22e741e13f98aea70281dcea7f26182390bde097db04c86cd2ec7ae79ae9"
+    },
+    {
+      "id": "sound",
+      "chapter": "02 / 环境",
+      "title": "声音，\n由你来搭配。",
+      "body": "背景音乐与自然声音，\n独立选择、调整音量。",
+      "subtitle": "背景音乐、自然声音，按喜好搭配。",
+      "source": "02-environment.mov",
+      "start": 32,
+      "sourceDuration": 4.9,
+      "duration": 5,
+      "crop": [
+        390,
+        460,
+        1340,
+        590
+      ],
+      "at": 23,
+      "take": "first-take",
+      "sourceSHA256": "dbdbe68214ff28617874b89318dc3af6a868f8cba794bcae6937842708184fec",
+      "speed": 0.9800000000000001,
+      "renderedSourceSHA256": "04ca22e741e13f98aea70281dcea7f26182390bde097db04c86cd2ec7ae79ae9"
+    },
+    {
+      "id": "start",
+      "chapter": "03 / 开始",
+      "title": "开始，\n回到工作。",
+      "body": "一段自然入场，\n切换到专注的状态。",
+      "subtitle": "点击开始，让自然入场陪你进入状态。",
+      "source": "02-environment.mov",
+      "start": 76,
+      "sourceDuration": 14,
+      "duration": 10,
+      "crop": [
+        0,
+        0,
+        1800,
+        1376
+      ],
+      "at": 28,
+      "take": "first-take",
+      "sourceSHA256": "dbdbe68214ff28617874b89318dc3af6a868f8cba794bcae6937842708184fec",
+      "speed": 1.4,
+      "renderedSourceSHA256": "04ca22e741e13f98aea70281dcea7f26182390bde097db04c86cd2ec7ae79ae9"
+    },
+    {
+      "id": "work",
+      "chapter": "03 / 开始",
+      "title": "继续做，\n手边的工作。",
+      "body": "在原来的应用里，\n把这一件事往前推进。",
+      "subtitle": "继续使用熟悉的应用，推进手边的工作。",
+      "source": "03-working.mov",
+      "start": 19,
+      "sourceDuration": 7.5,
+      "duration": 6,
+      "crop": [
+        215,
+        50,
+        1080,
+        800
+      ],
+      "exposureGain": 2,
+      "at": 38,
+      "take": "first-take",
+      "sourceSHA256": "0cb83850a5621d94f7f8bc24ba17f5ab27e279d273d88109dd3074184e86d7aa",
+      "speed": 1.25
+    },
+    {
+      "id": "pause",
+      "chapter": "04 / 节奏",
+      "title": "需要时，\n就暂停一下。",
+      "body": "随时打开本次控制，\n查看计时、暂停或结束。",
+      "subtitle": "需要时，随时暂停。",
+      "source": "04-controls.mov",
+      "start": 3.3,
+      "sourceDuration": 8,
+      "duration": 5,
+      "crop": [
+        0,
+        0,
+        1800,
+        1376
+      ],
+      "at": 44,
+      "take": "first-take",
+      "sourceSHA256": "f520cbd5f45864cd38c0232a5870610be88bc8018191522ed8744015813ee8d6",
+      "speed": 1.6
+    },
+    {
+      "id": "resume-prepare",
+      "chapter": "04 / 节奏",
+      "title": "准备好，\n再继续。",
+      "body": "保留本次目标与配置，\n继续刚才的专注。",
+      "subtitle": "准备好了，就继续。",
+      "source": "04-controls.mov",
+      "start": 14.3,
+      "sourceDuration": 3,
+      "duration": 1.5,
+      "crop": [
+        0,
+        0,
+        1800,
+        1376
+      ],
+      "at": 49,
+      "take": "first-take",
+      "sourceSHA256": "f520cbd5f45864cd38c0232a5870610be88bc8018191522ed8744015813ee8d6",
+      "speed": 2.0
+    },
+    {
+      "id": "resume-active",
+      "chapter": "04 / 节奏",
+      "title": "准备好，\n再继续。",
+      "body": "保留本次目标与配置，\n继续刚才的专注。",
+      "subtitle": "准备好了，就继续。",
+      "source": "04-controls.mov",
+      "start": 36.5,
+      "sourceDuration": 2.5,
+      "duration": 2.5,
+      "crop": [
+        0,
+        0,
+        1800,
+        1376
+      ],
+      "at": 50.5,
+      "take": "first-take",
+      "sourceSHA256": "f520cbd5f45864cd38c0232a5870610be88bc8018191522ed8744015813ee8d6",
+      "speed": 1.0
+    },
+    {
+      "id": "ended",
+      "chapter": "04 / 节奏",
+      "title": "结束本轮，\n回到日常。",
+      "body": "这次真实投入的时间，\n会留在专注记录里。",
+      "subtitle": "结束本轮，记录自动留下。",
+      "source": "07-end-retake.mov",
+      "start": 65.4,
+      "sourceDuration": 6,
+      "duration": 4,
+      "crop": [
+        0,
+        0,
+        1800,
+        1376
+      ],
+      "take": "end-retake",
+      "at": 53.0,
+      "sourceSHA256": "b83ea2baaa828e10a72c3b08c759d9b33031ffce2f7358bb62a8d179bae8efc2",
+      "speed": 1.5
+    },
+    {
+      "id": "template",
+      "chapter": "05 / 复用",
+      "title": "常用配置，\n下次一键复用。",
+      "body": "保存为专注模版，\n减少下一次的准备。",
+      "subtitle": "保存常用模版，让下次开始更简单。",
+      "source": "02-environment.mov",
+      "start": 50,
+      "sourceDuration": 8,
+      "duration": 5,
+      "crop": [
+        350,
+        100,
+        1440,
+        1130
+      ],
+      "at": 57.0,
+      "take": "first-take",
+      "sourceSHA256": "dbdbe68214ff28617874b89318dc3af6a868f8cba794bcae6937842708184fec",
+      "speed": 1.6,
+      "renderedSourceSHA256": "04ca22e741e13f98aea70281dcea7f26182390bde097db04c86cd2ec7ae79ae9"
+    },
+    {
+      "id": "stats",
+      "chapter": "06 / 回看",
+      "title": "看见自己的\n真实投入。",
+      "body": "按天查看专注时长，\n回看每一段投入。",
+      "subtitle": "在统计中，看见自己的真实投入。",
+      "source": "07-end-retake.mov",
+      "start": 104,
+      "sourceDuration": 5,
+      "duration": 4,
+      "crop": [
+        0,
+        50,
+        1800,
+        950
+      ],
+      "take": "end-retake",
+      "at": 62.0,
+      "sourceSHA256": "b83ea2baaa828e10a72c3b08c759d9b33031ffce2f7358bb62a8d179bae8efc2",
+      "speed": 1.25
+    },
+    {
+      "id": "history",
+      "chapter": "06 / 回看",
+      "title": "每一段投入，\n都有迹可循。",
+      "body": "查看历史，\n也能复用之前的目标。",
+      "subtitle": "回看历史，也能复用之前的目标。",
+      "source": "08-retake-history.mov",
+      "start": 8.3,
+      "sourceDuration": 5,
+      "duration": 4,
+      "crop": [
+        0,
+        50,
+        1800,
+        1000
+      ],
+      "take": "end-retake",
+      "at": 66.0,
+      "sourceSHA256": "473fc49cbd83d069f305247fe1b53e373991a481b2d2f61249b92f2b2b8f78d7",
+      "speed": 1.25
+    },
+    {
+      "id": "outro",
+      "duration": 7,
+      "card": "outro",
+      "subtitle": "归径，为当下这一件事，留一片安静。",
+      "at": 70.0,
+      "take": "first-take"
+    }
+  ],
+  "bindings": {
+    ".harness/view/background-sound-light/audio/morning.mp3": "25a18be2e8b47ee75c336d9e27ac709bf71f0409806d696ab49ea2bddc113d80",
+    ".build/归径.app/Contents/Resources/AppIcon.icns": "f8ef991a74d8dc2642fd331fa3f4a39e3fcf513c0eeda096f8bd6658337fdae3",
+    "videos/product-intro/edit/shots.json": "ef12223f96b4d66ffedfc45669e27b32b054ccc15d7c03bee662d4ab766e18b0",
+    "videos/product-intro/edit/render.py": "feb7c01fc0cb046a22f614b9964a40167fa73687feda915f7195bbd145274043"
+  },
+  "sequenceNote": "多次真实演示剪辑，不是一次无剪辑会话；结束、统计和历史来自同一次结束动作补录，第一轮的准备、工作与暂停继续片段保留实际时间。",
+  "storedSourceNote": "02-environment.mov 为存储用途高质量重编码；sourceSHA256 核对当前存储版本，renderedSourceSHA256 保留原片生成主片时的来源。编码前后记录见 recordings/02-environment.json，77 秒主片未重渲染。"
+}

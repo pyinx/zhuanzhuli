@@ -48,7 +48,7 @@ type featureState struct {
 	settingsSections                                                                              [2]m.ID
 	settingsTabs                                                                                  m.ID
 	focusEffectsForm                                                                              *configForm
-	focusEffectsDirty                                                                             bool
+	refreshFocusSettings                                                                          func()
 	report                                                                                        focusReport
 	templateDurationOwner                                                                         *store.Template
 	templateDuration                                                                              durationEdit
@@ -404,13 +404,15 @@ func (a *application) auditionConfig(c session.Config, notice m.ID) {
 	a.scheduleAuditionStop()
 	showMessage(notice, "正在试听 5 秒，再次点击可停止。")
 }
-func (a *application) validateFocusConfig(c session.Config) error {
+func (a *application) validateFocusConfig(c session.Config, checkAppPaths bool) error {
 	if err := c.Validate(true); err != nil {
 		return err
 	}
-	for _, v := range c.Apps {
-		if app, err := m.AppAt(v.Path); err != nil || app.ID != v.ID {
-			return fmt.Errorf("无法确认 %s 的应用位置，请更新位置或移除后重试", v.Name)
+	if checkAppPaths {
+		for _, v := range c.Apps {
+			if app, err := m.AppAt(v.Path); err != nil || app.ID != v.ID {
+				return fmt.Errorf("无法确认 %s 的应用位置，请更新位置或移除后重试", v.Name)
+			}
 		}
 	}
 	if _, ok := a.catalog.Scene(c.Scene); !ok {
@@ -453,7 +455,6 @@ func (a *application) showConfigurationDetails(title string, build func(m.ID)) {
 		m.UnbindTree(root)
 		if a.detail == w {
 			a.detail = nil
-			a.permissionRefresh = nil
 		}
 		a.refreshNavigation()
 	})
@@ -466,72 +467,39 @@ func (a *application) showConfigurationDetails(title string, build func(m.ID)) {
 }
 
 func (a *application) refreshImmersionPermission() {
-	if a.detail != nil && a.permissionRefresh != nil {
-		a.permissionRefresh()
+	if a.mainPage == pageSettings && a.main != nil && a.main.IsVisible() {
+		if a.settingsSection == 0 && a.inlinePermissionRefresh != nil {
+			a.inlinePermissionRefresh(false)
+		} else if a.settingsSection == 1 {
+			a.refreshNotificationPermission()
+		}
 	}
 }
 
-func (a *application) immersionPermissionView(r m.ID, proceedTitle string, proceed, ordinary func()) {
-	titleText(r, "辅助功能权限", 20)
-	if a.controller.Snapshot().Phase == "paused" {
-		bodyText(r, "从系统设置返回会自动检查，计时保持暂停，直到你点恢复。", 13, true)
-	} else {
-		bodyText(r, "沉浸模式使用此权限整理工作窗口。从系统设置返回会自动检查，不会开始计时。", 13, true)
+func immersionPermissionStatus(err error) (text, color string) {
+	switch {
+	case err == nil:
+		return "正在运行的归径已获辅助功能权限。", "systemGreenColor"
+	case errors.Is(err, errImmersionPermission):
+		return "正在运行的归径未获辅助功能权限。", "systemRedColor"
+	default:
+		return "系统的辅助功能查询组件未能返回状态，无法判断是否已授权。请重新检查。", "labelColor"
 	}
-	status := bodyText(r, "", 14, false)
-	m.Send(status, "setAccessibilityLabel:", m.NS("辅助功能检查结果"))
-	path := m.CurrentApplicationPath()
-	location := "无法读取当前应用位置。请从「应用程序」打开归径。"
-	if path != "" {
-		location = "当前运行位置：" + path
-	}
-	label := bodyText(r, location, 12, true)
-	m.Send(label, "setSelectable:", true)
-	help := bodyText(r, "系统开关已开但仍提示未授权？移除旧的「归径」条目，再添加这里显示的副本并开启。", 12, true)
-	links := row(r, 8)
-	action(links, "打开辅助功能权限…", m.OpenAccessibilitySettings)
-	if path != "" {
-		action(links, "在 Finder 中显示", m.RevealCurrentApplication)
-	}
-	action(links, "重新检查权限", a.refreshImmersionPermission)
-	m.Flex(links)
+}
 
-	onChoice := func(fn func()) func() {
-		return func() {
-			if a.busy || a.detail == nil {
-				return
-			}
-			a.detail.Close()
-			fn()
-		}
-	}
-	var next m.ID
-	if proceed != nil {
-		buttons := row(r, 8)
-		next = action(buttons, proceedTitle, onChoice(proceed))
-		m.Primary(next)
-		if ordinary != nil {
-			action(buttons, "本次改用普通专注", onChoice(ordinary))
-		}
-		m.Flex(buttons)
-	}
-	a.permissionRefresh = func() {
+func (a *application) immersionPermissionCheck(initialErr error, update func(error)) func(bool) {
+	lastReadFailed := errors.Is(initialErr, errImmersionPermissionCheck)
+	return func(explicit bool) {
 		err := a.checkImmersionAccess()
-		switch {
-		case err == nil:
-			m.Text(status, "正在运行的归径已获辅助功能权限。")
-		case errors.Is(err, errImmersionPermission):
-			m.Text(status, "正在运行的归径未获辅助功能权限。")
-		default:
-			m.Text(status, "系统的辅助功能查询组件未能返回状态，无法判断是否已授权。请重新检查。")
+		readFailed := errors.Is(err, errImmersionPermissionCheck)
+		if readFailed && (explicit || !lastReadFailed) {
+			a.debugEvent(debugAccessFailed, a.debugAttempt, "", 0)
 		}
-		m.Hidden(help, !errors.Is(err, errImmersionPermission))
-		if next != 0 {
-			m.Enabled(next, err == nil)
-		}
+		lastReadFailed = readFailed
+		update(err)
 	}
-	a.refreshImmersionPermission()
 }
+
 func (a *application) mediaFailureControls(root m.ID) (m.ID, m.ID) {
 	return a.mediaFailureControlsFor(root, func() string { return a.effectiveConfig().Scene })
 }

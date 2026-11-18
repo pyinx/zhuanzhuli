@@ -40,6 +40,11 @@ func (a *application) selectSettingsSection(i int) {
 			m.Hidden(pane, j != i)
 		}
 	}
+	if i == 0 && a.refreshFocusSettings != nil {
+		a.refreshFocusSettings()
+	} else if i == 1 {
+		a.refreshNotificationPermission()
+	}
 }
 func (a *application) rememberNotificationDraft() {
 	if a.profileField != 0 && a.notificationDraft != nil {
@@ -92,6 +97,8 @@ func (a *application) renderSettings() {
 	bodyText(r, "仅改变"+appDisplayName+"的界面，选择会自动保存。", 12, true)
 	m.Gap(r, 16)
 	a.settingsNotifications(r)
+	m.Gap(r, 16)
+	a.buildDebugSettings(r)
 	a.settingsNotice = a.notificationSaveNotice
 	a.settingsNotices[2] = a.settingsNotice
 	a.settingsErrors[2] = a.settingsErrorKey()
@@ -104,56 +111,118 @@ func copyFocusEffects(dst *session.Config, source session.Config) {
 	dst.Entry, dst.Voice, dst.ReminderSound = source.Entry, source.Voice, source.ReminderSound
 }
 
-func (a *application) buildFocusSettings(root m.ID) {
-	scroll, content := m.ScrollStack(root)
-	m.Edges(scroll, root, 0)
-	titleText(content, "专注设置", 22)
-	bodyText(content, "沉浸模式用于下次专注。声音与入场是自定义专注的默认值，已保存模版沿用各自的配置。", 12, true)
-	cfg := a.store.Data.Preferences.Config().IndependentAudio()
-	f := &configForm{
-		get:     func() *session.Config { return &cfg },
-		changed: func() { a.focusEffectsDirty = true; a.quitDiscarded = false },
+func useFocusDefault[T comparable](value, baseline *T, previous, next T) {
+	if previous == next {
+		return
 	}
+	if *value == *baseline && *baseline == previous {
+		*value = next
+	}
+	if *baseline == previous {
+		*baseline = next
+	}
+}
+
+func (a *application) saveFocusPreference(change func(*store.Preferences)) error {
+	previous := a.store.Data.Preferences
+	next := previous
+	change(&next)
+	if err := a.store.SetPreferences(next); err != nil {
+		return err
+	}
+	if d := a.focusDraft; d != nil && d.sourceID == "" {
+		d.config, d.baseline = d.config.IndependentAudio(), d.baseline.IndependentAudio()
+		old, c := previous.Config().IndependentAudio(), a.store.Data.Preferences.Config()
+		useFocusDefault(&d.config.Sound, &d.baseline.Sound, old.Sound, c.Sound)
+		useFocusDefault(&d.config.Volume, &d.baseline.Volume, old.Volume, c.Volume)
+		useFocusDefault(&d.config.Ambience.Mode, &d.baseline.Ambience.Mode, old.Ambience.Mode, c.Ambience.Mode)
+		useFocusDefault(&d.config.Ambience.Volume, &d.baseline.Ambience.Volume, old.Ambience.Volume, c.Ambience.Volume)
+		useFocusDefault(&d.config.Entry, &d.baseline.Entry, old.Entry, c.Entry)
+		useFocusDefault(&d.config.Voice, &d.baseline.Voice, old.Voice, c.Voice)
+		useFocusDefault(&d.config.ReminderSound, &d.baseline.ReminderSound, old.ReminderSound, c.ReminderSound)
+	}
+	a.refreshReadySummary()
+	a.refreshTrayTitle(trayTitle(a.controller.Snapshot()))
+	return nil
+}
+
+func (a *application) buildFocusSettings(root m.ID) {
+	content, footer, _ := contentFooter(root)
+	titleText(content, "专注设置", 22)
+	bodyText(content, "更改后自动保存。沉浸模式用于下次专注；声音、入场和提醒是自定义专注的默认值。", 12, true)
+	feedback := message(footer)
+	cfg := a.store.Data.Preferences.Config().IndependentAudio()
+	var syncEffects func()
+	save := func(change func(*store.Preferences)) bool {
+		if err := a.saveFocusPreference(change); err != nil {
+			showMessage(feedback, preferenceSaveError)
+			return false
+		}
+		showMessage(feedback, "")
+		return true
+	}
+	f := &configForm{get: func() *session.Config { return &cfg }}
+	f.notice = message(footer)
 	a.focusEffectsForm = f
 	immersion := row(content, 12)
 	titleText(immersion, "沉浸模式", 15)
 	m.Flex(immersion)
-	immersive := a.store.Data.Preferences.Immersion
-	toggle := m.Switch(immersion, "沉浸模式", immersive, func(on bool) {
-		immersive = on
-		f.changed()
+	var toggle m.ID
+	toggle = m.Switch(immersion, "沉浸模式", a.store.Data.Preferences.Immersion, func(on bool) {
+		saved := save(func(p *store.Preferences) { p.Immersion = on })
+		if !saved {
+			m.SetChecked(toggle, a.store.Data.Preferences.Immersion)
+		}
+		a.inlinePermissionRefresh(saved && on)
 	})
 	m.Arrange(immersion, toggle, false)
-	bodyText(content, "将选中的工作窗口分别切入原生全屏。需要辅助功能权限；其他应用的通知仍按系统设置显示。", 12, true)
-	action(content, "检查辅助功能权限…", func() {
-		a.showConfigurationDetails("沉浸模式权限", func(r m.ID) {
-			a.immersionPermissionView(r, "", nil, nil)
-		})
-	})
+	bodyText(content, "有辅助功能权限时，尽力将选中的工作窗口切入原生全屏。全屏失败仍照常计时；通知按系统设置显示。", 12, true)
+	a.buildInlineImmersionPermission(content)
 	m.Gap(content, 6)
-	a.buildFocusEffects(content, f, true)
-	f.notice = message(content)
-	feedback := message(content)
-	save := action(content, "保存专注设置", func() {
-		next := a.store.Data.Preferences
-		next.Immersion = immersive
-		current := next.Config()
-		copyFocusEffects(&current, cfg)
-		next.SetConfig(current)
-		if err := a.store.SetPreferences(next); err != nil {
-			showMessage(feedback, preferenceSaveError)
-			return
-		}
-		if a.focusDraft != nil && a.focusDraft.sourceID == "" {
-			copyFocusEffects(&a.focusDraft.config, cfg)
-			copyFocusEffects(&a.focusDraft.baseline, cfg)
-			a.refreshConfigurationDirty()
-		}
-		a.focusEffectsDirty = false
-		a.refreshReadySummary()
-		showMessage(feedback, "已保存；沉浸模式用于下一次专注。")
+	syncEffects = a.buildFocusEffects(content, f, func(change func(*session.Config)) {
+		save(func(p *store.Preferences) {
+			current := p.Config().IndependentAudio()
+			change(&current)
+			p.SetConfig(current)
+		})
+		cfg = a.store.Data.Preferences.Config().IndependentAudio()
+		syncEffects()
 	})
-	m.Primary(save)
+	a.refreshFocusSettings = func() {
+		cfg = a.store.Data.Preferences.Config().IndependentAudio()
+		m.SetChecked(toggle, a.store.Data.Preferences.Immersion)
+		syncEffects()
+		a.inlinePermissionRefresh(false)
+	}
+}
+
+func (a *application) buildInlineImmersionPermission(root m.ID) {
+	group, content := m.GroupStack(root, 8)
+	m.Arrange(root, group, true)
+	status := bodyText(content, "", 14, false)
+	m.Send(status, "setAccessibilityLabel:", m.NS("沉浸模式辅助功能权限"))
+	help := bodyText(content, "未授权时仍可开始或恢复专注，只跳过全屏。若刚从临时签名的旧版升级，可能需要在系统设置为当前版本重新授权一次。", 12, true)
+	m.Send(help, "setAccessibilityLabel:", m.NS("沉浸模式重新授权提示"))
+	check := a.immersionPermissionCheck(nil, func(err error) {
+		text, color := immersionPermissionStatus(err)
+		m.Text(status, text)
+		m.Send(status, "setTextColor:", m.Send(m.Class("NSColor"), color))
+		m.Hidden(help, !errors.Is(err, errImmersionPermission))
+	})
+	a.inlinePermissionRefresh = func(explicit bool) {
+		on := a.store.Data.Preferences.Immersion
+		m.Hidden(group, !on)
+		if on {
+			check(explicit)
+			if a.fixtureRoot != "" {
+				a.inlinePermissionReads++
+			}
+		}
+	}
+	buttons := row(content, 8)
+	action(buttons, "打开辅助功能权限…", m.OpenAccessibilitySettings)
+	action(buttons, "重新检查权限", func() { a.inlinePermissionRefresh(true) })
+	m.Flex(buttons)
 }
 func (a *application) setAppearance(value string) {
 	old := a.store.Data.Preferences.Appearance
@@ -185,17 +254,6 @@ func (a *application) settingsErrorKey() string {
 }
 func (a *application) preparationFailureView(r m.ID) {
 	if a.protectionFailure == nil || a.controller.Snapshot().Phase != "paused" {
-		return
-	}
-	if immersionPermissionIssue(a.protectionFailure) {
-		a.immersionPermissionView(r, "恢复沉浸专注", func() {
-			a.acceptLimitedApps = false
-			a.resumeWithConsent()
-		}, a.resumeOrdinaryFocus)
-		action(r, "结束本次", func() {
-			a.detail.Close()
-			a.end()
-		})
 		return
 	}
 	box, g := m.GroupStack(r, 8)
@@ -332,17 +390,8 @@ func (a *application) settingsNotifications(r m.ID) {
 	m.Arrange(r, box, true)
 	titleText(state, "当前状态", 13)
 	a.notificationStatuses[0] = bodyText(state, a.notificationCaption(), 13, false)
-	permission := bodyText(state, "", 12, true)
-	m.Send(permission, "setAccessibilityLabel:", m.NS("当前版本辅助功能权限"))
-	checkPermission := func() {
-		trusted, err := m.FocusAccess()
-		m.Text(permission, notificationPermissionCaption(trusted, err))
-	}
-	checkPermission()
-	links := row(state, 10)
-	action(links, "辅助功能权限…", m.OpenAccessibilitySettings)
-	action(links, "重新检查权限", checkPermission)
-	m.Flex(links)
+	a.notificationPermissionLabel = bodyText(state, "", 12, true)
+	m.Send(a.notificationPermissionLabel, "setAccessibilityLabel:", m.NS("当前版本辅助功能权限"))
 	p := a.store.Data.Preferences
 	if a.notificationDraft == nil {
 		a.notificationDraft = &notificationDraft{p.FocusProfile, p.FocusLinked}
@@ -367,6 +416,12 @@ func (a *application) settingsNotifications(r m.ID) {
 	m.Primary(save)
 	a.draftChanged()
 	bodyText(r, "仅覆盖系统 Focus 可控制的标准通知。关键警报、部分系统／来电及自绘提醒除外；联动需要辅助功能权限。", 12, true)
+}
+func (a *application) refreshNotificationPermission() {
+	if a.notificationPermissionLabel != 0 {
+		trusted, err := m.FocusAccess()
+		m.Text(a.notificationPermissionLabel, notificationPermissionCaption(trusted, err))
+	}
 }
 func (a *application) saveNotificationDraft() {
 	a.rememberNotificationDraft()
@@ -394,4 +449,5 @@ func (a *application) resetSettingsReferences() {
 	a.draftNotice = 0
 	a.notificationSaveNotice = 0
 	a.notificationStatuses = [2]m.ID{}
+	a.notificationPermissionLabel = 0
 }

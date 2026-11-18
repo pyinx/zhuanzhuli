@@ -78,10 +78,6 @@ func (a *application) openChoice() {
 		})
 	})
 	a.choiceButtons = []m.ID{back, join}
-	if a.controller.Snapshot().Immersion {
-		m.Hidden(join, true)
-		a.choiceButtons = []m.ID{back}
-	}
 	rowAction(buttons, "结束专注", a.end)
 	m.Primary(back)
 	bodyText(r, "关闭此窗可稍后决定，专注仍在继续。", 12, true)

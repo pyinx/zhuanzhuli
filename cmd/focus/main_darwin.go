@@ -20,6 +20,8 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"runtime"
+	"slices"
 	"strings"
 	"syscall"
 	"time"
@@ -31,6 +33,8 @@ type application struct {
 	store                                         *store.Store
 	controller                                    *session.Controller
 	journal                                       *journal.Journal
+	debug                                         *debugRecorder
+	debugAttempt                                  string // main thread; copied into environment operations
 	immersionJournal                              *journal.Journal
 	fullscreenLeases                              map[journal.Ref]*m.FullscreenWindow // serial effect worker only
 	dir, resources                                string
@@ -70,6 +74,7 @@ type application struct {
 	countdownOverlay                              m.CounterOverlay
 	entryError                                    string
 	tray                                          *mygo.Tray
+	trayMenuVisible                               bool
 	notice                                        Notice
 	undo                                          []deleted
 	stop                                          chan struct{}
@@ -117,6 +122,8 @@ func main() {
 	notificationCheck := flag.Bool("notification-check", false, "audit existing notification linkage permission without requesting it or switching system Focus")
 	panelCloseProbe := flag.Bool("panel-close-probe", false, "read-only owned-panel Escape candidate; requires notification-check and an explicit empty data directory")
 	fixtureCheck := flag.String("fixture-check", "", "diagnose app effects against only two explicitly identified local fixtures")
+	fixtureImmersion := flag.Bool("fixture-immersion", false, "exercise native fullscreen against the two fixture-check apps")
+	fixtureOutsideJoin := flag.Bool("fixture-outside-join", false, "exercise the immersive outside-app choice with the owned fixtures")
 	fixtureUI := flag.String("fixture-ui", "", "interactive acceptance with effects restricted to two local fixtures; requires --data-dir")
 	fixtureAppearance := flag.String("fixture-appearance", "", "isolated fixture UI only: light or dark; does not change system settings")
 	flag.Parse()
@@ -146,6 +153,12 @@ func main() {
 	}
 	if *fixtureAppearance != "" && (*fixtureUI == "" || (*fixtureAppearance != "light" && *fixtureAppearance != "dark")) {
 		startupError("fixture appearance requires --fixture-ui and light or dark", true)
+	}
+	if *fixtureImmersion && (*fixtureCheck == "" || *check || *nativeCheck || *notificationCheck || *downgradeJournal) {
+		startupError("fixture-immersion requires an isolated fixture-check", true)
+	}
+	if *fixtureOutsideJoin && (*fixtureCheck == "" || *fixtureImmersion || *check || *nativeCheck || *notificationCheck || *downgradeJournal) {
+		startupError("fixture-outside-join requires an isolated fixture-check without other checks", true)
 	}
 	if *fixtureUI != "" {
 		if !explicitDataDir || *fixtureCheck != "" {
@@ -214,6 +227,8 @@ func main() {
 		startupError("环境恢复记录无法读取，已保留原文件，未启动新的专注。", *check || *nativeCheck)
 	}
 	a := &application{store: s, journal: j, dir: *dir, resources: resources, controller: session.New(time.Now), expected: map[int]bool{}, stop: make(chan struct{})}
+	a.debug = &debugRecorder{dir: *dir, enabled: s.Data.Preferences.DebugLogging}
+	a.debugEvent(debugAppStarted, "", "", 0)
 	a.immersionJournal, e = journal.Open(filepath.Join(*dir, "fullscreen.json"))
 	if e != nil {
 		startupError("全屏恢复记录无法读取，已保留原文件："+e.Error(), *check || *nativeCheck)
@@ -324,8 +339,9 @@ func main() {
 			}
 			// Geometry and empty-state checks do not require keyboard ownership.
 			// Preserve their results even when the separate activation check fails.
-			uiChecks := map[string]any{"buildID": buildID}
+			uiChecks := map[string]any{"buildID": buildID, "goarch": runtime.GOARCH}
 			a.nativeImmersionPermissionChecks(uiChecks)
+			a.nativeSettingsChecks(uiChecks)
 			a.openMain()
 			// Match the real user precondition before testing explicit keyboard
 			// focus. LaunchServices activation completes after WhenReady returns.
@@ -375,7 +391,7 @@ func main() {
 			return
 		}
 		if *fixtureCheck != "" {
-			go a.fixtureCheck()
+			go a.fixtureCheck(*fixtureImmersion, *fixtureOutsideJoin)
 			return
 		}
 		mygo.Power.OnSuspend(func() { a.pauseForSystem("系统睡眠，已自动暂停") })
@@ -653,11 +669,6 @@ func (a *application) protect() error {
 	return a.protectPlan(plan)
 }
 func (a *application) protectPlan(plan *protectionPlan) error {
-	if plan.immersion {
-		if err := a.checkImmersionAccess(); err != nil {
-			return protectionIssue("沉浸模式", "", err)
-		}
-	}
 	if err := a.ignoreEnvironment(); err != nil {
 		return protectionIssue("存储", "", err)
 	}
@@ -671,6 +682,9 @@ func (a *application) protectPlan(plan *protectionPlan) error {
 		for _, leaf := range protectionLeaves(listErr) {
 			key := ""
 			if item, ok := leaf.(*m.AppIdentityError); ok {
+				if plan.immersion && slices.Contains(allowed, item.BundleID) {
+					continue // Its window identity is handled by immersive handoff.
+				}
 				key = item.Key()
 			}
 			errs = append(errs, protectionIssue("应用限制", key, leaf))
@@ -900,20 +914,21 @@ func (a *application) startConfiguredMode(goal string, p session.Config, sourceI
 		return false
 	}
 	a.stopAudition()
+	a.debugAttempt = newDebugAttempt()
+	attempt := a.debugAttempt
+	startCode := debugStart
+	if immersion {
+		startCode = debugImmersionStart
+	}
+	a.debugEvent(startCode, attempt, "", 0)
 	if len(a.catalog.Scenes) == 0 {
+		a.debugEvent(debugStartFailed, attempt, "", 0)
 		a.fail(noticeInfo, "应用资源不完整，暂时无法开始。请重新安装应用后重试。", nil)
 		return false
 	}
-	if err := a.validateFocusConfig(p); err != nil {
+	if err := a.validateFocusConfig(p, !immersion); err != nil {
+		a.debugEvent(debugStartFailed, attempt, "", 0)
 		a.fail(noticeInfo, err.Error(), nil)
-		return false
-	}
-	if immersion && a.checkImmersionAccess() != nil {
-		a.showConfigurationDetails("沉浸模式权限", func(r m.ID) {
-			a.immersionPermissionView(r, "开始沉浸专注",
-				func() { a.startConfiguredMode(goal, p, sourceID, sourceName, true) },
-				func() { a.startConfiguredMode(goal, p, sourceID, sourceName, false) })
-		})
 		return false
 	}
 	a.ensureMain()
@@ -924,6 +939,7 @@ func (a *application) startConfiguredMode(goal string, p session.Config, sourceI
 	a.startDisplay = m.CaptureDisplay(handle)
 	e := a.controller.Start(session.State{ID: fmt.Sprint(time.Now().UnixNano()), Goal: goal, Config: &p, TemplateID: sourceID, TemplateName: sourceName, Partial: true, Immersion: immersion})
 	if e != nil {
+		a.debugEvent(debugStartFailed, attempt, "", 0)
 		a.fail(noticeInfo, e.Error(), nil)
 		return false
 	}
@@ -932,6 +948,7 @@ func (a *application) startConfiguredMode(goal string, p session.Config, sourceI
 	copyFocusEffects(&lastUsed, last.Config())
 	last.SetConfig(lastUsed)
 	if err := a.store.SetPreferences(last); err != nil {
+		a.debugEvent(debugStartFailed, attempt, "", 0)
 		a.controller.Pause()
 		a.fail(noticeStorage, preferenceSaveError, err)
 		return false
@@ -945,6 +962,7 @@ func (a *application) startConfiguredMode(goal string, p session.Config, sourceI
 	a.acceptLimitedApps = false
 	a.limitedAppConsent = nil
 	if !a.persist() {
+		a.debugEvent(debugStartFailed, attempt, "", 0)
 		return false
 	}
 	a.beginCountdown(a.prepareEntry)
@@ -969,6 +987,7 @@ func (a *application) prepareEntry() {
 			return
 		}
 		if e != nil || a.controller.Snapshot().Phase != "entry" {
+			a.debugEvent(debugPrepareFailed, plan.debugAttempt, "", 0)
 			a.protectionStopped(e)
 			return
 		}
@@ -1108,19 +1127,23 @@ func (a *application) enter() {
 	a.handoffPreparedWork(false, nil, a.controller.Snapshot().AllowedIDs())
 }
 
-// A successful handoff is the work-entry commit point. Neither environment
-// preparation nor launching/waiting for the work app advances the session clock.
+// The completed handoff attempt is the work-entry commit point. Ordinary
+// focus requires a successful handoff; immersive window preparation is optional.
 func (a *application) handoffPreparedWork(resume bool, defaults, allowed []string) {
 	before := a.controller.Snapshot()
+	attempt := a.debugAttempt
 	generation := a.protectionGeneration
 	valid := func() bool {
 		s := a.controller.Snapshot()
 		return !a.quitting && s.ID == before.ID && s.Phase == before.Phase && generation == a.protectionGeneration
 	}
 	a.notice = Notice{noticeHandoffProgress, "正在返回专注应用，计时尚未开始…"}
+	var immersion immersionOutcome
 	a.effect(func() error {
 		if before.Immersion {
-			return a.enterImmersiveWork(before, valid)
+			var err error
+			immersion, err = a.enterImmersiveWork(before, valid, attempt)
+			return err
 		}
 		return a.returnToWorkFor(allowed, valid)
 	}, func(err error) {
@@ -1129,10 +1152,14 @@ func (a *application) handoffPreparedWork(resume bool, defaults, allowed []strin
 			return
 		}
 		if err != nil {
+			if !before.Immersion {
+				a.debugEvent(debugHandoffFailed, attempt, "", 0)
+			}
 			a.protectionStopped(protectionIssue("工作交接", "", err))
 			return
 		}
 		if err = a.controller.CommitWork(resume, defaults, a.store.Checkpoint); err != nil {
+			a.debugEvent(debugStartFailed, attempt, "", 0)
 			a.stopEnvironment()
 			a.protectionFailure = protectionIssue("存储", "", err)
 			a.fail(noticeStorage, "无法保存工作开始状态，计时保持暂停。请检查磁盘后重试。", err)
@@ -1144,9 +1171,15 @@ func (a *application) handoffPreparedWork(resume bool, defaults, allowed []strin
 		if resume {
 			a.reminderUntil = time.Time{}
 		}
+		a.debugEvent(debugWorkStarted, attempt, "", 0)
 		a.notice = Notice{}
 		if a.protectionFailure != nil {
 			a.notice = Notice{noticeProtection, "当前按已确认的应用边界继续，系统通知仍可能出现。"}
+		}
+		if before.Immersion {
+			if caption := immersion.caption(); caption != "" {
+				a.notice = Notice{noticeInfo, strings.TrimSpace(a.notice.Text + " " + caption)}
+			}
 		}
 		a.backgroundsOn()
 		a.environmentSound()
@@ -1155,10 +1188,12 @@ func (a *application) handoffPreparedWork(resume bool, defaults, allowed []strin
 			if a.goal != 0 && strings.TrimSpace(m.Value(a.goal)) == before.Goal {
 				m.Text(a.goal, "")
 			}
-			a.main.Hide()
+			if !before.Immersion || immersion.handedOff {
+				a.main.Hide()
+			}
 		}
 		a.closeEntryPresentation()
-		if a.control != nil {
+		if a.control != nil && (!before.Immersion || immersion.handedOff) {
 			a.control.Hide()
 		}
 	})
@@ -1427,6 +1462,7 @@ func (a *application) pause(reason string) {
 		return
 	}
 	a.controller.Pause()
+	a.debugEvent(debugPaused, a.debugAttempt, "", 0)
 	a.reminderUntil = time.Time{}
 	a.acceptLimitedApps = false
 	a.pending = nil
@@ -1500,14 +1536,8 @@ func (a *application) resumeWithConsent() {
 		a.fail(noticeInfo, "请至少选择一个专注应用", nil)
 		return
 	}
-	if a.controller.Snapshot().Immersion {
-		if err := a.checkImmersionAccess(); err != nil {
-			a.protectionFailure = protectionIssue("沉浸模式", "", err)
-			a.fail(noticeProtection, immersionPermissionPaused, nil)
-			a.openFailureDetails()
-			return
-		}
-	}
+	a.debugAttempt = newDebugAttempt()
+	a.debugEvent(debugResume, a.debugAttempt, "", 0)
 	a.notice = Notice{}
 	consent := map[string]bool{}
 	if a.acceptLimitedApps {
@@ -1522,6 +1552,7 @@ func (a *application) resumeWithConsent() {
 			return
 		}
 		if !consentedApplications(e, plan.consent) {
+			a.debugEvent(debugPrepareFailed, plan.debugAttempt, "", 0)
 			a.protectionStopped(e)
 			return
 		}
@@ -1556,6 +1587,7 @@ func (a *application) end() {
 			return
 		}
 		a.controller.End()
+		a.debugEvent(debugEnded, a.debugAttempt, "", 0)
 		if a.historyRoot != 0 {
 			a.renderHistory()
 		}
@@ -1585,7 +1617,7 @@ func (a *application) quit() {
 		}
 		return
 	}
-	if !a.quitReady && !a.quitDiscarded && (a.focusIsDirty() || a.templateIsDirty() || a.notificationDraftDirty() || a.focusEffectsDirty) {
+	if !a.quitReady && !a.quitDiscarded && (a.focusIsDirty() || a.templateIsDirty() || a.notificationDraftDirty()) {
 		if a.appPicker != nil {
 			a.appPicker.Close()
 		}
@@ -1612,7 +1644,7 @@ func (a *application) quit() {
 			a.entry.Hide()
 		}
 		a.quitPrompt = true
-		sheet, err := m.NewAlertSheet(a.main.NativeHandle(), "退出并放弃未保存配置？", "未保存的本次调整、模版、专注和通知设置将被放弃。当前专注会在确认后按正常流程结束。", []string{"取消", "放弃并退出"}, func(i int) {
+		sheet, err := m.NewAlertSheet(a.main.NativeHandle(), "退出并放弃未保存配置？", "未保存的本次调整、模版和通知设置将被放弃。当前专注会在确认后按正常流程结束。", []string{"取消", "放弃并退出"}, func(i int) {
 			a.unknownSheet = nil
 			a.quitPrompt = false
 			a.refreshNavigation()
@@ -1663,6 +1695,7 @@ func (a *application) quit() {
 			return
 		}
 		a.controller.End()
+		a.debugEvent(debugEnded, a.debugAttempt, "", 0)
 	}
 	a.effect(a.restore, func(e error) {
 		continueQuit := a.quitting
@@ -1678,6 +1711,7 @@ func (a *application) quit() {
 			fmt.Fprintln(os.Stderr, "quit environment:", e)
 		}
 		a.quitReady = true
+		a.debugEvent(debugAppQuit, "", "", 0)
 		if a.off != nil {
 			a.off()
 		}

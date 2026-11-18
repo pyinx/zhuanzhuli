@@ -11,6 +11,7 @@ import (
 
 var buildVersion = "development"
 var buildID = "unbundled"
+var buildNumber = ""
 
 // Bounded, local and deliberately content-free: no goal, document path or raw
 // OS error text. Failure to log never changes recovery ownership.

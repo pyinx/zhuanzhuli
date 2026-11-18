@@ -140,6 +140,9 @@ func (a *application) ensureMain() {
 		a.settingsSections = [2]m.ID{}
 		a.settingsScroll = [4]m.ID{}
 		a.focusEffectsForm = nil
+		a.refreshFocusSettings = nil
+		a.inlinePermissionRefresh = nil
+		a.notificationPermissionLabel = 0
 		a.profileField = 0
 		a.linkedField = 0
 	})
@@ -215,6 +218,11 @@ func (a *application) showPage(page mainPage) {
 		a.settingsRoot = a.pageRoot(pageSettings)
 		if a.settingsScroll[2] == 0 || a.settingsErrors[2] != a.settingsErrorKey() {
 			a.renderSettings()
+		}
+		if a.settingsSection == 0 && a.refreshFocusSettings != nil {
+			a.refreshFocusSettings()
+		} else if a.settingsSection == 1 {
+			a.refreshNotificationPermission()
 		}
 		a.settingsNotice = a.settingsNotices[2]
 

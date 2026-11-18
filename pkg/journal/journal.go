@@ -88,10 +88,11 @@ func WriteJSON(path string, value any) error {
 	if err != nil {
 		return err
 	}
-	return writeAtomic(path, append(b, '\n'))
+	return WriteFile(path, append(b, '\n'))
 }
 
-func writeAtomic(path string, b []byte) error {
+// WriteFile atomically replaces a local file with user-only permissions.
+func WriteFile(path string, b []byte) error {
 	f, err := os.CreateTemp(filepath.Dir(path), ".atomic-*")
 	if err != nil {
 		return err
@@ -151,7 +152,7 @@ func (j *Journal) backup() error {
 	} else if !errors.Is(err, os.ErrNotExist) {
 		return err
 	}
-	return writeAtomic(path, b)
+	return WriteFile(path, b)
 }
 
 func (j *Journal) commit(next File) error {

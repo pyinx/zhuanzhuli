@@ -14,6 +14,7 @@ import (
 	"github.com/ebitengine/purego/objc"
 	"github.com/egoist/mygo"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 )
@@ -82,8 +83,9 @@ func (a *application) validateFixtureRecovery() error {
 // Runs production effects against only identity-checked fixtures. Inputs are
 // scripted; activation is restricted to this host and its two owned fixtures.
 // No notification switching, synthesized input or third-party-app effects.
-func (a *application) fixtureCheck() {
-	result := map[string]any{"evidenceKind": "automated-real-app-effects", "userInteractionVerified": false}
+func (a *application) fixtureCheck(immersion, outsideJoin bool) {
+	result := map[string]any{"evidenceKind": "automated-real-app-effects", "userInteractionVerified": false,
+		"buildID": buildID, "goarch": runtime.GOARCH}
 	var refs []journal.Ref
 	mygo.RunOnMain(func() {
 		running, _ := m.Running()
@@ -102,10 +104,14 @@ func (a *application) fixtureCheck() {
 		}
 	}
 	defer func() {
-		if e := a.restore(); e != nil {
-			result["cleanupError"] = e.Error()
+		// The two immersive suites use asynchronous production handlers. On
+		// timeout, let quit serialize cleanup after their in-flight effect.
+		if !immersion && !outsideJoin {
+			if e := a.restore(); e != nil {
+				result["cleanupError"] = e.Error()
+			}
 		}
-		result["pendingAtEnd"] = a.journal.Pending()
+		result["pendingAtEnd"] = a.pendingEnvironment()
 		if e := journal.WriteJSON(filepath.Join(a.dir, "fixture-check.json"), result); e != nil {
 			fmt.Println(e)
 		}
@@ -113,6 +119,12 @@ func (a *application) fixtureCheck() {
 	}()
 	if len(refs) != 2 || first.PID == 0 || second.PID == 0 {
 		result["error"] = "two identity-checked fixtures required"
+		return
+	}
+	if outsideJoin {
+		if err := a.fixtureImmersiveOutsideJoin(first, second, result); err != nil {
+			result["error"] = err.Error()
+		}
 		return
 	}
 	// LaunchServices activation is asynchronous. A real user starts from the
@@ -133,6 +145,10 @@ func (a *application) fixtureCheck() {
 	result["initialForegroundWaitMS"] = time.Since(initialStarted).Milliseconds()
 	if initialErr != nil {
 		result["error"] = "fixture host foreground precondition: " + initialErr.Error()
+		return
+	}
+	if immersion {
+		a.fixtureImmersionCheck(result, first, second)
 		return
 	}
 	var pickerErr error
@@ -551,4 +567,239 @@ func (a *application) fixtureCheck() {
 			return
 		}
 	}
+}
+
+// Exercise the real outside prompt and button without requesting AX permission.
+func (a *application) fixtureImmersiveOutsideJoin(first, second journal.Ref, result map[string]any) error {
+	var err error
+	mygo.RunOnMain(func() {
+		a.controller.End()
+		cfg := a.store.Data.Preferences.Config()
+		cfg.Apps = []store.App{{ID: first.BundleID, Name: first.Label, Path: first.Path}}
+		cfg.Background, cfg.Entry, cfg.Sound, cfg.Voice = false, false, false, false
+		cfg.Ambience.Mode = "off"
+		err = a.controller.Start(session.State{ID: "immersive-outside-join", Goal: "沉浸加入本次验收", Config: &cfg, Partial: true, Immersion: true})
+		if err == nil {
+			err = a.controller.Enter()
+		}
+	})
+	if err != nil {
+		return err
+	}
+	if err := a.hide(second); err != nil {
+		return err
+	}
+	defer mygo.RunOnMain(func() { a.pending = nil; a.closeChoice() })
+	var join m.ID
+	mygo.RunOnMain(func() {
+		a.pending = &second
+		a.outsideResult = "范围外应用已收起。加入本次不会改动模版。"
+		a.openChoice()
+		if a.choice == nil {
+			return
+		}
+		window := m.ID(a.choice.NativeHandle())
+		if !objc.Send[bool](window, m.S("isVisible")) {
+			return
+		}
+		view := m.Send(window, "contentView")
+		join = nativeButton(view, "加入本次")
+		if join == 0 || objc.Send[bool](join, m.S("isHiddenOrHasHiddenAncestor")) || !objc.Send[bool](join, m.S("isEnabled")) {
+			join = 0
+			return
+		}
+		result["immersiveJoinOnActiveSpace"] = objc.Send[bool](window, m.S("isOnActiveSpace"))
+		// Snapshot only this real AppKit view; no desktop capture permission.
+		m.Send(view, "layoutSubtreeIfNeeded")
+		bounds := m.Bounds(view)
+		bitmap := m.Send(view, "bitmapImageRepForCachingDisplayInRect:", bounds)
+		if bitmap != 0 {
+			m.Send(view, "cacheDisplayInRect:toBitmapImageRep:", bounds, bitmap)
+			const png = uint64(4) // NSBitmapImageFileTypePNG
+			image := m.Send(bitmap, "representationUsingType:properties:", png, m.Send(m.Class("NSDictionary"), "dictionary"))
+			const name = "immersive-outside-join.png"
+			if image != 0 && objc.Send[bool](image, m.S("writeToFile:atomically:"), m.NS(filepath.Join(a.dir, name)), true) {
+				result["immersiveJoinScreenshot"] = name
+			}
+		}
+	})
+	if join == 0 {
+		return errors.New("the immersive outside prompt does not show an enabled Join This Session button")
+	}
+	mygo.RunOnMain(func() {
+		if a.choice == nil || nativeButton(m.Send(m.ID(a.choice.NativeHandle()), "contentView"), "加入本次") != join {
+			err = errors.New("the outside prompt changed before the button could be clicked")
+			return
+		}
+		m.Send(join, "performClick:", m.ID(0))
+	})
+	if err != nil {
+		return err
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	tick := time.NewTicker(50 * time.Millisecond)
+	defer tick.Stop()
+	_, err = probe.AwaitChange(ctx, func() error { return nil }, func() (bool, error) {
+		var ready bool
+		var readErr error
+		mygo.RunOnMain(func() {
+			hidden, e := m.IsHidden(second)
+			readErr = e
+			state := a.store.Data.Current
+			ready = !a.busy && a.pending == nil && !hidden && state != nil && state.Immersion && state.Config != nil &&
+				len(state.Config.Apps) == 1 && state.Config.Apps[0].ID == first.BundleID &&
+				len(state.TemporaryApps) == 1 && state.TemporaryApps[0].ID == second.BundleID
+		})
+		return ready, readErr
+	}, tick.C)
+	if err != nil {
+		return fmt.Errorf("join was not applied only to the current session: %w", err)
+	}
+	resumeContext, cancelResume := context.WithTimeout(context.Background(), 18*time.Second)
+	defer cancelResume()
+	_, err = probe.AwaitChange(resumeContext, func() error {
+		mygo.RunOnMain(func() { a.pause("暂停加入本次验收") })
+		return nil
+	}, func() (bool, error) {
+		var paused bool
+		mygo.RunOnMain(func() { paused = !a.busy && a.controller.Snapshot().Phase == "paused" })
+		return paused, nil
+	}, tick.C)
+	if err == nil {
+		_, err = probe.AwaitChange(resumeContext, func() error {
+			mygo.RunOnMain(a.resumeWithConsent)
+			return nil
+		}, func() (bool, error) {
+			var resumed bool
+			var hiddenErr error
+			mygo.RunOnMain(func() {
+				hidden, e := m.IsHidden(second)
+				hiddenErr = e
+				s := a.controller.Snapshot()
+				resumed = !a.busy && session.Working(s.Phase) && s.Immersion && a.controller.Allowed(second.BundleID) && !hidden
+			})
+			return resumed, hiddenErr
+		}, tick.C)
+	}
+	result["immersiveOutsideJoinPreserved"] = err == nil
+	if err != nil {
+		return fmt.Errorf("temporary allowance did not survive pause and resume: %w", err)
+	}
+	return nil
+}
+
+// Observe the real start, handoff, and pause paths with two owned applications.
+func (a *application) fixtureImmersionCheck(result map[string]any, first, second journal.Ref) {
+	result["evidenceKind"] = "automated-real-immersive-effects"
+	var accepted bool
+	var access error
+	refs := []journal.Ref{first, second}
+	mygo.RunOnMain(func() {
+		cfg := a.store.Data.Preferences.Config().IndependentAudio()
+		cfg.Apps = []store.App{{ID: first.BundleID, Name: first.Label, Path: first.Path}, {ID: second.BundleID, Name: second.Label, Path: second.Path}}
+		cfg.Background, cfg.Entry, cfg.Sound, cfg.Voice = false, false, false, false
+		cfg.Ambience.Mode = "off"
+		access = a.checkImmersionAccess()
+		a.debug.setEnabled(true)
+		accepted = a.startConfiguredMode("隔离验收：双工作窗口", cfg, "", "", true)
+	})
+	result["accessibilityTrusted"] = access == nil
+	if !accepted {
+		result["error"] = "immersive start was refused"
+		return
+	}
+	wait := func(duration time.Duration, fn func() bool) bool {
+		for end := time.Now().Add(duration); time.Now().Before(end); time.Sleep(50 * time.Millisecond) {
+			if fn() {
+				return true
+			}
+		}
+		return false
+	}
+	workStarted := wait(18*time.Second, func() bool {
+		var done bool
+		mygo.RunOnMain(func() {
+			phase := a.controller.Snapshot().Phase
+			done = session.Working(phase) || phase == "paused"
+		})
+		return done
+	})
+	var working, activeTarget bool
+	var failure error
+	mygo.RunOnMain(func() {
+		working = session.Working(a.controller.Snapshot().Phase)
+		failure = a.protectionFailure
+		for _, ref := range refs {
+			if active, _ := m.Active(ref); active {
+				activeTarget = true
+			}
+		}
+	})
+	result["workStartedAfterHandoff"] = workStarted && working && activeTarget
+	if !working {
+		result["error"] = fmt.Sprintf("immersive handoff not completed: %v", failure)
+		return
+	}
+	if access != nil {
+		result["permissionDenied"] = errors.Is(access, errImmersionPermission)
+		var noSheet, statusVisible bool
+		mygo.RunOnMain(func() {
+			noSheet = a.detail == nil
+			statusVisible = strings.Contains(a.notice.Text, "本次未调整全屏")
+		})
+		result["permissionDeniedWorkStarted"] = working && noSheet && statusVisible
+		result["permissionErrorLogged"] = a.nativeDebugHas(debugAccessDenied, debugError)
+		mygo.RunOnMain(func() { a.pause("隔离验收暂停") })
+		paused := wait(10*time.Second, func() bool {
+			var done bool
+			mygo.RunOnMain(func() { done = !a.busy && a.controller.Snapshot().Phase == "paused" })
+			return done
+		})
+		if paused {
+			mygo.RunOnMain(a.resumeWithConsent)
+		}
+		result["permissionDeniedWorkResumed"] = paused && wait(12*time.Second, func() bool {
+			var resumed bool
+			mygo.RunOnMain(func() {
+				resumed = !a.busy && a.detail == nil && session.Working(a.controller.Snapshot().Phase)
+			})
+			return resumed
+		})
+		result["permissionDeniedNoFullscreenRequests"] = !a.nativeDebugHas(debugFullscreenRequest, debugInfo) &&
+			a.immersionJournal.Pending() == 0
+		mygo.RunOnMain(func() { a.pause("隔离验收结束前暂停") })
+		if !wait(10*time.Second, func() bool {
+			var done bool
+			mygo.RunOnMain(func() { done = !a.busy && a.controller.Snapshot().Phase == "paused" })
+			return done
+		}) {
+			result["error"] = "permission fallback cleanup did not finish"
+		}
+		return
+	}
+	nativeState := func(expected bool) bool {
+		for _, ref := range refs {
+			if immersionInstance(ref) != nil {
+				return false
+			}
+			w, err := m.WorkFullscreenWindow(int32(ref.PID))
+			if err != nil {
+				return false
+			}
+			full, err := w.State()
+			w.Close()
+			if err != nil || full != expected {
+				return false
+			}
+		}
+		return true
+	}
+	result["bothWindowsFullscreen"] = nativeState(true)
+	mygo.RunOnMain(func() { a.pause("隔离验收暂停") })
+	result["pauseRestoredBoth"] = wait(12*time.Second, func() bool {
+		var paused bool
+		mygo.RunOnMain(func() { paused = !a.busy && a.controller.Snapshot().Phase == "paused" })
+		return paused && a.pendingEnvironment() == 0 && nativeState(false)
+	})
 }

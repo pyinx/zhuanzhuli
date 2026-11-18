@@ -18,8 +18,13 @@ def validate_native(facts,normal):
         "historySearchAllPages","historyDetailsAttached","historyEmptyResults","pickerAttached","pickerBlocksNavigation",
         "pickerCancelPreservesDraft","page0FitsMinimum","page1FitsMinimum","page2FitsMinimum","page3FitsMinimum",
         "mainCloseReopensSameWindow","noPendingEffects","recoveryControlsRemoved","startRecoveryLinkRemoved","saveAsPreservesOtherDraft","saveAsCancelPreservesDraft","quitChecksUnsavedDraft","preparationDetailsReachable","immersionPermissionHasSettingsAction","backgroundOffDoesNotShowEntryScene",
-        "immersionDeniedBeforeCountdown","immersionPermissionRepeatKeepsSheet","immersionPermissionLocatesCurrentApp","immersionPermissionRefreshIsReadOnly","immersionPermissionRequiresExplicitStart",
-        "immersionPermissionOrdinaryStartIsOneTime","immersionPermissionResumeStaysPaused","immersionFixturePreferencesRestored")
+        "immersionStartsCountdownWithoutPermission","immersionRepeatKeepsSession","immersionFixturePreferencesRestored",
+        "focusSettingsCommitWithoutSave","focusSettingsWriteFailureRestoresControl",
+        "focusEffectsCommitWithoutSave","focusSettingsFixtureRestored",
+        "inlinePermissionOffHidesAndSkipsCheck","inlinePermissionDeniedVisibleAndRed",
+        "inlinePermissionRecheckShowsGreen","inlinePermissionActivationRefreshesUnknown","inlinePermissionRefreshDoesNotStart",
+        "applicationSettingsPermissionActionsRemoved",
+        "debugPreferenceDurable","debugLogAttachedAfterDisable","permissionErrorLogged","fullscreenErrorLogged")
     failed=[name for name in required if facts.get(name) is not True]
     if facts.get("error"):failed.append(facts["error"])
     if failed:raise RuntimeError("native regression failed: "+", ".join(failed))
@@ -231,6 +236,23 @@ def ui(manifest_path, suite):
                 "due": phase=="overtime" and "时间到了" in native.get("counterOverlay",{}).get("text",""),
             }.get(state)
             if valid is not True:raise RuntimeError("trial UI label does not match native state: "+state)
+        elif suite == "inline-immersion-permission":
+            state=shot["state"]
+            valid={
+                "inline-permission": native.get("settingsSection")==0 and native.get("immersionEnabled") is True and native.get("inlinePermissionReads",0)>0 and not native.get("mainModal"),
+                "application-settings": native.get("settingsSection")==1 and not native.get("mainModal"),
+            }.get(state)
+            if native["mainPage"]!=3 or valid is not True:raise RuntimeError("UI label does not match native state: "+state)
+        elif suite == "tray-immersion-debug":
+            state=shot["state"]
+            valid={
+                "focus-settings": native["mainPage"]==3 and native.get("settingsSection")==0 and native.get("immersionEnabled") is True,
+                "debug-settings": native["mainPage"]==3 and native.get("settingsSection")==1 and native.get("debugLogging") is True,
+                "debug-view": native["mainPage"]==3 and native.get("detailTitle")=="调试日志" and native.get("mainModal") is True,
+                "immersion-permission": native.get("detailTitle")=="沉浸模式权限" and native.get("mainModal") is True,
+                "tray-menu": native.get("trayBounds",{}).get("Width",0)>0 and native.get("trayMenuVisible") is True,
+            }.get(state)
+            if valid is not True:raise RuntimeError("UI label does not match native state: "+state)
         else:
             validate_ui_state(shot["state"],native)
         identity=window_ids.setdefault(shot["runID"],main["number"])
@@ -243,6 +265,19 @@ def ui(manifest_path, suite):
     if suite == "trial-feedback":
         missing={("light",0,"duration"),("dark",1,"duration")}-seen
         required={"duration","duration-invalid","entry-countdown","outside-choice","focus-history","saved-quick","due"}
+    elif suite == "tray-immersion-debug":
+        missing=set()
+        required={"focus-settings","debug-settings","debug-view","immersion-permission","tray-menu"}
+    elif suite == "inline-immersion-permission":
+        missing=set()
+        required={"inline-permission","application-settings"}
+        returned=evidence["permissionReturn"]
+        before,away,after=(returned[k] for k in ("before","away","after"))
+        if not all(s.get("buildID")==expected and s.get("mainPage")==3 and s.get("settingsSection")==0 and
+                   s.get("immersionEnabled") is True and not s.get("mainModal") for s in (before,away,after)):
+            raise RuntimeError("permission return proof is not from the current inline settings")
+        if before["inlinePermissionReads"]!=away["inlinePermissionReads"] or after["inlinePermissionReads"]<=away["inlinePermissionReads"] or away["hostActive"] or not after["hostActive"]:
+            raise RuntimeError("returning from System Settings did not prove a new read")
     else:
         missing={(appearance,page) for appearance in ("light","dark") for page in range(4)}-{(a,p) for a,p,_ in seen}
         required={"ready","apps","templates","settings","history","history-detail","history-filter","picker","working","paused","empty-apps","empty-history","empty-templates","notification-draft","template-draft"}
@@ -253,7 +288,7 @@ def ui(manifest_path, suite):
 
 def main():
     from build import TARGETS
-    p=argparse.ArgumentParser();p.add_argument("check",choices=["tests","media","native","package","notifications","panel-close","history","ui"]);p.add_argument("--manifest");p.add_argument("--ui-suite",choices=("release","trial-feedback"),default="release");p.add_argument("--arch",choices=TARGETS.values());a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument("check",choices=["tests","media","native","package","notifications","panel-close","history","ui"]);p.add_argument("--manifest");p.add_argument("--ui-suite",choices=("release","trial-feedback","tray-immersion-debug","inline-immersion-permission"),default="release");p.add_argument("--arch",choices=TARGETS.values());a=p.parse_args()
     if a.manifest and a.check!="ui":p.error("--manifest is only valid for ui")
     if a.check=="ui" and not a.manifest:p.error("ui requires --manifest")
     if a.arch and a.check!="native":p.error("--arch is only valid for native")

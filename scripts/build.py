@@ -9,7 +9,7 @@ BUNDLE_ID = "com.yunsiweilai.zhuanzhuli"
 APP = ROOT / ".build" / f"{APP_NAME}.app"
 ICON_SOURCE = pathlib.Path("assets/artwork/guijing-icon.svg")
 VERSION = "0.4.0"
-BUILD_NUMBER = "19"
+BUILD_NUMBER = "23"
 TARGETS = {"arm64": "arm64", "amd64": "x86_64"}
 PACKAGE_PLATFORM = "macOS-universal"
 def digest(path):
@@ -74,21 +74,59 @@ def toolchain():
 def run(args, **kwargs):
     subprocess.run(args, cwd=ROOT, check=True, **kwargs)
 
-def sign_app(app, identifier):
-    identity=os.environ.get("FOCUS_CODESIGN_IDENTITY", "").strip() or "-"
+def signing_profile(directory):
+    path = directory / "signing-identity.json"
+    if not path.exists():
+        return None
+    profile = json.loads(path.read_text())
+    if not isinstance(profile, dict) or any(not isinstance(profile.get(key), str) or not profile[key]
+                                              for key in ("identity", "requirement")) or profile["identity"] == "-":
+        raise RuntimeError("invalid persistent signing identity profile")
+    return profile
+
+def signing_identity(profile):
+    identity = (os.environ.get("FOCUS_CODESIGN_IDENTITY", "").strip()
+                or (profile["identity"] if profile else "-"))
+    if identity == "-" and (profile or os.environ.get("FOCUS_REQUIRE_STABLE_SIGNING") == "1"):
+        raise RuntimeError("stable signing requires a valid Developer ID Application signing identity; ad-hoc is disabled")
+    return identity
+
+def verify_signing_requirement(app, requirement):
+    run(["codesign", "--verify", "--strict", "--all-architectures", "-R", "=" + requirement, str(app)])
+
+def designated_requirement(app, architecture, identifier):
+    result = subprocess.run(["codesign", "--display", "--arch", architecture, "-r-", str(app)],
+                            check=True, capture_output=True, text=True)
+    requirements = [line.removeprefix("designated => ") for line in (result.stdout + result.stderr).splitlines()
+                    if line.startswith("designated => ")]
+    if (len(requirements) != 1 or f'identifier "{identifier}"' not in requirements[0]
+            or "certificate " not in requirements[0] or "cdhash " in requirements[0]):
+        raise RuntimeError("signature does not contain a stable certificate and bundle identifier requirement")
+    return requirements[0]
+
+def sign_app(app, identifier, identity, profile):
     args=["codesign", "--force", "--sign", identity, "--identifier", identifier]
     if identity != "-":
         args += ["--timestamp", "--options", "runtime"]
     run(args + [str(app)])
     run(["codesign", "--verify", "--strict", str(app)])
-    return "ad-hoc" if identity == "-" else "certificate"
+    if identity == "-":
+        return None
+    requirements = {designated_requirement(app, arch, identifier) for arch in TARGETS.values()}
+    if len(requirements) != 1:
+        raise RuntimeError("application architectures do not use the same designated requirement")
+    requirement = requirements.pop()
+    if profile and profile["requirement"] != requirement:
+        raise RuntimeError("signing identity changed; refusing to replace the existing upgrade identity")
+    verify_signing_requirement(app, requirement)
+    return dict(identity=identity, requirement=requirement)
 def verify_architectures(exe):
     actual = subprocess.check_output(["lipo","-archs",str(exe)],cwd=ROOT,text=True).split()
     if set(actual) != set(TARGETS.values()):
         raise RuntimeError("expected arm64 and x86_64 in the application executable; found " + ", ".join(actual))
 
 def build_executable(exe,build_id,staging):
-    values = {"main.buildVersion": VERSION, "main.buildID": build_id, "main.appDisplayName": APP_NAME}
+    values = {"main.buildVersion": VERSION, "main.buildNumber": BUILD_NUMBER, "main.buildID": build_id, "main.appDisplayName": APP_NAME}
     ldflags = " ".join(f"-X {key}={value}" for key, value in values.items())
     env = dict(os.environ, GOTOOLCHAIN="local", GOWORK="off", GOOS="darwin", CGO_ENABLED="0",
                GOARM64="v8.0", GOAMD64="v1",
@@ -104,12 +142,14 @@ def build_executable(exe,build_id,staging):
 def build_candidate():
     if sys.platform != "darwin":
         raise SystemExit("This build requires macOS.")
+    profile = signing_profile(APP.parent)
+    identity = signing_identity(profile)
     manifest, targets = release_manifest()
     build_id, sources = source_fingerprint()
     APP.parent.mkdir(exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="focus-build-",dir=APP.parent) as temporary:
-        build_at(pathlib.Path(temporary),manifest,targets,build_id,sources)
-def build_at(staging,manifest,targets,build_id,sources):
+        build_at(pathlib.Path(temporary),manifest,targets,build_id,sources,identity,profile)
+def build_at(staging,manifest,targets,build_id,sources,identity="-",profile=None):
     candidate = staging / APP.name
     icon = staging/"app-icon.png"
     run(["sips", "-s", "format", "png", str(ROOT/ICON_SOURCE), "--out", str(icon)], stdout=subprocess.DEVNULL)
@@ -146,11 +186,18 @@ def build_at(staging,manifest,targets,build_id,sources):
     (resources/"build.json").write_text(json.dumps(dict(version=VERSION,buildNumber=BUILD_NUMBER,buildID=build_id,sources=sources,resources={str(p.relative_to(resources)):digest(p) for p in sorted(resources.rglob("*")) if p.is_file()}),ensure_ascii=False,indent=2)+"\n")
     # Bind the bundle identifier, Info.plist and resources. The Go linker's
     # executable-only signature is not a valid signed application bundle.
-    signing=sign_app(candidate,info["CFBundleIdentifier"])
+    signed=sign_app(candidate,info["CFBundleIdentifier"],identity,profile)
     if source_fingerprint()[0]!=build_id:raise RuntimeError("source inputs changed during build; candidate not published")
+    if signed:
+        staged_profile=staging/"signing-identity.json"
+        staged_profile.write_text(json.dumps(signed,indent=2)+"\n")
+        os.replace(staged_profile,APP.parent/staged_profile.name)
     if APP.exists(): shutil.rmtree(APP)
     candidate.rename(APP)
-    (APP.parent/"candidate.json").write_text(json.dumps(dict(version=VERSION,buildID=build_id,signing=signing,files=bundle_files(APP)),ensure_ascii=False,indent=2)+"\n")
+    metadata=dict(version=VERSION,buildID=build_id,signing="certificate" if signed else "ad-hoc",files=bundle_files(APP))
+    if signed:
+        metadata["signingRequirement"]=signed["requirement"]
+    (APP.parent/"candidate.json").write_text(json.dumps(metadata,ensure_ascii=False,indent=2)+"\n")
     print(APP)
 @contextmanager
 def candidate_lock():

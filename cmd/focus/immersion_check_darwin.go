@@ -75,6 +75,14 @@ func (a *application) nativeFullscreenCheck(done func(bool, error)) {
 		if err := window.Writable(); err != nil {
 			return err
 		}
+		// The real window has no observation lease yet, so the production
+		// entry must reject it without sending a request and record an ERROR.
+		a.debug.setEnabled(true)
+		missingWatchErr := a.fullscreenTarget(immersionTarget{ref: ref, window: window}, func() bool { return true }, newDebugAttempt())
+		a.debug.setEnabled(false)
+		if missingWatchErr == nil || a.immersionJournal.Pending() != 0 {
+			return errors.New("unobserved fullscreen target was not rejected safely")
+		}
 		if err := window.Watch(); err != nil {
 			return err
 		}
@@ -90,7 +98,7 @@ func (a *application) nativeFullscreenCheck(done func(bool, error)) {
 			if err := waitFullscreen(window, true); err != nil {
 				return fmt.Errorf("own window could not enter fullscreen (NSWindow fullscreen=%t): %w", w.IsFullScreen(), err)
 			}
-			if err := a.fullscreenTarget(immersionTarget{ref: ref, window: window}, func() bool { return true }); err != nil {
+			if err := a.fullscreenTarget(immersionTarget{ref: ref, window: window}, func() bool { return true }, ""); err != nil {
 				return err
 			}
 			if a.immersionJournal.Pending() != 0 {
@@ -127,7 +135,7 @@ func (a *application) nativeFullscreenCheck(done func(bool, error)) {
 			return nil
 		}
 		target := immersionTarget{ref: ref, window: window}
-		if err := a.fullscreenTarget(target, func() bool { return true }); err != nil {
+		if err := a.fullscreenTarget(target, func() bool { return true }, ""); err != nil {
 			return fmt.Errorf("enter owned native fullscreen: %w", err)
 		}
 		if a.immersionJournal.Pending() != 1 {
@@ -150,7 +158,7 @@ func (a *application) nativeFullscreenCheck(done func(bool, error)) {
 		if err := waitFullscreen(current, true); err != nil {
 			return err
 		}
-		if err := a.fullscreenTarget(immersionTarget{ref: ref, window: current}, func() bool { return true }); err != nil {
+		if err := a.fullscreenTarget(immersionTarget{ref: ref, window: current}, func() bool { return true }, ""); err != nil {
 			return err
 		}
 		if a.immersionJournal.Pending() != 0 {
@@ -172,7 +180,7 @@ func (a *application) nativeFullscreenCheck(done func(bool, error)) {
 		if err := current.Watch(); err != nil {
 			return err
 		}
-		if err := a.fullscreenTarget(immersionTarget{ref: ref, window: current}, func() bool { return true }); err != nil {
+		if err := a.fullscreenTarget(immersionTarget{ref: ref, window: current}, func() bool { return true }, ""); err != nil {
 			return err
 		}
 		external, err := m.WorkFullscreenWindow(int32(os.Getpid()))

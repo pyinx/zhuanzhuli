@@ -19,6 +19,15 @@ const fullscreenAttribute = "AXFullScreen"
 var ErrWorkWindowUnavailable = errors.New("没有可识别的工作窗口，请先打开应用窗口")
 var ErrWorkWindowGone = errors.New("工作窗口已关闭")
 
+type FullscreenAXError struct {
+	operation string
+	Code      int32
+}
+
+func (e *FullscreenAXError) Error() string {
+	return fmt.Sprintf("%s（AX %d）", e.operation, e.Code)
+}
+
 type FullscreenWindow struct {
 	ref, observer uintptr
 	pid           int32
@@ -44,7 +53,7 @@ func workFullscreenWindow(pid int32, focused bool) (*FullscreenWindow, error) {
 	}
 	defer cfDrop(app)
 	if code := axTimeout(app, .5); code != 0 {
-		return nil, fmt.Errorf("无法限制窗口查询等待时间（AX %d）", code)
+		return nil, &FullscreenAXError{"无法限制窗口查询等待时间", code}
 	}
 	attrs := []string{"AXMainWindow", "AXFocusedWindow"}
 	if focused {
@@ -126,7 +135,7 @@ func (w *FullscreenWindow) State() (bool, error) {
 		return false, ErrWorkWindowGone
 	}
 	if code != 0 || v == 0 || cfType(v) != cfBoolType() {
-		return false, fmt.Errorf("无法读取窗口的原生全屏状态（AX %d）", code)
+		return false, &FullscreenAXError{"无法读取窗口的原生全屏状态", code}
 	}
 	return cfBool(v), nil
 }
@@ -136,7 +145,7 @@ func (w *FullscreenWindow) Writable() error {
 	defer cfDrop(key)
 	var writable uint8
 	if code := axSettable(w.ref, key, &writable); code != 0 || writable == 0 {
-		return fmt.Errorf("该窗口不支持自动切换原生全屏（AX %d）", code)
+		return &FullscreenAXError{"该窗口不支持自动切换原生全屏", code}
 	}
 	return nil
 }
@@ -152,7 +161,7 @@ func (w *FullscreenWindow) Set(fullscreen bool) error {
 		return errors.New("窗口状态刚刚改变，未发送全屏操作")
 	}
 	if code := axSet(w.ref, key, value); code != 0 {
-		return fmt.Errorf("原生全屏请求未确认（AX %d）", code)
+		return &FullscreenAXError{"原生全屏请求未确认", code}
 	}
 	return nil
 }
@@ -177,7 +186,7 @@ var fullscreenCallback = sync.OnceValue(func() uintptr {
 func (w *FullscreenWindow) Watch() error {
 	var observer uintptr
 	if code := axObserverCreate(w.pid, fullscreenCallback(), &observer); code != 0 || observer == 0 {
-		return fmt.Errorf("无法观察窗口变化（AX %d）", code)
+		return &FullscreenAXError{"无法观察窗口变化", code}
 	}
 	for _, name := range []string{"AXResized", "AXUIElementDestroyed"} {
 		key := cfString(0, name, 0x08000100)
@@ -185,7 +194,7 @@ func (w *FullscreenWindow) Watch() error {
 		cfDrop(key)
 		if code != 0 {
 			cfDrop(observer)
-			return fmt.Errorf("窗口不支持安全的恢复观察（AX %d）", code)
+			return &FullscreenAXError{"窗口不支持安全的恢复观察", code}
 		}
 	}
 	fullscreenObservers.Store(observer, w)

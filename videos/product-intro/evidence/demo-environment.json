@@ -1,0 +1,527 @@
+{
+  "schemaVersion": 2,
+  "entries": [
+    {
+      "operationID": "hide-41567-1794997861799742000",
+      "ref": {
+        "label": "ChatGPT",
+        "pid": 41567,
+        "launched": 1794978152.408748,
+        "bundleID": "com.openai.codex",
+        "path": "/Applications/ChatGPT.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-549-1794997861926767000",
+      "ref": {
+        "label": "Clash Verge",
+        "pid": 549,
+        "launched": 1794620448.372697,
+        "bundleID": "io.github.clash-verge-rev.clash-verge-rev",
+        "path": "/Applications/Clash Verge.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-559-1794997861995111000",
+      "ref": {
+        "label": "Code",
+        "pid": 559,
+        "launched": 1794620448.527072,
+        "bundleID": "com.microsoft.VSCode",
+        "path": "/private/var/folders/md/6pw3c8rd7xs6zlc79g6kgtqm0000gn/T/AppTranslocation/7BD99E50-3189-4291-AA22-6DE7CCD860E7/d/Visual Studio Code.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-85290-1794997862068020000",
+      "ref": {
+        "label": "Docker Desktop",
+        "pid": 85290,
+        "launched": 1794827577.297916,
+        "bundleID": "com.electron.dockerdesktop",
+        "path": "/Applications/Docker.app/Contents/MacOS/Docker Desktop.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-528-1794997862193807000",
+      "ref": {
+        "label": "Google Chrome",
+        "pid": 528,
+        "launched": 1794620448.100594,
+        "bundleID": "com.google.Chrome",
+        "path": "/Applications/Google Chrome.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-557-1794997862415909000",
+      "ref": {
+        "label": "Pulse",
+        "pid": 557,
+        "launched": 1794620448.474718,
+        "bundleID": "com.egoist.pulse",
+        "path": "/Applications/Pulse.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-71741-1794997862585010000",
+      "ref": {
+        "label": "SecureCRT",
+        "pid": 71741,
+        "launched": 1794992684.974678,
+        "bundleID": "com.vandyke.SecureCRT",
+        "path": "/Applications/SecureCRT.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-554-1794997862708368000",
+      "ref": {
+        "label": "WPS Office",
+        "pid": 554,
+        "launched": 1794620448.449999,
+        "bundleID": "com.kingsoft.wpsoffice.mac",
+        "path": "/Applications/wpsoffice.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-550-1794997862938405000",
+      "ref": {
+        "label": "Windows App Beta",
+        "pid": 550,
+        "launched": 1794620448.406022,
+        "bundleID": "com.microsoft.rdc.osx.beta",
+        "path": "/private/var/folders/md/6pw3c8rd7xs6zlc79g6kgtqm0000gn/T/AppTranslocation/12AF6E10-865D-468B-9F99-09EED962E551/d/Windows App Beta.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-30458-1794997863109240000",
+      "ref": {
+        "label": "WorkBuddy",
+        "pid": 30458,
+        "launched": 1794740693.100239,
+        "bundleID": "com.tencent.workbuddy.mac",
+        "path": "/Applications/WorkBuddy.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-558-1794997863183506000",
+      "ref": {
+        "label": "flomo",
+        "pid": 558,
+        "launched": 1794620448.502472,
+        "bundleID": "com.flomoapp.m",
+        "path": "/Applications/flomo.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-604-1794997863260032000",
+      "ref": {
+        "label": "magpie",
+        "pid": 604,
+        "launched": 1794620451.1651,
+        "bundleID": "com.yetone.magpie",
+        "path": "/Applications/magpie.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-93546-1794997863379074000",
+      "ref": {
+        "label": "即梦 AI",
+        "pid": 93546,
+        "launched": 1794901079.757682,
+        "bundleID": "com.dreamina.desktop",
+        "path": "/Applications/即梦 AI.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-542-1794997863499533000",
+      "ref": {
+        "label": "微信",
+        "pid": 542,
+        "launched": 1794620448.314716,
+        "bundleID": "com.tencent.xinWeChat",
+        "path": "/Applications/WeChat.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-580-1794997863570066000",
+      "ref": {
+        "label": "微信读书",
+        "pid": 580,
+        "launched": 1794620449.115866,
+        "bundleID": "com.tencent.weread",
+        "path": "/private/var/folders/md/6pw3c8rd7xs6zlc79g6kgtqm0000gn/X/87524521-728D-5186-8EF1-817D34257827/d/Wrapper/WeRead.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-538-1794997863689095000",
+      "ref": {
+        "label": "提醒事项",
+        "pid": 538,
+        "launched": 1794620448.21912,
+        "bundleID": "com.apple.reminders",
+        "path": "/System/Applications/Reminders.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-66378-1794997864010509000",
+      "ref": {
+        "label": "日历",
+        "pid": 66378,
+        "launched": 1794888385.909726,
+        "bundleID": "com.apple.iCal",
+        "path": "/System/Applications/Calendar.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-532-1794997864182329000",
+      "ref": {
+        "label": "终端",
+        "pid": 532,
+        "launched": 1794620448.148246,
+        "bundleID": "com.apple.Terminal",
+        "path": "/System/Applications/Utilities/Terminal.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-561-1794997864302976000",
+      "ref": {
+        "label": "网易云音乐",
+        "pid": 561,
+        "launched": 1794620448.554204,
+        "bundleID": "com.netease.163music",
+        "path": "/Applications/NeteaseMusic.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-546-1794997864371933000",
+      "ref": {
+        "label": "钉钉",
+        "pid": 546,
+        "launched": 1794620448.334785,
+        "bundleID": "com.alibaba.DingTalkMac",
+        "path": "/Applications/DingTalk.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-41567-1794997984664967000",
+      "ref": {
+        "label": "ChatGPT",
+        "pid": 41567,
+        "launched": 1794978152.408748,
+        "bundleID": "com.openai.codex",
+        "path": "/Applications/ChatGPT.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-549-1794997984737113000",
+      "ref": {
+        "label": "Clash Verge",
+        "pid": 549,
+        "launched": 1794620448.372697,
+        "bundleID": "io.github.clash-verge-rev.clash-verge-rev",
+        "path": "/Applications/Clash Verge.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-559-1794997984803982000",
+      "ref": {
+        "label": "Code",
+        "pid": 559,
+        "launched": 1794620448.527072,
+        "bundleID": "com.microsoft.VSCode",
+        "path": "/private/var/folders/md/6pw3c8rd7xs6zlc79g6kgtqm0000gn/T/AppTranslocation/7BD99E50-3189-4291-AA22-6DE7CCD860E7/d/Visual Studio Code.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-85290-1794997984872825000",
+      "ref": {
+        "label": "Docker Desktop",
+        "pid": 85290,
+        "launched": 1794827577.297916,
+        "bundleID": "com.electron.dockerdesktop",
+        "path": "/Applications/Docker.app/Contents/MacOS/Docker Desktop.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-528-1794997984938088000",
+      "ref": {
+        "label": "Google Chrome",
+        "pid": 528,
+        "launched": 1794620448.100594,
+        "bundleID": "com.google.Chrome",
+        "path": "/Applications/Google Chrome.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-557-1794997985005844000",
+      "ref": {
+        "label": "Pulse",
+        "pid": 557,
+        "launched": 1794620448.474718,
+        "bundleID": "com.egoist.pulse",
+        "path": "/Applications/Pulse.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "abandoned",
+      "reason": "prior environment left unchanged"
+    },
+    {
+      "operationID": "hide-71741-1794997985073927000",
+      "ref": {
+        "label": "SecureCRT",
+        "pid": 71741,
+        "launched": 1794992684.974678,
+        "bundleID": "com.vandyke.SecureCRT",
+        "path": "/Applications/SecureCRT.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "abandoned",
+      "reason": "instance ended or replaced; do not affect a replacement"
+    },
+    {
+      "operationID": "hide-554-1794997985142842000",
+      "ref": {
+        "label": "WPS Office",
+        "pid": 554,
+        "launched": 1794620448.449999,
+        "bundleID": "com.kingsoft.wpsoffice.mac",
+        "path": "/Applications/wpsoffice.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-550-1794997985262897000",
+      "ref": {
+        "label": "Windows App Beta",
+        "pid": 550,
+        "launched": 1794620448.406022,
+        "bundleID": "com.microsoft.rdc.osx.beta",
+        "path": "/private/var/folders/md/6pw3c8rd7xs6zlc79g6kgtqm0000gn/T/AppTranslocation/12AF6E10-865D-468B-9F99-09EED962E551/d/Windows App Beta.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-30458-1794997985333032000",
+      "ref": {
+        "label": "WorkBuddy",
+        "pid": 30458,
+        "launched": 1794740693.100239,
+        "bundleID": "com.tencent.workbuddy.mac",
+        "path": "/Applications/WorkBuddy.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-558-1794997985402953000",
+      "ref": {
+        "label": "flomo",
+        "pid": 558,
+        "launched": 1794620448.502472,
+        "bundleID": "com.flomoapp.m",
+        "path": "/Applications/flomo.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-604-1794997985472141000",
+      "ref": {
+        "label": "magpie",
+        "pid": 604,
+        "launched": 1794620451.1651,
+        "bundleID": "com.yetone.magpie",
+        "path": "/Applications/magpie.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-93546-1794997985540966000",
+      "ref": {
+        "label": "即梦 AI",
+        "pid": 93546,
+        "launched": 1794901079.757682,
+        "bundleID": "com.dreamina.desktop",
+        "path": "/Applications/即梦 AI.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-542-1794997985610085000",
+      "ref": {
+        "label": "微信",
+        "pid": 542,
+        "launched": 1794620448.314716,
+        "bundleID": "com.tencent.xinWeChat",
+        "path": "/Applications/WeChat.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-580-1794997985677060000",
+      "ref": {
+        "label": "微信读书",
+        "pid": 580,
+        "launched": 1794620449.115866,
+        "bundleID": "com.tencent.weread",
+        "path": "/private/var/folders/md/6pw3c8rd7xs6zlc79g6kgtqm0000gn/X/87524521-728D-5186-8EF1-817D34257827/d/Wrapper/WeRead.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-538-1794997985742859000",
+      "ref": {
+        "label": "提醒事项",
+        "pid": 538,
+        "launched": 1794620448.21912,
+        "bundleID": "com.apple.reminders",
+        "path": "/System/Applications/Reminders.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-66378-1794997985812088000",
+      "ref": {
+        "label": "日历",
+        "pid": 66378,
+        "launched": 1794888385.909726,
+        "bundleID": "com.apple.iCal",
+        "path": "/System/Applications/Calendar.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-532-1794997985879019000",
+      "ref": {
+        "label": "终端",
+        "pid": 532,
+        "launched": 1794620448.148246,
+        "bundleID": "com.apple.Terminal",
+        "path": "/System/Applications/Utilities/Terminal.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-561-1794997985946999000",
+      "ref": {
+        "label": "网易云音乐",
+        "pid": 561,
+        "launched": 1794620448.554204,
+        "bundleID": "com.netease.163music",
+        "path": "/Applications/NeteaseMusic.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    },
+    {
+      "operationID": "hide-546-1794997986013073000",
+      "ref": {
+        "label": "钉钉",
+        "pid": 546,
+        "launched": 1794620448.334785,
+        "bundleID": "com.alibaba.DingTalkMac",
+        "path": "/Applications/DingTalk.app",
+        "token": "production-instance",
+        "identitySource": "bsd-start-v1"
+      },
+      "status": "released"
+    }
+  ]
+}

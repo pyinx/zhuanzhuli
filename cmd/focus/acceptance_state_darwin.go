@@ -80,6 +80,17 @@ func (a *application) acceptanceState() {
 	}
 	state["notice"] = a.notice
 	state["mainPage"] = a.mainPage
+	state["settingsSection"] = a.settingsSection
+	state["immersionEnabled"] = a.store.Data.Preferences.Immersion
+	state["inlinePermissionReads"] = a.inlinePermissionReads
+	state["debugLogging"] = a.store.Data.Preferences.DebugLogging
+	if a.tray != nil {
+		state["trayBounds"] = a.tray.Bounds()
+	}
+	state["trayMenuVisible"] = a.trayMenuVisible
+	if a.detail != nil {
+		state["detailTitle"] = m.Str(m.Send(m.ID(a.detail.NativeHandle()), "title"))
+	}
 	state["windowSizing"] = a.windowSizing
 	if a.main != nil {
 		state["currentWindowMetrics"] = m.WindowMetrics(a.main.NativeHandle())

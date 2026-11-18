@@ -17,18 +17,69 @@ import (
 	"focus.local/zhuanzhuli/pkg/journal"
 )
 
-func TestImmersionPermissionRevocationStopsBothWindowBoundaries(t *testing.T) {
-	trusted := true
-	a := &application{readImmersionAccess: func() (bool, error) { return trusted, nil }}
-	if err := a.checkImmersionAccess(); err != nil {
-		t.Fatal(err)
+func TestImmersionContinuesWithoutAccessibility(t *testing.T) {
+	readError := errors.New("permission API unavailable")
+	for _, tc := range []struct {
+		name string
+		err  error
+		want error
+	}{{"denied", nil, errImmersionPermission}, {"query error", readError, errImmersionPermissionCheck}} {
+		t.Run(tc.name, func(t *testing.T) {
+			a := &application{readImmersionAccess: func() (bool, error) { return false, tc.err }}
+			outcome := immersionOutcome{selected: 1}
+			err := a.tryImmersionWindows(&outcome, []immersionTarget{{}}, func() bool { return true }, "", func(*immersionTarget) error {
+				t.Fatal("AX operation was attempted without a verified grant")
+				return nil
+			})
+			if err != nil || !errors.Is(outcome.accessErr, tc.want) || outcome.fullscreen != 0 || outcome.caption() == "" {
+				t.Fatalf("missing permission blocked or misreported the attempt: %+v, %v", outcome, err)
+			}
+		})
 	}
-	trusted = false
-	if err := a.protectPlan(&protectionPlan{immersion: true}); !errors.Is(err, errImmersionPermission) {
-		t.Fatalf("revocation must stop preparation before store and window operations: %v", err)
+}
+
+func TestImmersionContinuesAfterWindowFailures(t *testing.T) {
+	a := &application{readImmersionAccess: func() (bool, error) { return true, nil }}
+	targets := []immersionTarget{{app: session.App{ID: "first"}}, {app: session.App{ID: "second"}}}
+	for _, succeeds := range []bool{true, false} {
+		outcome := immersionOutcome{selected: len(targets)}
+		var attempted []string
+		err := a.tryImmersionWindows(&outcome, targets, func() bool { return true }, "", func(target *immersionTarget) error {
+			attempted = append(attempted, target.app.ID)
+			if succeeds && target.app.ID == "second" {
+				return nil
+			}
+			return errors.New("window vanished")
+		})
+		want := 0
+		if succeeds {
+			want = 1
+		}
+		if err != nil || strings.Join(attempted, ",") != "first,second" || outcome.fullscreen != want || outcome.caption() == "" {
+			t.Fatalf("a window failure blocked another target or the session: %v, %+v, %v", attempted, outcome, err)
+		}
 	}
-	if err := a.enterImmersiveWork(session.State{Immersion: true}, func() bool { return true }); !errors.Is(err, errImmersionPermission) {
-		t.Fatalf("revocation must also stop the later fullscreen handoff: %v", err)
+	cancelled := false
+	err := a.tryImmersionWindows(&immersionOutcome{}, targets, func() bool { return !cancelled }, "", func(target *immersionTarget) error {
+		if target.app.ID != "first" {
+			t.Fatal("an ended session attempted another window")
+		}
+		cancelled = true
+		return errors.New("window vanished")
+	})
+	if !errors.Is(err, errHideCancelled) {
+		t.Fatalf("cancellation must still stop the attempt: %v", err)
+	}
+
+	var handedOff string
+	if err := tryImmersionHandoffs(targets, func(target immersionTarget) error {
+		if target.app.ID == "first" {
+			return errors.New("first verified application disappeared during handoff")
+		}
+		handedOff = target.app.ID
+		return nil
+	}); err != nil || handedOff != "second" {
+		t.Fatalf("the next verified application was not tried: %q, %v", handedOff, err)
 	}
 }
 
@@ -88,19 +139,25 @@ func TestImmersiveLaunchRefusesAlternateRunningLocation(t *testing.T) {
 	targets := []immersionTarget{{app: browser}, {app: editor}}
 	var launched []session.App
 	open := func(app session.App) error { launched = append(launched, app); return nil }
-	err := openMissingImmersionApps(targets, refs, nil, open)
-	if err == nil || !strings.Contains(err.Error(), editor.Name) || !strings.Contains(err.Error(), "所选位置不同") || len(launched) != 0 {
-		t.Fatalf("alternate running copy must stop preparation without any launches: launched=%v, err=%v", launched, err)
+	skipped := openMissingImmersionApps(targets, refs, nil, open)
+	if err := skipped[editor.ID]; err == nil || !strings.Contains(err.Error(), "所选位置不同") || len(launched) != 1 || launched[0] != browser {
+		t.Fatalf("only the alternate copy must be skipped: launched=%v, skipped=%v", launched, skipped)
 	}
+	launched = nil
 	unidentified := &m.AppIdentityError{PID: 7, BundleID: editor.ID}
-	err = openMissingImmersionApps(targets, nil, errors.Join(unidentified), open)
-	if err == nil || !strings.Contains(err.Error(), "无法核对运行实例") || len(launched) != 0 {
-		t.Fatalf("an unverified selected process must not be relaunched: launched=%v, err=%v", launched, err)
+	skipped = openMissingImmersionApps(targets, nil, errors.Join(unidentified), open)
+	if err := skipped[editor.ID]; err == nil || !strings.Contains(err.Error(), "无法核对运行实例") || len(launched) != 1 || launched[0] != browser {
+		t.Fatalf("an unverified selected process must not be relaunched: launched=%v, skipped=%v", launched, skipped)
 	}
+	launched = nil
 	refs = append(refs, journal.Ref{PID: 8, BundleID: editor.ID, Path: editor.Path})
 	unrelated := &m.AppIdentityError{PID: 9, BundleID: "org.example.unrelated"}
-	if err := openMissingImmersionApps(targets, refs, unrelated, open); err != nil || len(launched) != 1 || launched[0] != browser {
-		t.Fatalf("the selected running copy should be reused; only a missing app should open: launched=%v, err=%v", launched, err)
+	if skipped := openMissingImmersionApps(targets, refs, unrelated, open); len(skipped) != 0 || len(launched) != 1 || launched[0] != browser {
+		t.Fatalf("the selected running copy should be reused; only a missing app should open: launched=%v, skipped=%v", launched, skipped)
+	}
+	refs = append(refs, journal.Ref{PID: 9, BundleID: editor.ID, Path: editor.Path})
+	if _, err := immersionRunningApp(editor, refs, nil); err == nil {
+		t.Fatal("ambiguous matching instances must not be targeted")
 	}
 }
 

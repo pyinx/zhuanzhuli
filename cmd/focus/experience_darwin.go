@@ -86,7 +86,7 @@ func (a *application) buildEnvironmentControls(root m.ID, f *configForm) {
 		action(root, "声音与入场设置…", a.openFocusSettings)
 	} else {
 		m.Arrange(root, background, true)
-		refreshEffects = a.buildFocusEffects(root, f, false)
+		refreshEffects = a.buildFocusEffects(root, f, nil)
 	}
 	f.notice = message(root)
 	f.refreshScene = func() {
@@ -122,8 +122,15 @@ func (a *application) buildEnvironmentControls(root m.ID, f *configForm) {
 	f.refreshScene()
 }
 
-func (a *application) buildFocusEffects(root m.ID, f *configForm, inSettings bool) func() {
-	get, changed := f.get, f.changed
+func (a *application) buildFocusEffects(root m.ID, f *configForm, commit func(func(*session.Config))) func() {
+	get := f.get
+	inSettings := commit != nil
+	if commit == nil {
+		commit = func(edit func(*session.Config)) {
+			edit(get())
+			f.changed()
+		}
+	}
 	*get() = get().IndependentAudio()
 	c := get()
 	titleText(root, "声音", 13)
@@ -154,15 +161,18 @@ func (a *application) buildFocusEffects(root m.ID, f *configForm, inSettings boo
 		item := m.Send(naturePicker, "itemAtIndex:", int64(0))
 		m.Send(item, "setTitle:", m.NS(label))
 	}
-	musicSwitch = m.Check(g, "背景音乐", c.Sound, m.R(0, 0, 400, 26), func(v bool) { a.stopAudition(); get().Sound = v; refreshSound(); changed() })
+	musicSwitch = m.Check(g, "背景音乐", c.Sound, m.R(0, 0, 400, 26), func(v bool) {
+		a.stopAudition()
+		commit(func(c *session.Config) { c.Sound = v })
+		refreshSound()
+	})
 	m.Arrange(g, musicSwitch, true)
 	musicSlider = m.Slider(g, c.Volume, m.R(0, 0, 400, 24), func(v float64) {
-		get().Volume = v
+		commit(func(c *session.Config) { c.Volume = v })
 		if a.auditionNotice == f.notice {
-			a.audition.Volume(v)
+			a.audition.Volume(get().Volume)
 		}
 		refreshSound()
-		changed()
 	})
 	m.Arrange(g, musicSlider, true)
 	m.Fixed(musicSlider, "height", 24)
@@ -178,21 +188,23 @@ func (a *application) buildFocusEffects(root m.ID, f *configForm, inSettings boo
 	naturePicker = m.Popup(g, []string{"自动", "关闭", "下雨", "鸟叫", "海浪", "流水"}, selected, m.R(0, 0, 300, 28), func(i int) {
 		if i >= 0 && i < len(modes) {
 			a.stopAudition()
-			get().Ambience.Mode = modes[i]
+			commit(func(c *session.Config) { c.Ambience.Mode = modes[i] })
 			refreshSound()
-			changed()
 		}
 	})
 	m.Arrange(g, naturePicker, true)
 	m.Send(naturePicker, "setAccessibilityLabel:", m.NS("白噪音选择"))
 	natureSlider = m.Slider(g, c.Ambience.Volume, m.R(0, 0, 400, 24), func(v float64) {
-		get().Ambience.Volume = v
+		commit(func(c *session.Config) { c.Ambience.Volume = v })
 		if a.auditionNotice == f.notice {
-			a.auditionNature.Volume(v)
+			a.auditionNature.Volume(get().Ambience.Volume)
 		}
 		refreshSound()
-		changed()
 	})
+	if inSettings {
+		m.Send(musicSlider, "setContinuous:", false)
+		m.Send(natureSlider, "setContinuous:", false)
+	}
 	m.Arrange(g, natureSlider, true)
 	m.Fixed(natureSlider, "height", 24)
 	m.Send(natureSlider, "setAccessibilityLabel:", m.NS("白噪音音量"))
@@ -230,15 +242,19 @@ func (a *application) buildFocusEffects(root m.ID, f *configForm, inSettings boo
 		cfg := get()
 		m.Text(summary, fmt.Sprintf("入场%s · 人声%s · 到点提示%s", on(cfg.Entry), on(cfg.Voice), on(cfg.ReminderSound)))
 	}
-	check := func(title string, on bool, set func(bool)) {
-		v := m.Check(advanced, title, on, m.R(0, 0, 400, 26), func(v bool) { set(v); refreshSummary(); changed() })
+	check := func(title string, on bool, set func(*session.Config, bool)) m.ID {
+		v := m.Check(advanced, title, on, m.R(0, 0, 400, 26), func(v bool) {
+			commit(func(c *session.Config) { set(c, v) })
+			refreshSummary()
+		})
 		m.Arrange(advanced, v, true)
+		return v
 	}
-	check("播放入场短片", c.Entry, func(v bool) { get().Entry = v })
+	entry := check("播放入场短片", c.Entry, func(c *session.Config, v bool) { c.Entry = v })
 	bodyText(advanced, "关闭「显示自然背景」时，本次也会跳过入场短片。", 12, true)
-	check("入场人声引导", c.Voice, func(v bool) { get().Voice = v })
+	voice := check("入场人声引导", c.Voice, func(c *session.Config, v bool) { c.Voice = v })
 	action(advanced, "预听人声", func() { a.previewGuide(get().Scene, f.notice) })
-	check("到点提示音", c.ReminderSound, func(v bool) { get().ReminderSound = v })
+	reminder := check("到点提示音", c.ReminderSound, func(c *session.Config, v bool) { c.ReminderSound = v })
 	action(advanced, "试听到点提示音", func() {
 		if err := playReminderSound(); err != nil {
 			showMessage(f.notice, "提示音未播放，请检查系统声音输出。")
@@ -248,7 +264,25 @@ func (a *application) buildFocusEffects(root m.ID, f *configForm, inSettings boo
 	})
 	refreshSound()
 	refreshSummary()
-	return func() { refreshSound(); refreshSummary() }
+	return func() {
+		if inSettings {
+			cfg := get()
+			m.SetChecked(musicSwitch, cfg.Sound)
+			m.Send(musicSlider, "setDoubleValue:", cfg.Volume)
+			m.Send(natureSlider, "setDoubleValue:", cfg.Ambience.Volume)
+			for i, mode := range modes {
+				if mode == cfg.Ambience.Mode {
+					m.Send(naturePicker, "selectItemAtIndex:", int64(i))
+					break
+				}
+			}
+			m.SetChecked(entry, cfg.Entry)
+			m.SetChecked(voice, cfg.Voice)
+			m.SetChecked(reminder, cfg.ReminderSound)
+		}
+		refreshSound()
+		refreshSummary()
+	}
 }
 
 func (a *application) formMediaFailureCaption(f *configForm) string {

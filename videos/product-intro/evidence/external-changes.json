@@ -1,0 +1,16 @@
+{
+  "README.md": {
+    "before": "9c3d4bc87e3b258cbba6732fe325a8f316811045128558885a0f9cb61312eebd",
+    "after": "68b057fbf162f8b04bfa6a998b394b7c00e3cb6a778ccaa7e156e86079397f40",
+    "modifiedAt": "2026-11-18T18:38:34.909270+08:00",
+    "observation": "初始快照后、视频制作期间根 README 改为产品功能介绍。本轮写入仅针对 videos/product-intro/README.md，未写根 README；保留该外部更新，不回退或纳入视频变更。",
+    "subsequentChanges": [
+      {
+        "before": "abb8f0633bcbe96bda1fcba9f7738c870d379e74163fa0b82b70037f8030f8e3",
+        "after": "68b057fbf162f8b04bfa6a998b394b7c00e3cb6a778ccaa7e156e86079397f40",
+        "authorization": "用户要求更新 README 并加入已交付视频；2026-11-18-readme-product-video",
+        "scope": "仅加入产品介绍视频封面、观看、字幕和署名入口，其余正文与本轮快照一致。"
+      }
+    ]
+  }
+}

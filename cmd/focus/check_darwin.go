@@ -318,6 +318,7 @@ func (a *application) nativeCheck(uiChecks map[string]any) {
 			result["fullscreenError"] = err.Error()
 		}
 		check("nativeFullscreenOwnership", err == nil)
+		check("fullscreenErrorLogged", a.nativeDebugHas(debugFullscreenFailed, debugError))
 		result["nativeFullscreenAXWritesVerified"] = axWritesVerified
 		check("noPendingEffects", a.pendingEnvironment() == 0 && !a.focusPending)
 		if len(failures) > 0 {
@@ -337,100 +338,166 @@ func (a *application) nativeCheck(uiChecks map[string]any) {
 	})
 }
 
-// A distinct disposable bundle must be refused before countdown or storage.
-// This check only creates its own UI and does not need keyboard focus.
+// These checks use real controls and a file-backed store; unlike window
+// activation and fullscreen, they do not require keyboard ownership.
+func (a *application) nativeSettingsChecks(result map[string]any) {
+	check := func(name string, value bool) { result[name] = value }
+	path := a.store.Path
+	a.openFocusSettings()
+	settings := a.settingsSections[0]
+	dispatch := func(control m.ID) {
+		m.Send(control, "sendAction:to:", m.Send(control, "action"), m.Send(control, "target"))
+	}
+	immersion := nativeControl(settings, "沉浸模式")
+	oldSave := nativeButton(settings, "保存专注设置")
+	original := a.store.Data.Preferences
+	wasImmersive := original.Immersion
+	setImmersion := func(on bool) {
+		m.SetChecked(immersion, on)
+		dispatch(immersion)
+	}
+	setImmersion(!wasImmersive)
+	reopened, reopenErr := store.Open(a.dir)
+	check("focusSettingsCommitWithoutSave", immersion != 0 && m.Checked(immersion) != wasImmersive &&
+		a.store.Data.Preferences.Immersion != wasImmersive && reopenErr == nil &&
+		reopened.Data.Preferences.Immersion != wasImmersive && oldSave == 0)
+	setImmersion(wasImmersive)
+	a.store.Path = filepath.Join(path, "blocked")
+	setImmersion(!wasImmersive)
+	check("focusSettingsWriteFailureRestoresControl", immersion != 0 && m.Checked(immersion) == wasImmersive &&
+		a.store.Data.Preferences.Immersion == wasImmersive)
+	a.store.Path = path
+	a.nativeInlinePermissionChecks(check, settings, setImmersion, wasImmersive)
+	music := nativeButton(settings, "背景音乐")
+	musicVolume := nativeControl(settings, "音乐音量")
+	nature := nativeControl(settings, "白噪音选择")
+	natureVolume := nativeControl(settings, "白噪音音量")
+	entry := nativeButton(settings, "播放入场短片")
+	voice := nativeButton(settings, "入场人声引导")
+	reminder := nativeButton(settings, "到点提示音")
+	for _, change := range []struct {
+		control m.ID
+		on      bool
+	}{{music, true}, {entry, !original.Entry}, {voice, !original.Voice}, {reminder, !original.ReminderSound}} {
+		m.SetChecked(change.control, change.on)
+		dispatch(change.control)
+	}
+	m.Send(musicVolume, "setDoubleValue:", .42)
+	dispatch(musicVolume)
+	m.Send(nature, "selectItemAtIndex:", int64(2)) // rain
+	dispatch(nature)
+	m.Send(natureVolume, "setDoubleValue:", .54)
+	dispatch(natureVolume)
+	reopened, reopenErr = store.Open(a.dir)
+	durable := reopenErr == nil && music != 0 && musicVolume != 0 && nature != 0 && natureVolume != 0 && entry != 0 && voice != 0 && reminder != 0
+	if durable {
+		p := reopened.Data.Preferences
+		durable = p.Sound && p.Volume == .42 && p.Ambience != nil && p.Ambience.Mode == "rain" && p.Ambience.Volume == .54 &&
+			p.Entry != original.Entry && p.Voice != original.Voice && p.ReminderSound != original.ReminderSound
+	}
+	check("focusEffectsCommitWithoutSave", durable)
+	check("focusSettingsFixtureRestored", a.saveFocusPreference(func(p *store.Preferences) { *p = original }) == nil)
+	a.refreshFocusSettings()
+	a.openApplicationSettings()
+	appSettings := a.settingsSections[1]
+	check("applicationSettingsPermissionActionsRemoved", nativeButton(appSettings, "辅助功能权限…") == 0 &&
+		nativeButton(appSettings, "打开辅助功能权限…") == 0 && nativeButton(appSettings, "重新检查权限") == 0 &&
+		nativeControl(appSettings, "当前版本辅助功能权限") != 0)
+	debugToggle := nativeControl(a.settingsSections[1], "记录调试日志")
+	m.SetChecked(debugToggle, true)
+	dispatch(debugToggle)
+	debugPrefs, debugPrefsErr := store.Open(a.dir)
+	check("debugPreferenceDurable", debugToggle != 0 && debugPrefsErr == nil && debugPrefs.Data.Preferences.DebugLogging)
+	m.SetChecked(debugToggle, false)
+	dispatch(debugToggle)
+	debugView := nativeButton(a.settingsSections[1], "查看日志…")
+	m.Send(debugView, "performClick:", m.ID(0))
+	check("debugLogAttachedAfterDisable", debugView != 0 && !a.store.Data.Preferences.DebugLogging && a.detail != nil &&
+		nativeControl(m.Send(m.ID(a.detail.NativeHandle()), "contentView"), "日志级别") != 0)
+	if a.detail != nil {
+		a.detail.Close()
+	}
+}
+
+func (a *application) nativeInlinePermissionChecks(check func(string, bool), root m.ID, toggle func(bool), previous bool) {
+	status := nativeControl(root, "沉浸模式辅助功能权限")
+	help := nativeControl(root, "沉浸模式重新授权提示")
+	open := nativeButton(root, "打开辅助功能权限…")
+	recheck := nativeButton(root, "重新检查权限")
+	visible := func(id m.ID) bool {
+		return id != 0 && !objc.Send[bool](id, m.S("isHiddenOrHasHiddenAncestor"))
+	}
+	color := func(name string) bool {
+		return status != 0 && objc.Send[bool](m.Send(status, "textColor"), m.S("isEqual:"), m.Send(m.Class("NSColor"), name))
+	}
+	trusted, reads := false, 0
+	var readErr error
+	read := a.readImmersionAccess
+	a.readImmersionAccess = func() (bool, error) { reads++; return trusted, readErr }
+	defer func() { a.readImmersionAccess = read; toggle(previous) }()
+	toggle(false)
+	check("inlinePermissionOffHidesAndSkipsCheck", status != 0 && !visible(status) && !visible(open) && !visible(recheck) && reads == 0)
+	toggle(true)
+	check("inlinePermissionDeniedVisibleAndRed", reads > 0 && visible(status) && visible(help) && visible(open) && visible(recheck) &&
+		strings.Contains(m.Value(status), "未获") && strings.Contains(m.Value(help), "只跳过全屏") && color("systemRedColor") &&
+		nativeButton(root, "检查辅助功能权限…") == 0 && a.detail == nil && !session.Exists(a.controller.Snapshot().Phase))
+	trusted = true
+	m.Send(recheck, "performClick:", m.ID(0))
+	check("inlinePermissionRecheckShowsGreen", strings.Contains(m.Value(status), "已获") && color("systemGreenColor") && !visible(help) && a.detail == nil)
+	readErr = errors.New("隔离权限查询失败")
+	a.refreshImmersionPermission()
+	check("inlinePermissionActivationRefreshesUnknown", strings.Contains(m.Value(status), "无法判断") && color("labelColor") && !visible(help) && a.detail == nil)
+	readErr, trusted = nil, true
+	a.refreshImmersionPermission()
+	check("inlinePermissionRefreshDoesNotStart", color("systemGreenColor") && a.detail == nil &&
+		!session.Exists(a.controller.Snapshot().Phase))
+}
+
+// Verify the real start button path without letting this UI-only host touch
+// another application. The effects fixture verifies work and resume end to end.
 func (a *application) nativeImmersionPermissionChecks(result map[string]any) {
 	workApp, workErr := m.AppAt("/System/Applications/TextEdit.app")
 	trusted, accessErr := m.FocusAccess()
 	if workErr != nil || accessErr != nil || trusted {
-		result["immersionDeniedBeforeCountdown"] = false
 		return
 	}
-	beforePermission := a.store.Data.Preferences
+	before := a.store.Data.Preferences
 	beforeSession := a.store.Data.Current
 	beforeGoal, beforeNotice := a.draftGoal, a.notice
-	a.store.Data.Preferences.Immersion = true
-	cfg := beforePermission.Config()
-	cfg.Apps = []store.App{workApp}
-	reset := func() {
-		if a.detail != nil {
-			a.detail.Close()
-		}
+	a.debug.setEnabled(true)
+	defer a.debug.setEnabled(before.DebugLogging)
+	defer func() {
 		a.stopCountdown()
 		a.controller.End()
 		a.store.Data.Current = beforeSession
 		a.draftGoal, a.notice = beforeGoal, beforeNotice
-	}
-	defer func() {
-		a.readImmersionAccess = nil
-		a.protectionFailure = nil
-		reset()
-		result["immersionFixturePreferencesRestored"] = a.store.SetPreferences(beforePermission) == nil
+		result["immersionFixturePreferencesRestored"] = a.store.SetPreferences(before) == nil
 		a.renderMain()
 	}()
-	rejected := !a.startConfigured("沉浸权限原生回归", cfg, "", "")
-	result["immersionDeniedBeforeCountdown"] = rejected && a.detail != nil && !session.Exists(a.controller.Snapshot().Phase) &&
-		a.countdownAt.IsZero() && reflect.DeepEqual(beforeSession, a.store.Data.Current)
-	if !rejected || a.detail == nil {
-		return
-	}
-	detail := a.detail
-	result["immersionPermissionRepeatKeepsSheet"] = !a.startConfigured("重复点击", cfg, "", "") && a.detail == detail &&
-		!session.Exists(a.controller.Snapshot().Phase) && a.countdownAt.IsZero()
-	root := m.Send(m.ID(detail.NativeHandle()), "contentView")
-	next := nativeButton(root, "开始沉浸专注")
-	recheck := nativeButton(root, "重新检查权限")
-	status := nativeControl(root, "辅助功能检查结果")
-	enabled := func(button m.ID) bool { return button != 0 && objc.Send[bool](button, m.S("isEnabled")) }
-	result["immersionPermissionLocatesCurrentApp"] = m.CurrentApplicationPath() != "" &&
-		nativeButton(root, "在 Finder 中显示") != 0 && recheck != 0 && next != 0 && !enabled(next)
-	// Only change the read result on the disposable UI. No synthetic grant is
-	// ever used to launch, hide, or change another application's windows.
-	var readErr error
-	a.readImmersionAccess = func() (bool, error) { return trusted, readErr }
-	trusted = true
-	a.refreshImmersionPermission()
-	grantRefreshed := enabled(next) && !session.Exists(a.controller.Snapshot().Phase) && a.countdownAt.IsZero()
-	readErr = errors.New("隔离回归的权限读取失败")
-	m.Send(recheck, "performClick:", m.ID(0))
-	result["immersionPermissionRefreshIsReadOnly"] = grantRefreshed && !enabled(next) &&
-		strings.Contains(m.Value(status), "查询组件未能返回状态") &&
-		!session.Exists(a.controller.Snapshot().Phase) && reflect.DeepEqual(beforeSession, a.store.Data.Current)
-	readErr = nil
-	a.refreshImmersionPermission()
-	m.Send(next, "performClick:", m.ID(0))
-	started := a.controller.Snapshot()
-	result["immersionPermissionRequiresExplicitStart"] = grantRefreshed && started.Phase == "entry" && started.Immersion
-	reset()
+	cfg := before.Config()
+	cfg.Apps = []store.App{workApp}
+	accepted := a.startConfiguredMode("沉浸权限原生回归", cfg, "", "", true)
+	s := a.controller.Snapshot()
+	result["immersionStartsCountdownWithoutPermission"] = accepted && a.detail == nil &&
+		s.Phase == "entry" && s.Immersion && !a.countdownAt.IsZero()
+	result["immersionRepeatKeepsSession"] = !a.startConfiguredMode("重复点击", cfg, "", "", true) &&
+		s.ID == a.controller.Snapshot().ID
+	var outcome immersionOutcome
+	called := false
+	err := a.tryImmersionWindows(&outcome, []immersionTarget{{app: workApp}}, func() bool { return true }, a.debugAttempt,
+		func(*immersionTarget) error { called = true; return nil })
+	result["permissionErrorLogged"] = err == nil && !called && errors.Is(outcome.accessErr, errImmersionPermission) &&
+		a.nativeDebugHas(debugAccessDenied, debugError)
+}
 
-	trusted, readErr = false, nil
-	if a.startConfigured("普通专注回退原生回归", cfg, "", "") || a.detail == nil {
-		return
+func (a *application) nativeDebugHas(code debugCode, level debugLevel) bool {
+	records, _, err := a.debug.snapshot()
+	for _, record := range records {
+		if record.Code == code && record.Level == level {
+			return err == nil
+		}
 	}
-	root = m.Send(m.ID(a.detail.NativeHandle()), "contentView")
-	ordinary := nativeButton(root, "本次改用普通专注")
-	m.Send(ordinary, "performClick:", m.ID(0))
-	started = a.controller.Snapshot()
-	result["immersionPermissionOrdinaryStartIsOneTime"] = ordinary != 0 && started.Phase == "entry" &&
-		!started.Immersion && a.store.Data.Preferences.Immersion
-	reset()
-
-	if err := a.controller.Start(session.State{ID: "native-permission-resume", Goal: "恢复权限原生回归", Config: &cfg, Partial: true, Immersion: true}); err != nil {
-		return
-	}
-	a.controller.Pause()
-	paused := a.controller.Snapshot()
-	a.resumeWithConsent()
-	if a.detail == nil {
-		return
-	}
-	root = m.Send(m.ID(a.detail.NativeHandle()), "contentView")
-	next = nativeButton(root, "恢复沉浸专注")
-	blocked := errors.Is(a.protectionFailure, errImmersionPermission) && next != 0 && !enabled(next)
-	trusted = true
-	a.refreshImmersionPermission()
-	result["immersionPermissionResumeStaysPaused"] = blocked && enabled(next) &&
-		reflect.DeepEqual(paused, a.controller.Snapshot()) && !a.busy
+	return false
 }
 func abs(v float64) float64 {
 	if v < 0 {

@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Fail-closed final release packaging. A developer build is never a readiness claim."""
 import argparse, hashlib, json, os, pathlib, plistlib, shutil, subprocess, sys, tempfile
-from build import ROOT, APP, APP_NAME, VERSION, BUILD_NUMBER, PACKAGE_PLATFORM, TARGETS, digest, source_fingerprint, candidate_lock, bundle_files
+from build import (ROOT, APP, APP_NAME, VERSION, BUILD_NUMBER, PACKAGE_PLATFORM, TARGETS,
+                   digest, source_fingerprint, candidate_lock, bundle_files, signing_profile,
+                   verify_signing_requirement)
 
 CRITERIA = ["AC"+str(n) for n in range(1,14)]
 CHECKS = ["test", "native", "effects", "media", "package", "full-session", "notification-effect", "audio-listening", "accessibility", "display-lifecycle", "review-spec", "review-code"]
@@ -95,10 +97,13 @@ def local_package():
     print(output);return 0
 
 def signing_notice(signing):
-    return '本地 ad-hoc 签名' if signing == 'ad-hoc' else '已使用证书签名'
+    if signing == 'ad-hoc':
+        return '本地 ad-hoc 临时签名（测试包；升级后可能仍需重新授权）'
+    return '已使用稳定证书身份签名'
 
-ACCESSIBILITY_NOTICE = ('沉浸模式开始前会核对辅助功能权限。若系统开关已开但仍被拒绝，请通过归径的权限面板定位当前副本，'
-                        '在系统设置移除旧条目后重新添加这份应用。返回归径会更新状态，计时不会自动开始或恢复。\n')
+ACCESSIBILITY_NOTICE = ('沉浸模式尽力调整全屏；缺辅助功能权限或窗口失败时仍照常计时。'
+                        '可在归径的「设置 → 专注设置」打开系统权限并重新检查。'
+                        '首次从旧临时签名版本迁移，可能需要为当前版本重新授权一次。\n')
 
 def local_installation_notice(signing='ad-hoc'):
     manifest=json.loads((ROOT/'assets/release-media.json').read_text())
@@ -164,6 +169,11 @@ def verify_mounted_app(mounted, candidate):
         if arches!=[candidate['architecture']]:return False
     if subprocess.run(['codesign','--verify','--strict',str(mounted)],capture_output=True).returncode!=0:
         return False
+    if candidate.get('signingRequirement'):
+        try:
+            verify_signing_requirement(mounted,candidate['signingRequirement'])
+        except subprocess.CalledProcessError:
+            return False
     return True
 
 def dmg_image_format(image):
@@ -245,6 +255,17 @@ def stage_architecture(app, architecture):
 
 def local_dmg(*architectures):
     """A real, mountable local DMG. It never claims formal release readiness."""
+    candidate=json.loads((APP.parent/'candidate.json').read_text())
+    profile=signing_profile(APP.parent)
+    if profile or os.environ.get('FOCUS_REQUIRE_STABLE_SIGNING')=='1' or candidate.get('signing')=='certificate':
+        if (not profile or candidate.get('signing')!='certificate' or
+                candidate.get('signingRequirement')!=profile['requirement']):
+            raise RuntimeError('stable signing required; rebuild with the configured Developer ID identity')
+        verify_signing_requirement(APP,profile['requirement'])
+    else:
+        if os.environ.get('FOCUS_ALLOW_ADHOC_DMG')!='1':
+            raise RuntimeError('no stable signing identity; set FOCUS_ALLOW_ADHOC_DMG=1 only for a temporary test DMG')
+        print('Packaging an ad-hoc local test build; authorization continuity is not verified.',flush=True)
     subprocess.run([sys.executable,'scripts/verify.py','media'],cwd=ROOT,check=True)
     subprocess.run([sys.executable,'scripts/verify.py','package'],cwd=ROOT,check=True)
     for architecture in architectures or (None,):
@@ -294,7 +315,8 @@ def package_dmg(architecture):
                     installMethod='drag-to-Applications-shortcut',
                     installationNoticeSHA256=hashlib.sha256(notice.encode()).hexdigest(),
                     appFileCount=len(payload['files']),exactSignedBundleRoundTrip=True,
-                    hdiutilVerifyAndCodesignVerified=True,remainingReadiness=readiness())
+                    hdiutilVerifyAndCodesignVerified=True,signing=candidate.get('signing','ad-hoc'),
+                    remainingReadiness=readiness())
         if architecture:
             report['architecture']=architecture
         (publication/(image_name+'.sha256')).write_text(sha+'  '+image_name+'\n')

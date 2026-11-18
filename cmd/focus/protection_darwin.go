@@ -74,6 +74,7 @@ type protectionPlan struct {
 	focusLinked  bool
 	focusProfile string
 	immersion    bool
+	debugAttempt string
 }
 
 func (a *application) newProtectionPlan(resume bool, allowed []string, consent map[string]bool) *protectionPlan {
@@ -84,7 +85,7 @@ func (a *application) newProtectionPlan(resume bool, allowed []string, consent m
 		accepted[key] = value
 	}
 	s := a.controller.Snapshot()
-	p := &protectionPlan{id: s.ID, generation: a.protectionGeneration, resume: resume, allowed: append([]string{}, allowed...), consent: accepted, immersion: s.Immersion}
+	p := &protectionPlan{id: s.ID, generation: a.protectionGeneration, resume: resume, allowed: append([]string{}, allowed...), consent: accepted, immersion: s.Immersion, debugAttempt: a.debugAttempt}
 	if !s.Immersion {
 		p.focusLinked, p.focusProfile = prefs.FocusLinked, prefs.FocusProfile
 	}
@@ -109,8 +110,6 @@ func (a *application) preparationValid(p *protectionPlan) bool {
 	return valid
 }
 
-const immersionPermissionPaused = "计时保持暂停。点「处理准备问题…」查看归径当前的辅助功能权限。"
-
 func (a *application) protectionStopped(err error) {
 	a.diagnostic("preparation", "failed")
 	a.protectionFailure = err
@@ -119,11 +118,7 @@ func (a *application) protectionStopped(err error) {
 	if !a.persist() {
 		return
 	}
-	text := "环境准备未完成，计时保持暂停。查看详情后重试，或结束专注。"
-	if immersionPermissionIssue(err) {
-		text = immersionPermissionPaused
-	}
-	a.notice = Notice{noticeProtection, text}
+	a.notice = Notice{noticeProtection, "环境准备未完成，计时保持暂停。查看详情后重试，或结束专注。"}
 	a.renderMain()
 	a.openMain()
 	a.effect(a.restore, nil)

@@ -1,0 +1,11 @@
+{
+  "sourceApp": "/Users/zyb/Documents/git/yunsiweilai.com/my-appstore/zhuanzhuli/.build/归径.app",
+  "app": "/private/var/folders/md/6pw3c8rd7xs6zlc79g6kgtqm0000gn/T/guijing-video-osvae6pv/归径补录.app",
+  "stage": "/private/var/folders/md/6pw3c8rd7xs6zlc79g6kgtqm0000gn/T/guijing-video-osvae6pv",
+  "data": "/private/var/folders/md/6pw3c8rd7xs6zlc79g6kgtqm0000gn/T/guijing-video-osvae6pv/data-retake",
+  "version": "0.4.0",
+  "build": 23,
+  "executableSHA256": "fc064f39f7ed42e7a0a1201a48df20513a4793b2ddd0ed7a9162327a6fff1700",
+  "purpose": "retake-real-end-action",
+  "sourceExecutableSHA256": "f0442564eaec0c096ae690f5cb8996725ac672d2d0d41b7237729ecb6e2adb89"
+}

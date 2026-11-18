@@ -1,0 +1,81 @@
+{
+  "technicalStatus": "pass",
+  "duration": 77.0,
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "maxVolumeDB": -11.0,
+  "meanVolumeDB": -26.2,
+  "fullDecode": true,
+  "faststart": true,
+  "sourceRecordings": {
+    "06-goal-apps.mov": {
+      "sha256": "4f8eb9a74d43caaa402bdfdc589a8bfd716f3c2458fd9875465f0adda1e29780",
+      "duration": 39.8
+    },
+    "02-environment.mov": {
+      "sha256": "dbdbe68214ff28617874b89318dc3af6a868f8cba794bcae6937842708184fec",
+      "duration": 179.733333
+    },
+    "03-working.mov": {
+      "sha256": "0cb83850a5621d94f7f8bc24ba17f5ab27e279d273d88109dd3074184e86d7aa",
+      "duration": 29.733333
+    },
+    "04-controls.mov": {
+      "sha256": "f520cbd5f45864cd38c0232a5870610be88bc8018191522ed8744015813ee8d6",
+      "duration": 39.8
+    },
+    "07-end-retake.mov": {
+      "sha256": "b83ea2baaa828e10a72c3b08c759d9b33031ffce2f7358bb62a8d179bae8efc2",
+      "duration": 109.783333
+    },
+    "08-retake-history.mov": {
+      "sha256": "473fc49cbd83d069f305247fe1b53e373991a481b2d2f61249b92f2b2b8f78d7",
+      "duration": 14.683333
+    }
+  },
+  "demoElapsedSeconds": 128.916180917,
+  "externalChangesPreserved": {
+    "README.md": {
+      "before": "9c3d4bc87e3b258cbba6732fe325a8f316811045128558885a0f9cb61312eebd",
+      "after": "68b057fbf162f8b04bfa6a998b394b7c00e3cb6a778ccaa7e156e86079397f40",
+      "modifiedAt": "2026-11-18T18:38:34.909270+08:00",
+      "observation": "初始快照后、视频制作期间根 README 改为产品功能介绍。本轮写入仅针对 videos/product-intro/README.md，未写根 README；保留该外部更新，不回退或纳入视频变更。",
+      "subsequentChanges": [
+        {
+          "before": "abb8f0633bcbe96bda1fcba9f7738c870d379e74163fa0b82b70037f8030f8e3",
+          "after": "68b057fbf162f8b04bfa6a998b394b7c00e3cb6a778ccaa7e156e86079397f40",
+          "authorization": "用户要求更新 README 并加入已交付视频；2026-11-18-readme-product-video",
+          "scope": "仅加入产品介绍视频封面、观看、字幕和署名入口，其余正文与本轮快照一致。"
+        }
+      ]
+    }
+  },
+  "files": {
+    "guijing-intro.mp4": {
+      "bytes": 5316725,
+      "sha256": "66fcc9fc2f9cc85a1491c834864e69353a4274f3eabf1716524689ff8461fab9"
+    },
+    "poster.jpg": {
+      "bytes": 91989,
+      "sha256": "574b1e1b4187131118d5c68c2ce4999171d570561448c47301de76d5e6a47955"
+    },
+    "guijing-intro.srt": {
+      "bytes": 1142,
+      "sha256": "0792b584222b4f312b1732b200c7f9e736a15ac39f1262bdd48df90c8f231447"
+    },
+    "script.md": {
+      "bytes": 3081,
+      "sha256": "2b33f5c337dc8ea7749a84e96feea3d7500454506fb8aef231626b8cff21fccc"
+    },
+    "CREDITS.md": {
+      "bytes": 2337,
+      "sha256": "592648eb52013e6f674d09ddfdae66ee0431b4fdd97b33c1c9038280aa8a4d91"
+    },
+    "README.md": {
+      "bytes": 3451,
+      "sha256": "d5205032710ab620373fb49cec9256cdae490016f2769ce4857a4027d00a6f29"
+    }
+  },
+  "review": "Visual interpretation, privacy and usefulness require independent review; this command does not grade them."
+}

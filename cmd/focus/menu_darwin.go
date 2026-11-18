@@ -53,8 +53,19 @@ func (a *application) menu() {
 				a.openControl(true)
 			}
 		})
+		trayMenu := mygo.NewMenu([]*mygo.MenuItem{
+			item("打开控制面板", "", func() { a.openControl(false) }),
+			mygo.Separator(),
+			item("退出"+appDisplayName, "", a.quit),
+		})
 		t.OnRightClick(func() {
-			a.openControl(false)
+			a.trayMenuVisible = true
+			a.acceptanceState()
+			defer func() {
+				a.trayMenuVisible = false
+				a.acceptanceState()
+			}()
+			trayMenu.Popup(nil)
 		})
 	}
 }
@@ -83,8 +94,12 @@ func (a *application) refreshTrayTitle(title string) {
 			} else {
 				title = "◉ "
 			}
-			a.tray.SetTitle(fmt.Sprintf("%s部分保护 · %d 分", title, v.Config.Minutes))
-			a.tray.SetToolTip(fmt.Sprintf("%s · 以部分保护开始「%s」· %d 分钟（右键打开）", appDisplayName, v.Name, v.Config.Minutes))
+			mode := "部分保护"
+			if a.store.Data.Preferences.Immersion {
+				mode = "沉浸模式"
+			}
+			a.tray.SetTitle(fmt.Sprintf("%s%s · %d 分", title, mode, v.Config.Minutes))
+			a.tray.SetToolTip(fmt.Sprintf("%s · 以%s开始「%s」· %d 分钟（右键打开菜单）", appDisplayName, mode, v.Name, v.Config.Minutes))
 			return
 		}
 	}

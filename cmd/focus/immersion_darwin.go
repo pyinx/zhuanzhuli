@@ -14,12 +14,36 @@ import (
 )
 
 type immersionTarget struct {
-	app    session.App
-	ref    journal.Ref
-	window *m.FullscreenWindow
+	app        session.App
+	ref        journal.Ref
+	window     *m.FullscreenWindow
+	fullscreen bool
 }
 
 var errImmersionAppNotRunning = errors.New("尚未找到正在运行的应用")
+
+type immersionOutcome struct {
+	selected, fullscreen int
+	accessErr            error
+	handedOff            bool
+}
+
+func (r immersionOutcome) caption() string {
+	switch {
+	case errors.Is(r.accessErr, errImmersionPermission):
+		return "未获辅助功能权限，本次未调整全屏。"
+	case r.accessErr != nil:
+		return "无法确认辅助功能权限，本次未调整全屏。"
+	case r.fullscreen == 0:
+		return "本次未能调整全屏，计时照常。"
+	case r.fullscreen < r.selected:
+		return "部分窗口未全屏，计时照常。"
+	case !r.handedOff:
+		return "未能切回专注应用，计时照常。"
+	default:
+		return ""
+	}
+}
 
 func immersionRunningApp(app session.App, refs []journal.Ref, scanErr error) (journal.Ref, error) {
 	for _, err := range protectionLeaves(scanErr) {
@@ -52,28 +76,18 @@ func immersionRunningApp(app session.App, refs []journal.Ref, scanErr error) (jo
 	return journal.Ref{}, errImmersionAppNotRunning
 }
 
-func openMissingImmersionApps(targets []immersionTarget, refs []journal.Ref, scanErr error, open func(session.App) error) error {
-	var missing []session.App
-	var errs []error
+func openMissingImmersionApps(targets []immersionTarget, refs []journal.Ref, scanErr error, open func(session.App) error) map[string]error {
+	skipped := make(map[string]error)
 	for _, t := range targets {
 		_, err := immersionRunningApp(t.app, refs, scanErr)
 		if errors.Is(err, errImmersionAppNotRunning) {
-			missing = append(missing, t.app)
-		} else if err != nil {
-			errs = append(errs, fmt.Errorf("「%s」：%w", t.app.Name, err))
+			err = open(t.app)
+		}
+		if err != nil {
+			skipped[t.app.ID] = err
 		}
 	}
-	// Reopening an already-running bundle would not establish the identity
-	// of the existing process. Leave it untouched and explain the mismatch.
-	if len(errs) != 0 {
-		return errors.Join(errs...)
-	}
-	for _, app := range missing {
-		if err := open(app); err != nil {
-			errs = append(errs, fmt.Errorf("「%s」无法打开：%w", app.Name, err))
-		}
-	}
-	return errors.Join(errs...)
+	return skipped
 }
 
 func (a *application) pendingEnvironment() int {
@@ -97,10 +111,6 @@ func immersionInstance(ref journal.Ref) error {
 var errImmersionPermission = errors.New("当前版本未获辅助功能权限")
 var errImmersionPermissionCheck = errors.New("无法核对辅助功能权限")
 
-func immersionPermissionIssue(err error) bool {
-	return errors.Is(err, errImmersionPermission) || errors.Is(err, errImmersionPermissionCheck)
-}
-
 func (a *application) checkImmersionAccess() error {
 	read := a.readImmersionAccess
 	if read == nil {
@@ -116,19 +126,58 @@ func (a *application) checkImmersionAccess() error {
 	return nil
 }
 
-func (a *application) enterImmersiveWork(s session.State, valid func() bool) error {
+func debugAXCode(err error) int32 {
+	var ax *m.FullscreenAXError
+	if errors.As(err, &ax) {
+		return ax.Code
+	}
+	return 0
+}
+
+// Permission is needed for AX window operations, not for the session clock or
+// AppKit foreground handoff. Keep an unavailable permission distinct from cancellation.
+func (a *application) tryImmersionWindows(result *immersionOutcome, targets []immersionTarget, valid func() bool, attempt string, try func(*immersionTarget) error) error {
+	if !valid() {
+		return errHideCancelled
+	}
+	result.accessErr = a.checkImmersionAccessFor(attempt)
+	if result.accessErr != nil {
+		return nil
+	}
+	for i := range targets {
+		if !valid() {
+			return errHideCancelled
+		}
+		t := &targets[i]
+		err := try(t)
+		if errors.Is(err, errHideCancelled) {
+			return errHideCancelled
+		}
+		t.fullscreen = err == nil
+		if t.fullscreen {
+			result.fullscreen++
+		}
+	}
+	if !valid() {
+		return errHideCancelled
+	}
+	return nil
+}
+
+func (a *application) enterImmersiveWork(s session.State, valid func() bool, attempt string) (immersionOutcome, error) {
+	result := immersionOutcome{selected: len(s.AllowedIDs())}
 	isCurrent := func() bool {
 		var ok bool
 		mygo.RunOnMain(func() { ok = valid() })
 		return ok
 	}
-	if err := a.checkImmersionAccess(); err != nil {
-		return err
+	if !isCurrent() {
+		return result, errHideCancelled
 	}
-	if a.immersionJournal == nil || s.Config == nil {
-		return errors.New("全屏恢复记录或本次应用配置不可用")
+	if s.Config == nil {
+		return result, nil
 	}
-	targets := make([]immersionTarget, 0, len(s.AllowedIDs()))
+	targets := make([]immersionTarget, 0, result.selected)
 	defer func() {
 		for _, t := range targets {
 			if t.window != nil && a.fullscreenLeases[t.ref] != t.window {
@@ -147,7 +196,8 @@ func (a *application) enterImmersiveWork(s session.State, valid func() bool) err
 		var err error
 		mygo.RunOnMain(func() { canonical, err = m.AppAt(item.Path) })
 		if err != nil || canonical.ID != item.ID || (a.fixtureRoot != "" && !a.ownFixture(journal.Ref{BundleID: item.ID, Path: canonical.Path})) {
-			return fmt.Errorf("「%s」的应用位置或身份已变化，请重新选择", item.Name)
+			a.debugEvent(debugTargetFailed, attempt, item.ID, 0)
+			continue
 		}
 		canonical.Name = item.Name
 		if canonical.Name == "" {
@@ -155,18 +205,11 @@ func (a *application) enterImmersiveWork(s session.State, valid func() bool) err
 		}
 		targets = append(targets, immersionTarget{app: canonical})
 	}
-	if len(targets) == 0 || len(targets) != len(s.AllowedIDs()) {
-		return errors.New("本轮有专注应用无法核对位置，请重新选择")
-	}
 
-	// Open missing applications once, then allow their windows to finish loading.
 	var initialRefs []journal.Ref
 	var initialErr error
 	mygo.RunOnMain(func() { initialRefs, initialErr = m.Running() })
-	if !isCurrent() {
-		return errHideCancelled
-	}
-	openErr := openMissingImmersionApps(targets, initialRefs, initialErr, func(app session.App) error {
+	skipped := openMissingImmersionApps(targets, initialRefs, initialErr, func(app session.App) error {
 		var openErr error
 		mygo.RunOnMain(func() {
 			if !valid() {
@@ -177,49 +220,71 @@ func (a *application) enterImmersiveWork(s session.State, valid func() bool) err
 		})
 		return openErr
 	})
-	if openErr != nil {
-		return openErr
-	}
-
-	// Resolve all windows before mutating any. Do not use a similarly named app,
-	// another copy of the bundle, or an arbitrary member of a multi-window list.
+	// Resolve processes together, so multiple applications starting at the
+	// same time share one grace period. Permanent failures don't delay others.
 	deadline := time.Now().Add(4 * time.Second)
 	for {
 		if !isCurrent() {
-			return errHideCancelled
+			return result, errHideCancelled
 		}
 		var refs []journal.Ref
 		var scanErr error
 		mygo.RunOnMain(func() { refs, scanErr = m.Running() })
-		var missing []error
+		waiting := false
 		for i := range targets {
 			t := &targets[i]
-			if t.window != nil {
+			if skipped[t.app.ID] != nil {
 				continue
 			}
 			ref, err := immersionRunningApp(t.app, refs, scanErr)
-			if err != nil {
-				missing = append(missing, fmt.Errorf("「%s」：%w", t.app.Name, err))
-				continue
+			t.ref = ref
+			if errors.Is(err, errImmersionAppNotRunning) && time.Now().Before(deadline) {
+				waiting = true
+			} else if err != nil {
+				skipped[t.app.ID] = err
 			}
-			w, err := m.WorkFullscreenWindow(int32(ref.PID))
-			if err != nil {
-				missing = append(missing, fmt.Errorf("「%s」：%w", t.app.Name, err))
-				continue
-			}
-			t.ref, t.window = ref, w
 		}
-		if len(missing) == 0 {
+		if !waiting {
 			break
-		}
-		if time.Now().After(deadline) {
-			return errors.Join(missing...)
 		}
 		time.Sleep(100 * time.Millisecond)
 	}
+	for id, err := range skipped {
+		if errors.Is(err, errHideCancelled) {
+			return result, errHideCancelled
+		}
+		a.debugEvent(debugTargetFailed, attempt, id, debugAXCode(err))
+	}
 
-	var preflight []error
-	for _, t := range targets {
+	// Windows created during application startup share a short grace period.
+	// Inspect each instance again before addressing its PID via AX.
+	windowDeadline := time.Now().Add(4 * time.Second)
+	err := a.tryImmersionWindows(&result, targets, isCurrent, attempt, func(t *immersionTarget) error {
+		if t.ref.PID == 0 {
+			return errImmersionAppNotRunning
+		}
+		if a.immersionJournal == nil {
+			a.debugEvent(debugStorageFailed, attempt, t.app.ID, 0)
+			return errors.New("全屏恢复记录不可用")
+		}
+		for {
+			if !isCurrent() {
+				return errHideCancelled
+			}
+			err := immersionInstance(t.ref)
+			if err == nil {
+				t.window, err = m.WorkFullscreenWindow(int32(t.ref.PID))
+			}
+			if err == nil {
+				break
+			}
+			if !errors.Is(err, m.ErrWorkWindowUnavailable) || !time.Now().Before(windowDeadline) {
+				a.debugEvent(debugTargetFailed, attempt, t.app.ID, debugAXCode(err))
+				return err
+			}
+			time.Sleep(100 * time.Millisecond)
+		}
+		a.debugEvent(debugWindowReady, attempt, t.app.ID, 0)
 		full, err := t.window.State()
 		if err == nil && !full {
 			err = t.window.Writable()
@@ -228,50 +293,123 @@ func (a *application) enterImmersiveWork(s session.State, valid func() bool) err
 			}
 		}
 		if err != nil {
-			preflight = append(preflight, fmt.Errorf("「%s」：%w", t.app.Name, err))
+			a.debugEvent(debugWindowUnsupported, attempt, t.app.ID, debugAXCode(err))
+			return err
 		}
+		if err := a.fullscreenTarget(*t, isCurrent, attempt); err != nil {
+			return err
+		}
+		return nil
+	})
+	if err != nil {
+		return result, err
 	}
-	if len(preflight) != 0 {
-		return errors.Join(preflight...)
-	}
-	for i, t := range targets {
-		if err := a.fullscreenTarget(t, isCurrent); err != nil {
-			failed := []error{fmt.Errorf("「%s」：%w", t.app.Name, err)}
-			for _, skipped := range targets[i+1:] {
-				failed = append(failed, fmt.Errorf("「%s」：本轮已停止，未继续准备", skipped.app.Name))
+	if result.fullscreen > 0 {
+		for i := range targets {
+			t := &targets[i]
+			if !t.fullscreen {
+				continue
 			}
-			return errors.Join(failed...)
+			if err := immersionInstance(t.ref); err != nil {
+				a.debugEvent(debugHandoffFailed, attempt, t.app.ID, 0)
+				t.fullscreen = false
+				result.fullscreen--
+			} else if full, err := t.window.State(); err != nil || !full {
+				a.debugEvent(debugFullscreenFailed, attempt, t.app.ID, debugAXCode(err))
+				t.fullscreen = false
+				result.fullscreen--
+			}
+		}
+		if result.fullscreen > 0 {
+			if err := a.activateImmersiveTarget(targets, valid, true); err == nil {
+				result.handedOff = true
+				a.debugEvent(debugHandoffConfirmed, attempt, "", 0)
+				return result, nil
+			} else if errors.Is(err, errHideCancelled) {
+				return result, err
+			}
 		}
 	}
-	for _, t := range targets {
-		if err := immersionInstance(t.ref); err != nil {
-			return fmt.Errorf("「%s」在交接前退出或更换：%w", t.app.Name, err)
-		}
-		if full, err := t.window.State(); err != nil || !full {
-			return fmt.Errorf("「%s」在交接前未保持原生全屏", t.app.Name)
-		}
+	if err := a.activateImmersiveTarget(targets, valid, false); err == nil {
+		result.handedOff = true
+		a.debugEvent(debugWindowedHandoff, attempt, "", 0)
+	} else if errors.Is(err, errHideCancelled) {
+		return result, err
+	} else {
+		a.debugEvent(debugHandoffFailed, attempt, "", debugAXCode(err))
 	}
-	return a.activateImmersiveTarget(targets, valid)
+	return result, nil
 }
 
-func (a *application) activateImmersiveTarget(targets []immersionTarget, valid func() bool) error {
-	target := targets[0]
+func (a *application) activateImmersiveTarget(targets []immersionTarget, valid func() bool, fullscreen bool) error {
+	var ordered []immersionTarget
+	var cancelled bool
+	mygo.RunOnMain(func() {
+		cancelled = !valid()
+		if cancelled {
+			return
+		}
+		var foreground, last *immersionTarget
+		var rest []immersionTarget
+		for _, t := range targets {
+			if t.ref.PID == 0 || (fullscreen && !t.fullscreen) {
+				continue
+			}
+			active, err := m.Active(t.ref)
+			if err != nil {
+				continue
+			}
+			switch {
+			case active && foreground == nil:
+				foreground = &t
+			case a.lastWork != nil && *a.lastWork == t.ref:
+				last = &t
+			default:
+				rest = append(rest, t)
+			}
+		}
+		if foreground != nil {
+			ordered = append(ordered, *foreground)
+		}
+		if last != nil {
+			ordered = append(ordered, *last)
+		}
+		ordered = append(ordered, rest...)
+	})
+	if cancelled {
+		return errHideCancelled
+	}
+	return tryImmersionHandoffs(ordered, func(target immersionTarget) error {
+		return a.confirmImmersiveHandoff(target, valid, fullscreen)
+	})
+}
+
+func tryImmersionHandoffs(targets []immersionTarget, handoff func(immersionTarget) error) error {
+	if len(targets) == 0 {
+		return errors.New("没有可交接的专注应用")
+	}
+	var lastErr error
+	for _, target := range targets {
+		lastErr = handoff(target)
+		if lastErr == nil || errors.Is(lastErr, errHideCancelled) {
+			return lastErr
+		}
+	}
+	return lastErr
+}
+
+func (a *application) confirmImmersiveHandoff(target immersionTarget, valid func() bool, fullscreen bool) error {
 	var err error
 	mygo.RunOnMain(func() {
 		if !valid() {
 			err = errHideCancelled
 			return
 		}
-		for _, t := range targets {
-			if active, _ := m.Active(t.ref); active {
-				target = t
-				return
-			}
-			if a.lastWork != nil && *a.lastWork == t.ref {
-				target = t
-			}
+		var active bool
+		active, err = m.Active(target.ref)
+		if err == nil && !active {
+			err = m.Activate(target.ref)
 		}
-		err = m.Activate(target.ref)
 	})
 	if err != nil {
 		return err
@@ -290,68 +428,91 @@ func (a *application) activateImmersiveTarget(targets []immersionTarget, valid f
 			return err
 		}
 		if active {
-			// An existing fullscreen belongs to the user. macOS may keep a
-			// different window of that app focused; do not force it to switch.
-			if a.fullscreenLeases[target.ref] == nil {
-				if full, stateErr := target.window.State(); stateErr == nil && full {
-					mygo.RunOnMain(func() { a.lastWork = &target.ref })
-					return nil
+			focused := !fullscreen || a.fullscreenLeases[target.ref] == nil
+			if !focused {
+				if current, focusErr := m.FocusedFullscreenWindow(int32(target.ref.PID)); focusErr == nil {
+					focused = target.window.Matches(current)
+					current.Close()
 				}
 			}
-			if current, focusErr := m.FocusedFullscreenWindow(int32(target.ref.PID)); focusErr == nil {
-				match := target.window.Matches(current)
-				current.Close()
-				if match {
+			// For pre-existing fullscreen, do not force macOS to switch
+			// away from another focused window of the same app.
+			if focused {
+				if fullscreen {
 					if full, stateErr := target.window.State(); stateErr != nil || !full {
-						return fmt.Errorf("「%s」已离开原生全屏", target.app.Name)
+						return errors.New("交接时工作窗口已离开原生全屏")
 					}
-					mygo.RunOnMain(func() { a.lastWork = &target.ref })
-					return nil
 				}
+				mygo.RunOnMain(func() {
+					if !valid() {
+						err = errHideCancelled
+					} else {
+						a.lastWork = &target.ref
+					}
+				})
+				return err
 			}
 		}
 		time.Sleep(50 * time.Millisecond)
 	}
-	return errors.New("macOS 未将前台交给选定的全屏应用")
+	return errors.New("未确认切回专注应用")
 }
 
-func (a *application) fullscreenTarget(t immersionTarget, valid func() bool) error {
+func (a *application) fullscreenTarget(t immersionTarget, valid func() bool, attempt string) error {
 	w := t.window
+	fullscreenFailure := func(err error) error {
+		a.debugEvent(debugFullscreenFailed, attempt, t.ref.BundleID, debugAXCode(err))
+		return err
+	}
+	storage := func(err error) error {
+		if err != nil {
+			a.debugEvent(debugStorageFailed, attempt, t.ref.BundleID, 0)
+		}
+		return err
+	}
 	if !valid() {
 		return errHideCancelled
 	}
 	if err := immersionInstance(t.ref); err != nil {
-		return err
+		return fullscreenFailure(err)
 	}
 	full, err := w.State()
-	if err != nil || full {
-		return err
+	if err != nil {
+		return fullscreenFailure(err)
+	}
+	if full {
+		a.debugEvent(debugFullscreenPreserved, attempt, t.ref.BundleID, 0)
+		return nil
 	}
 	if !w.Watching() || w.Changed() {
-		return errors.New("工作窗口在准备时发生变化，请重试")
+		return fullscreenFailure(errors.New("工作窗口在准备时发生变化，请重试"))
 	}
 	id := fmt.Sprintf("fullscreen-%d-%d", t.ref.PID, time.Now().UnixNano())
 	if err := a.immersionJournal.Begin(id, t.ref, false); err != nil {
-		return err
+		return storage(err)
 	}
 	if !valid() {
-		return errors.Join(errHideCancelled, a.immersionJournal.Abandon(t.ref, "cancelled before request"))
+		return errors.Join(errHideCancelled, storage(a.immersionJournal.Abandon(t.ref, "cancelled before request")))
 	}
 	full, err = w.State()
 	if err == nil && full {
-		return a.immersionJournal.Abandon(t.ref, "window entered fullscreen before our request")
+		a.debugEvent(debugFullscreenPreserved, attempt, t.ref.BundleID, 0)
+		return storage(a.immersionJournal.Abandon(t.ref, "window entered fullscreen before our request"))
 	}
 	if err != nil || w.Changed() {
-		return errors.Join(errors.New("请求前窗口状态已改变，请重试"), err, a.immersionJournal.Abandon(t.ref, "window changed before request"))
+		return errors.Join(fullscreenFailure(errors.Join(errors.New("请求前窗口状态已改变，请重试"), err)),
+			storage(a.immersionJournal.Abandon(t.ref, "window changed before request")))
 	}
 	if a.fullscreenLeases == nil {
 		a.fullscreenLeases = map[journal.Ref]*m.FullscreenWindow{}
 	}
 	a.fullscreenLeases[t.ref] = w
+	a.debugEvent(debugFullscreenRequest, attempt, t.ref.BundleID, 0)
 	if err := enterFullscreenAndArmRestore(w); err != nil {
-		return err
+		return fullscreenFailure(err)
 	}
-	return a.immersionJournal.Applied(id)
+	a.debugEvent(debugFullscreenConfirmed, attempt, t.ref.BundleID, 0)
+	return storage(a.immersionJournal.Applied(id))
 }
 
 type fullscreenObservation interface {
@@ -429,7 +590,10 @@ func (a *application) restoreImmersion() error {
 		w := a.fullscreenLeases[r]
 		err := a.restoreFullscreen(entry, w, immersionInstance(r))
 		if err != nil {
+			a.debugEvent(debugRestoreFailed, "", r.BundleID, debugAXCode(err))
 			errs = append(errs, fmt.Errorf("「%s」的全屏待处理：%w", r.Label, err))
+		} else {
+			a.debugEvent(debugRestoreConfirmed, "", r.BundleID, 0)
 		}
 		if w != nil && (err == nil || w.Changed()) {
 			w.Close()

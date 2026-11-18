@@ -1,0 +1,239 @@
+[
+  {
+    "id": "intro",
+    "duration": 4,
+    "card": "intro",
+    "subtitle": "归径，回到正在做的一件事。"
+  },
+  {
+    "id": "goal",
+    "chapter": "01 / 准备",
+    "title": "先选定\n这一件事。",
+    "body": "写下当前目标，\n为它留出一段时间。",
+    "subtitle": "写下目标，选择这次专注的时长。",
+    "source": "06-goal-apps.mov",
+    "start": 13.8,
+    "sourceDuration": 4.1,
+    "duration": 6,
+    "crop": [
+      355,
+      100,
+      1430,
+      740
+    ]
+  },
+  {
+    "id": "apps",
+    "chapter": "01 / 准备",
+    "title": "选好需要的\n工作工具。",
+    "body": "按应用选择，\n继续使用熟悉的工具。",
+    "subtitle": "添加这次工作需要的应用。",
+    "source": "06-goal-apps.mov",
+    "start": 24,
+    "sourceDuration": 10.2,
+    "duration": 8,
+    "crop": [
+      330,
+      110,
+      1130,
+      1150
+    ]
+  },
+  {
+    "id": "scene",
+    "chapter": "02 / 环境",
+    "title": "让环境，\n配合你的节奏。",
+    "body": "六种自然场景，\n选一个此刻喜欢的。",
+    "subtitle": "在自然场景中，选一个喜欢的环境。",
+    "source": "02-environment.mov",
+    "start": 21,
+    "sourceDuration": 8,
+    "duration": 5,
+    "crop": [
+      350,
+      100,
+      1440,
+      1120
+    ]
+  },
+  {
+    "id": "sound",
+    "chapter": "02 / 环境",
+    "title": "声音，\n由你来搭配。",
+    "body": "背景音乐与自然声音，\n独立选择、调整音量。",
+    "subtitle": "背景音乐、自然声音，按喜好搭配。",
+    "source": "02-environment.mov",
+    "start": 32,
+    "sourceDuration": 4.9,
+    "duration": 5,
+    "crop": [
+      390,
+      460,
+      1340,
+      590
+    ]
+  },
+  {
+    "id": "start",
+    "chapter": "03 / 开始",
+    "title": "开始，\n回到工作。",
+    "body": "一段自然入场，\n切换到专注的状态。",
+    "subtitle": "点击开始，让自然入场陪你进入状态。",
+    "source": "02-environment.mov",
+    "start": 76,
+    "sourceDuration": 14,
+    "duration": 10,
+    "crop": [
+      0,
+      0,
+      1800,
+      1376
+    ]
+  },
+  {
+    "id": "work",
+    "chapter": "03 / 开始",
+    "title": "继续做，\n手边的工作。",
+    "body": "在原来的应用里，\n把这一件事往前推进。",
+    "subtitle": "继续使用熟悉的应用，推进手边的工作。",
+    "source": "03-working.mov",
+    "start": 19,
+    "sourceDuration": 7.5,
+    "duration": 6,
+    "crop": [
+      215,
+      50,
+      1080,
+      800
+    ],
+    "exposureGain": 2
+  },
+  {
+    "id": "pause",
+    "chapter": "04 / 节奏",
+    "title": "需要时，\n就暂停一下。",
+    "body": "随时打开本次控制，\n查看计时、暂停或结束。",
+    "subtitle": "需要时，随时暂停。",
+    "source": "04-controls.mov",
+    "start": 3.3,
+    "sourceDuration": 8,
+    "duration": 5,
+    "crop": [
+      0,
+      0,
+      1800,
+      1376
+    ]
+  },
+  {
+    "id": "resume-prepare",
+    "chapter": "04 / 节奏",
+    "title": "准备好，\n再继续。",
+    "body": "保留本次目标与配置，\n继续刚才的专注。",
+    "subtitle": "准备好了，就继续。",
+    "source": "04-controls.mov",
+    "start": 14.3,
+    "sourceDuration": 3,
+    "duration": 1.5,
+    "crop": [
+      0,
+      0,
+      1800,
+      1376
+    ]
+  },
+  {
+    "id": "resume-active",
+    "chapter": "04 / 节奏",
+    "title": "准备好，\n再继续。",
+    "body": "保留本次目标与配置，\n继续刚才的专注。",
+    "subtitle": "准备好了，就继续。",
+    "source": "04-controls.mov",
+    "start": 36.5,
+    "sourceDuration": 2.5,
+    "duration": 2.5,
+    "crop": [
+      0,
+      0,
+      1800,
+      1376
+    ]
+  },
+  {
+    "id": "ended",
+    "chapter": "04 / 节奏",
+    "title": "结束本轮，\n回到日常。",
+    "body": "这次真实投入的时间，\n会留在专注记录里。",
+    "subtitle": "结束本轮，记录自动留下。",
+    "source": "07-end-retake.mov",
+    "start": 65.4,
+    "sourceDuration": 6,
+    "duration": 4,
+    "crop": [
+      0,
+      0,
+      1800,
+      1376
+    ],
+    "take": "end-retake"
+  },
+  {
+    "id": "template",
+    "chapter": "05 / 复用",
+    "title": "常用配置，\n下次一键复用。",
+    "body": "保存为专注模版，\n减少下一次的准备。",
+    "subtitle": "保存常用模版，让下次开始更简单。",
+    "source": "02-environment.mov",
+    "start": 50,
+    "sourceDuration": 8,
+    "duration": 5,
+    "crop": [
+      350,
+      100,
+      1440,
+      1130
+    ]
+  },
+  {
+    "id": "stats",
+    "chapter": "06 / 回看",
+    "title": "看见自己的\n真实投入。",
+    "body": "按天查看专注时长，\n回看每一段投入。",
+    "subtitle": "在统计中，看见自己的真实投入。",
+    "source": "07-end-retake.mov",
+    "start": 104,
+    "sourceDuration": 5,
+    "duration": 4,
+    "crop": [
+      0,
+      50,
+      1800,
+      950
+    ],
+    "take": "end-retake"
+  },
+  {
+    "id": "history",
+    "chapter": "06 / 回看",
+    "title": "每一段投入，\n都有迹可循。",
+    "body": "查看历史，\n也能复用之前的目标。",
+    "subtitle": "回看历史，也能复用之前的目标。",
+    "source": "08-retake-history.mov",
+    "start": 8.3,
+    "sourceDuration": 5,
+    "duration": 4,
+    "crop": [
+      0,
+      50,
+      1800,
+      1000
+    ],
+    "take": "end-retake"
+  },
+  {
+    "id": "outro",
+    "duration": 7,
+    "card": "outro",
+    "subtitle": "归径，为当下这一件事，留一片安静。"
+  }
+]

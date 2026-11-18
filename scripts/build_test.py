@@ -9,6 +9,29 @@ from unittest.mock import patch
 import build
 
 
+class SigningIdentityTest(unittest.TestCase):
+    def test_stable_signing_cannot_silently_downgrade(self):
+        profile = dict(identity="Developer ID Application: test", requirement="pinned requirement")
+        with patch.dict(build.os.environ, {}, clear=True):
+            self.assertEqual(build.signing_identity(profile), profile["identity"])
+        with patch.dict(build.os.environ, {"FOCUS_CODESIGN_IDENTITY": "-"}, clear=True):
+            with self.assertRaisesRegex(RuntimeError, "ad-hoc is disabled"):
+                build.signing_identity(profile)
+        with patch.dict(build.os.environ, {"FOCUS_REQUIRE_STABLE_SIGNING": "1"}, clear=True):
+            with self.assertRaisesRegex(RuntimeError, "ad-hoc is disabled"):
+                build.signing_identity(None)
+
+    def test_signing_rejects_different_architectures_or_upgrade_requirements(self):
+        app = pathlib.Path("Test.app")
+        profile = dict(identity="old signer", requirement="old requirement")
+        with patch.object(build, "run"), patch.object(build, "designated_requirement", side_effect=["arm", "intel"]):
+            with self.assertRaisesRegex(RuntimeError, "same designated requirement"):
+                build.sign_app(app, build.BUNDLE_ID, "signer", None)
+        with patch.object(build, "run"), patch.object(build, "designated_requirement", return_value="new requirement"):
+            with self.assertRaisesRegex(RuntimeError, "identity changed"):
+                build.sign_app(app, build.BUNDLE_ID, "signer", profile)
+
+
 class ReleaseManifestNoticesTest(unittest.TestCase):
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory(prefix="focus-build-test-")
