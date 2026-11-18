@@ -8,7 +8,7 @@
 
 77 秒了解归径的基本功能，观看从设定目标、选择应用与场景，到开始、暂停、继续和结束专注的实际演示。
 
-[![归径产品介绍视频](videos/product-intro/poster.jpg)](https://github.com/pyinx/zhuanzhuli/blob/main/videos/product-intro/guijing-intro.mp4)
+https://github.com/user-attachments/assets/a105fe41-9d72-4c4c-9e96-8f7fa7e3142f
 
 ## 核心功能
 
